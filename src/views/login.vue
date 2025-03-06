@@ -7,10 +7,7 @@
         />
       </div>
       <div class="text">
-        <img
-          src="D:\Scet\sem-4\Fashion_store\public\assest\Fashion.png"
-          alt=""
-        />
+        <img src="\assest\Fashion.png" alt="" />
         <h3>{{ isRegistration ? "Registration" : "Login" }}</h3>
         <div class="box">
           <input
