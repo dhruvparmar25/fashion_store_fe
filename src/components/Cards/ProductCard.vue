@@ -37,5 +37,4 @@ const props = defineProps(["product"]);
 .container h1 {
   font-weight: 700;
 }
-
 </style>

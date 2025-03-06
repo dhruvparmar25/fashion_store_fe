@@ -44,8 +44,11 @@
     </div>
   </section>
 </template>
+
+<!-- JavaScript -->
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const products = ref(
   {
@@ -217,7 +220,13 @@ const products = ref(
     rating: "4.6",
   }
 );
+const route = useRoute();
+onMounted(() => {
+  console.log(route.params?.id);
+});
 </script>
+
+<!-- css -->
 <style scoped>
 .main {
   display: flex;
