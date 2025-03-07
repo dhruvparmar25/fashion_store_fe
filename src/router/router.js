@@ -18,6 +18,13 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login,
+    beforeEnter: (to, from, next) => {
+      if (localStorage.getItem("token")) {
+        next({ name: "Home" });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: "/product",

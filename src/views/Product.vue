@@ -4,9 +4,9 @@
       <!-- Category Filter -->
       <div class="categoress">
         <header>
-          <h3>Category</h3>
-          <button style="background-color: royalblue" @click="toggleCategory">
-            {{ isCategoryView ? "-" : "+" }}
+          <h3><i class="fa-solid fa-circle"></i>Category</h3>
+          <button @click="toggleCategory">
+            {{ isCategoryView ? "∧" : "∨" }}
           </button>
         </header>
         <div class="categoryList">
@@ -25,9 +25,9 @@
       <!-- Brand Filter -->
       <div class="brandfilter">
         <header>
-          <h3>Brand</h3>
-          <button style="background-color: royalblue" @click="toggleBrand">
-            {{ isBrandView ? "-" : "+" }}
+          <h3><i class="fa-solid fa-circle"></i>Brand</h3>
+          <button @click="toggleBrand">
+            {{ isBrandView ? "∧" : "∨" }}
           </button>
         </header>
         <div class="brandList">
@@ -272,8 +272,7 @@ const toggleBrand = () => {
 }
 
 .fillter button {
-  font-size: 22px;
-  background-color: white;
+  background-color: yellow;
   border: none;
   text-decoration: dotted;
 }
@@ -285,15 +284,16 @@ header {
   margin-top: 1rem;
 }
 header h3 {
-  color: white;
-  background: black;
   font-size: 16px;
-  padding: 5px;
   border-radius: 10px;
 }
+header > h3 i {
+  border-radius: 50%;
+  color: rgb(199, 203, 212);
+  margin-right: 0.5rem;
+}
 button {
-  color: white;
-  background-color: royalblue;
+  color: black;
   border-radius: 10px;
   font-size: 12px;
   width: 40px;
@@ -309,11 +309,10 @@ input {
 }
 
 .categoryList {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 .categoress {
   border-top: 1px solid #c7cbd4;
-  margin-top: 1rem;
 }
 .sticky {
   position: sticky;

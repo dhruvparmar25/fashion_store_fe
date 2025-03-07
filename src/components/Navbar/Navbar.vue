@@ -1,22 +1,10 @@
 <template>
   <nav>
     <div class="icons">
-      <router-link to="https://facebook.com" target="_blank" class="icon fb">
-        <i class="fa-brands fa-facebook"></i>
-      </router-link>
-      <router-link
-        to="https://instagram.com"
-        target="_blank"
-        class="icon insta"
-      >
-        <i class="fa-brands fa-instagram"></i>
-      </router-link>
-      <router-link to="https://youtube.com" target="_blank" class="icon yt">
-        <i class="fa-brands fa-youtube"></i>
-      </router-link>
-      <router-link to="https://twitter.com" target="_blank" class="icon x">
-        <i class="fa-brands fa-x-twitter"></i>
-      </router-link>
+      <i class="fa-brands fa-facebook fb"></i>
+      <i class="fa-brands fa-instagram insta"></i>
+      <i class="fa-brands fa-youtube yt"></i>
+      <i class="fa-brands fa-x-twitter x"></i>
     </div>
 
     <div class="offer">
@@ -27,12 +15,40 @@
 
     <div class="menu">
       <router-link to="/contact" class="menu-item">Contact</router-link>
-      <router-link to="/login" class="menu-item">Login</router-link>
+
+      <div class="user"><i class="fa-regular fa-user"></i></div>
+
+      <router-link v-if="!isLoggedIn" to="/login" class="menu-item"
+        >Login</router-link
+      >
+
+      <div v-else>
+        <button @click="logout">Logout</button>
+      </div>
     </div>
   </nav>
 </template>
 
-<script setup></script>
+<script setup>
+import router from "@/router/router";
+import { onMounted, ref } from "vue";
+
+const isLoggedIn = ref(false);
+
+const checkLoginStatus = () => {
+  isLoggedIn.value = !!localStorage.getItem("token");
+};
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  isLoggedIn.value = false;
+  router.push("/login");
+};
+
+onMounted(() => {
+  checkLoginStatus();
+});
+</script>
 
 <style scoped>
 nav {
@@ -79,7 +95,14 @@ nav {
   gap: 1.5rem;
 }
 
-.menu-item {
+.menu button {
+  border: none;
+  background-color: #f7f8f9;
+  text-decoration: none;
+}
+
+.menu-item,
+.menu button {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -87,9 +110,11 @@ nav {
   transition: color 0.3s ease-in-out;
 }
 
-.menu-item:hover {
+.menu-item:hover,
+.menu button:hover {
   color: blue;
 }
+
 /* Social Icons */
 .icons {
   display: flex;
@@ -124,5 +149,22 @@ nav {
 
 .icon:hover {
   transform: scale(1.1);
+}
+
+/* Icons */
+.main-icon {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.main-icon i {
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.main-icon i:hover {
+  color: blue;
 }
 </style>

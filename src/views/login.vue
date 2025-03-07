@@ -3,34 +3,45 @@
     <div class="main">
       <div class="image">
         <img
-          src="https://images.bewakoof.com/uploads/grid/app/444x666-Trending-Category-Icon-OS-T-Shirts-1735907878.jpg"
+          src="https://images.bewakoof.com/t640/men-s-blue-the-panda-way-oversized-t-shirt-580637-1676876264-1.jpg"
         />
       </div>
       <div class="text">
         <img src="\assest\Fashion.png" alt="" />
-        <h3>{{ isRegistration ? "Registration" : "Login" }}</h3>
+        <h3>{{ data.isRegistration ? "Registration" : "Login" }}</h3>
         <div class="box">
-          <input
-            v-if="isRegistration"
-            type="text"
-            name="Name"
-            placeholder="Enter Name"
-          /><br />
+          <form @submit.prevent="saveData">
+            <input
+              v-if="data.isRegistration"
+              v-model="data.name"
+              type="text"
+              name="Name"
+              placeholder="Enter Name"
+            /><br />
 
-          <input type="text" name="Email" placeholder="Enter Email" /><br />
-          <input
-            type="text"
-            name="Password"
-            placeholder="Enter Password"
-          /><br />
-          <button type="button">Login</button>
-          <p @click="toggleForm">
-            {{
-              isRegistration
-                ? "Already have an account? Login"
-                : "Don't have an account? Registration"
-            }}
-          </p>
+            <input
+              type="text"
+              v-model="data.email"
+              name="Email"
+              placeholder="Enter Email"
+            /><br />
+            <input
+              v-model="data.password"
+              name="Password"
+              placeholder="Enter Password"
+              type="password"
+            /><br />
+            <button type="submit">
+              {{ data.isRegistration ? "Registration" : "Login" }}
+            </button>
+            <p @click="toggleForm">
+              {{
+                data.isRegistration
+                  ? "Already have an account? Login"
+                  : "Don't have an account? Registration"
+              }}
+            </p>
+          </form>
         </div>
       </div>
     </div>
@@ -38,12 +49,49 @@
 </template>
 <!-- js -->
 <script setup>
+import { getHeader } from "@/utils/helpers";
+import axios from "axios";
+import router from "@/router/router";
 import { ref } from "vue";
 
-const isRegistration = ref(false);
+const data = ref({
+  isRegistration: false,
+  name: "",
+  email: "",
+  password: "",
+});
 
 const toggleForm = () => {
-  isRegistration.value = !isRegistration.value;
+  data.value.isRegistration = !data.value.isRegistration;
+};
+
+const saveData = () => {
+  const endpoint = data.value.isRegistration ? "register" : "login";
+  const headers = data.value.isRegistration ? {} : getHeader();
+  axios
+    .post(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, data.value, {
+      headers,
+    })
+    .then((res) => {
+      if (!data.value.isRegistration) {
+        console.log(res.data);
+        localStorage.setItem("token", res.data?.token || "");
+        localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
+        alert("Login Successful!");
+        router.push("/");
+      } else {
+        alert("Registration Successful! Please Login");
+        data.value.isRegistration = false;
+      }
+    })
+    .catch((err) => {
+      alert(
+        data.value.isRegistration
+          ? "Registration Failed!"
+          : "Invalid Email or Password"
+      );
+      console.log(err);
+    });
 };
 </script>
 <!-- style -->
@@ -59,24 +107,29 @@ const toggleForm = () => {
   padding: 1rem;
   /* background-color: black; */
 }
+
 .image {
   width: 50%;
   height: 100%;
 }
+
 .image img {
   width: 100%;
   height: 100%;
 }
+
 .text {
   width: 50%;
   height: 100%;
   text-align: center;
   padding: 2rem;
 }
+
 .text img {
   width: 100px;
   border-radius: 50%;
 }
+
 .text > h3 {
   font-family: "Montserrat";
   font-size: 20px;
@@ -84,6 +137,7 @@ const toggleForm = () => {
   font-weight: 600;
   text-transform: uppercase;
 }
+
 .box {
   border: 1px solid white;
   margin: auto;
@@ -93,6 +147,7 @@ const toggleForm = () => {
   border-radius: 10px;
   padding: 1rem;
 }
+
 .box input {
   width: 80%;
   height: 40px;
@@ -104,6 +159,7 @@ const toggleForm = () => {
   margin-top: 1rem;
   width: 80%;
 }
+
 .box button {
   width: 80%;
   height: 40px;
@@ -116,9 +172,11 @@ const toggleForm = () => {
   transition: 0.3s;
   margin: 1rem 0rem;
 }
+
 .box button:hover {
   background-color: rgba(0, 0, 255, 0.726);
 }
+
 .box p {
   color: skyblue;
   cursor: pointer;

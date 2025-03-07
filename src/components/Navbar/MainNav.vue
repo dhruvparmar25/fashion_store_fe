@@ -19,7 +19,6 @@
       <router-link to="/about">AboutUs</router-link>
     </div>
     <div class="main-icon">
-      <div class="user"><i class="fa-regular fa-user"></i></div>
       <div class="cart">
         <router-link to="/cart"
           ><i class="fa-solid fa-cart-shopping"></i
@@ -125,98 +124,3 @@ nav {
   border: none;
 }
 </style>
-
-<!-- 
-<style scoped>
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-}
-
-.logo > img {
-  width: 50px;
-  margin-left: 1rem;
-}
-
-/* Dropdown Button */
-.dropbtn {
-  color: black;
-  border: none;
-}
-
-.main-menu {
-  font-weight: normal;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.main-menu a {
-  text-decoration: none;
-  color: black;
-}
-
-.main-menu a:visited {
-  color: black;
-}
-
-.main-menu a:hover {
-  color: red;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  min-width: 100px;
-  padding: 0.5rem;
-  z-index: 10;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  font-size: 16px;
-  border-radius: 5px;
-  margin-left: 0.5rem;
-}
-
-.dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  color: red;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.main-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.main-icon i {
-  width: 20px;
-  height: 20px;
-  text-decoration: none;
-  color: black;
-}
-.main-icon i:hover {
-  color: red;
-}
-</style> -->
