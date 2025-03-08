@@ -4,11 +4,14 @@
       <div class="image">
         <img
           src="https://images.bewakoof.com/t640/men-s-blue-the-panda-way-oversized-t-shirt-580637-1676876264-1.jpg"
+          alt="Fashion T-shirt"
         />
       </div>
       <div class="text">
-        <img src="\assest\Fashion.png" alt="" />
-        <h3>{{ data.isRegistration ? "Registration" : "Login" }}</h3>
+        <img src="/public/Fashion.png" alt="Fashion Logo" />
+        <h3>
+          {{ data.isRegistration ? "Registration" : "Login" }}
+        </h3>
         <div class="box">
           <form @submit.prevent="saveData">
             <input
@@ -17,23 +20,29 @@
               type="text"
               name="Name"
               placeholder="Enter Name"
-            /><br />
+            />
+            <br />
 
             <input
               type="text"
               v-model="data.email"
               name="Email"
               placeholder="Enter Email"
-            /><br />
+            />
+            <br />
+
             <input
               v-model="data.password"
               name="Password"
               placeholder="Enter Password"
               type="password"
-            /><br />
+            />
+            <br />
+
             <button type="submit">
               {{ data.isRegistration ? "Registration" : "Login" }}
             </button>
+
             <p @click="toggleForm">
               {{
                 data.isRegistration
@@ -47,12 +56,12 @@
     </div>
   </section>
 </template>
-<!-- js -->
+
 <script setup>
-import { getHeader } from "@/utils/helpers";
+import { ref } from "vue";
 import axios from "axios";
 import router from "@/router/router";
-import { ref } from "vue";
+import { getHeader } from "@/utils/helpers";
 
 const data = ref({
   isRegistration: false,
@@ -68,17 +77,20 @@ const toggleForm = () => {
 const saveData = () => {
   const endpoint = data.value.isRegistration ? "register" : "login";
   const headers = data.value.isRegistration ? {} : getHeader();
+
   axios
     .post(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, data.value, {
       headers,
     })
     .then((res) => {
       if (!data.value.isRegistration) {
-        console.log(res.data);
         localStorage.setItem("token", res.data?.token || "");
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
         alert("Login Successful!");
-        router.push("/");
+        router.push("/").then(() => {
+          window.location.reload();
+        });
+        // window.location.reload();
       } else {
         alert("Registration Successful! Please Login");
         data.value.isRegistration = false;
@@ -90,11 +102,10 @@ const saveData = () => {
           ? "Registration Failed!"
           : "Invalid Email or Password"
       );
-      console.log(err);
+      console.error("Error:", err);
     });
 };
 </script>
-<!-- style -->
 
 <style scoped>
 .main {
@@ -105,7 +116,6 @@ const saveData = () => {
   justify-content: space-around;
   align-items: start;
   padding: 1rem;
-  /* background-color: black; */
 }
 
 .image {
@@ -139,7 +149,6 @@ const saveData = () => {
 }
 
 .box {
-  border: 1px solid white;
   margin: auto;
   width: 400px;
   background-color: white;
@@ -148,20 +157,21 @@ const saveData = () => {
   padding: 1rem;
 }
 
-.box input {
+.box input,
+.box button {
   width: 80%;
+}
+
+.box input {
   height: 40px;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
   font-size: 16px;
-  transition: 0.3s;
   margin-top: 1rem;
-  width: 80%;
 }
 
 .box button {
-  width: 80%;
   height: 40px;
   border: none;
   border-radius: 5px;
@@ -170,7 +180,7 @@ const saveData = () => {
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
-  margin: 1rem 0rem;
+  margin: 1rem 0;
 }
 
 .box button:hover {

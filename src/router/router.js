@@ -7,6 +7,7 @@ import Login from "@/views/login.vue";
 import Contact from "@/views/contact.vue";
 import Blog from "@/views/blog.vue";
 import About from "@/views/about.vue";
+import ProductPage from "@/components/Cards/ProductPage.vue";
 
 const routes = [
   {
@@ -35,6 +36,7 @@ const routes = [
     path: "/product/:id",
     name: "ProductDetail",
     component: ProductDetail,
+    props: true,
   },
   {
     path: "/contact",

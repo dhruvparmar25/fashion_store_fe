@@ -1,35 +1,35 @@
 <template>
   <nav>
     <div class="logo">
-      <img src="/assest/Fashion.png" />
+      <img src="/public/Fashion.png" />
     </div>
     <div class="main-menu">
-      <div><router-link to="/">Home</router-link></div>
-      <div><router-link to="/blog">Blog</router-link></div>
+      <router-link to="/">Home</router-link>
+      <router-link to="/blog">Blog</router-link>
       <div class="dropdown">
-        <div class="dropbtn">Category</div>
+        <span class="dropbtn">Category</span>
         <div class="dropdown-content">
-          <div><router-link to="">Men</router-link></div>
-          <div><router-link to="">Women</router-link></div>
+          <router-link to="/category/men">Men</router-link>
+          <router-link to="/category/women">Women</router-link>
         </div>
       </div>
-      <div>
-        <router-link to="/product">Product</router-link>
-      </div>
-      <router-link to="/about">AboutUs</router-link>
+      <router-link to="/product">Product</router-link>
+      <router-link to="/about">About Us</router-link>
     </div>
     <div class="main-icon">
-      <div class="cart">
-        <router-link to="/cart"
-          ><i class="fa-solid fa-cart-shopping"></i
-        ></router-link>
-      </div>
-      <div class="srch"><i class="fa-solid fa-magnifying-glass"></i></div>
+      <router-link to="/cart" class="cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </router-link>
+      <button class="search-btn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
     </div>
   </nav>
 </template>
 
-<script setup></script>
+<script setup>
+// No additional script needed for now.
+</script>
 
 <style scoped>
 nav {
@@ -51,7 +51,6 @@ nav {
   gap: 2rem;
   font-size: 16px;
   font-weight: 500;
-  cursor: pointer;
 }
 
 .main-menu a {
@@ -67,9 +66,6 @@ nav {
 /* Dropdown */
 .dropdown {
   position: relative;
-}
-
-.dropbtn {
   cursor: pointer;
 }
 
@@ -117,10 +113,17 @@ nav {
   color: blue;
 }
 
-/* cart */
+/* Cart */
 .cart i {
   text-decoration: none;
   color: black;
+}
+
+/* Search Button */
+.search-btn {
+  background: none;
   border: none;
+  cursor: pointer;
+  padding: 0;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <nav>
+    <!-- Social Media Icons -->
     <div class="icons">
       <i class="fa-brands fa-facebook fb"></i>
       <i class="fa-brands fa-instagram insta"></i>
@@ -7,37 +8,42 @@
       <i class="fa-brands fa-x-twitter x"></i>
     </div>
 
+    <!-- Dynamic Offer Message -->
     <div class="offer">
       <p class="offerText">
-        <strong>Special Offer</strong>: Free Shipping on all orders above $100
+        <strong>Special Offer</strong>: {{ offerMessage }}
       </p>
     </div>
 
+    <!-- Menu Section -->
     <div class="menu">
       <router-link to="/contact" class="menu-item">Contact</router-link>
+      <div class="user">
+        <i class="fa-regular fa-user"></i>
+      </div>
 
-      <div class="user"><i class="fa-regular fa-user"></i></div>
-
-      <router-link v-if="!isLoggedIn" to="/login" class="menu-item"
+      <!-- Login / Logout Button -->
+      <router-link v-if="!isLoggedIn" to="/login" class="login"
         >Login</router-link
       >
-
-      <div v-else>
-        <button @click="logout">Logout</button>
-      </div>
+      <button v-else class="logout-btn" @click="logout">Logout</button>
     </div>
   </nav>
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
 import router from "@/router/router";
-import { onMounted, ref } from "vue";
 
 const isLoggedIn = ref(false);
+const offerMessage = ref("Free Shipping on all orders above $100");
 
+// Check if user is logged in
 const checkLoginStatus = () => {
   isLoggedIn.value = !!localStorage.getItem("token");
 };
+
+// Logout function
 const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
@@ -45,12 +51,12 @@ const logout = () => {
   router.push("/login");
 };
 
-onMounted(() => {
-  checkLoginStatus();
-});
+// On component mount, check login status
+onMounted(checkLoginStatus);
 </script>
 
 <style scoped>
+/* Navigation Bar */
 nav {
   display: flex;
   align-items: center;
@@ -77,7 +83,6 @@ nav {
 }
 
 .icon:hover {
-  color: red;
   transform: scale(1.1);
 }
 
@@ -95,14 +100,7 @@ nav {
   gap: 1.5rem;
 }
 
-.menu button {
-  border: none;
-  background-color: #f7f8f9;
-  text-decoration: none;
-}
-
-.menu-item,
-.menu button {
+.menu-item {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -110,27 +108,42 @@ nav {
   transition: color 0.3s ease-in-out;
 }
 
-.menu-item:hover,
-.menu button:hover {
+.menu-item:hover {
   color: blue;
 }
-
-/* Social Icons */
-.icons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+/* Login Button */
+.login {
+  background-color: rgba(0, 0, 0, 0.753);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  text-decoration: none;
+}
+.login:hover {
+  background-color: #000;
 }
 
-.icon {
-  font-size: 20px;
-  color: black;
-  transition:
-    color 0.3s ease-in-out,
-    transform 0.2s ease-in-out;
+/* Logout Button */
+.logout-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 
-/* Hover Effects */
+.logout-btn:hover {
+  background-color: darkred;
+}
+
+/* Social Media Hover Effects */
 .fb:hover {
   color: #1877f2;
 }
@@ -145,26 +158,5 @@ nav {
 
 .x:hover {
   color: #000;
-}
-
-.icon:hover {
-  transform: scale(1.1);
-}
-
-/* Icons */
-.main-icon {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.main-icon i {
-  font-size: 20px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.main-icon i:hover {
-  color: blue;
 }
 </style>

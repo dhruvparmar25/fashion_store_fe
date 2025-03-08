@@ -1,5 +1,5 @@
 <template>
-  <div class="prddetail">
+  <router-link :to="`/product/${product.id}`" class="prddetail">
     <div class="cards">
       <div class="imag">
         <div
@@ -27,17 +27,25 @@
           </div>
           <div class="discount">{{ product.discount }}</div>
         </div>
-        <div class="rating">
-          <i class="fa-solid fa-star"></i> {{ product.rating }}
+        <div class="combine">
+          <div class="rating">
+            <i class="fa-solid fa-star"></i> {{ product.rating }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
+
 <script setup>
 const props = defineProps(["product"]);
 </script>
+
 <style scoped>
+.prddetail {
+  cursor: pointer;
+  text-decoration: none;
+}
 .cards {
   transition: 0.3s;
 }

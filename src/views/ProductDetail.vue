@@ -1,48 +1,46 @@
 <template>
-  <section class="productdetail">
+  <section class="productdetail" v-if="product">
     <div class="main">
       <div class="image">
         <div class="mainimage">
-          <img :src="products.image" />
+          <img :src="product.image" />
         </div>
       </div>
       <div class="detail">
         <div class="productdetail">
-          <div class="brand">{{ products.brand }}</div>
-          <p class="desc">{{ products.description }}</p>
-          <div class="name">{{ products.name }}</div>
+          <div class="brand">{{ product.brand }}</div>
+          <p class="desc">{{ product.description }}</p>
+          <div class="name">{{ product.name }}</div>
           <div class="combine">
             <h4 class="price">
-              <i class="fa-solid fa-indian-rupee-sign"></i> {{ products.price }}
+              <i class="fa-solid fa-indian-rupee-sign"></i> {{ product.price }}
             </h4>
-            <h4 class="offer">{{ products.offer }}</h4>
+            <h4 class="offer">{{ product.discount }}</h4>
           </div>
           <div class="combine">
-            <div class="design">{{ products.design }}</div>
+            <div class="design">{{ product.design }}</div>
             <h4 class="rating">
-              <i class="fa-solid fa-star"></i>{{ products.rating }}
+              <i class="fa-solid fa-star"></i>{{ product.rating }}
             </h4>
           </div>
           <div class="combine">
-            <h6 class="category">{{ products.category }}</h6>
+            <h6 class="category">{{ product.category }}</h6>
             <div
-              v-if="products?.tags?.length"
-              v-for="tag in products.tags"
+              v-if="product.tags?.length"
+              v-for="tag in product.tags"
               class="label"
             >
               {{ tag.label }}
             </div>
           </div>
-
-          <!-- <h5 class="type">Type: {{ products.type }}</h5>
-          <h4 class="discount">{{ products.discount }}</h4> -->
         </div>
         <button class="addtocart" type="button">
-          <i class="fa-solid fa-bag-shopping"></i>Add to bag
+          <i class="fa-solid fa-bag-shopping"></i> Add to bag
         </button>
       </div>
     </div>
   </section>
+  <p v-else>Loading...</p>
 </template>
 
 <!-- JavaScript -->
@@ -50,7 +48,10 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
-const products = ref(
+const route = useRoute();
+const product = ref(null); // Single product store karne ke liye
+
+const products = ref([
   {
     name: "Men's Purple Justice League Society Graphic Printed Oversized T-shirt",
     category: "T-Shirt",
@@ -218,11 +219,12 @@ const products = ref(
       "For TriBe Members bewakoof Men's Black The Panda Way Graphic Printed Oversized T-shirt Men's Black The Panda Way Graphic Printed Oversized T-shirt",
     id: 7,
     rating: "4.6",
-  }
-);
-const route = useRoute();
+  },
+]);
+
 onMounted(() => {
-  console.log(route.params?.id);
+  const productId = parseInt(route.params.id); // Route se id lo (string to number convert karo)
+  product.value = products.value.find((p) => p.id === productId);
 });
 </script>
 
