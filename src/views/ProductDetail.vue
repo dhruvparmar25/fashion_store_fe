@@ -34,7 +34,7 @@
             </div>
           </div>
         </div>
-        <button class="addtocart" type="button">
+        <button class="addtocart" @click="addToCart" type="button">
           <i class="fa-solid fa-bag-shopping"></i> Add to bag
         </button>
       </div>
@@ -43,13 +43,14 @@
   <p v-else>Loading...</p>
 </template>
 
-<!-- JavaScript -->
 <script setup>
+import router from "@/router/router";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const product = ref(null); // Single product store karne ke liye
+const product = ref(null);
+const cart = ref([]);
 
 const products = ref([
   {
@@ -223,9 +224,38 @@ const products = ref([
 ]);
 
 onMounted(() => {
-  const productId = parseInt(route.params.id); // Route se id lo (string to number convert karo)
+  const productId = parseInt(route.params.id);
   product.value = products.value.find((p) => p.id === productId);
+  loadCart();
 });
+
+const loadCart = () => {
+  const storedCart = localStorage.getItem("cart");
+  if (storedCart) {
+    cart.value = JSON.parse(storedCart);
+  }
+};
+
+const saveCart = () => {
+  localStorage.setItem("cart", JSON.stringify(cart.value));
+};
+
+const addToCart = () => {
+  if (!product.value) return;
+
+  const existingItem = cart.value.find((item) => item.id === product.value.id);
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.value.push({ ...product.value, quantity: 1 });
+  }
+
+  saveCart();
+  alert("Product added to cart!");
+
+  router.push("/cart");
+};
 </script>
 
 <!-- css -->

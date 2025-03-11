@@ -88,9 +88,8 @@ const saveData = () => {
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
         alert("Login Successful!");
         router.push("/").then(() => {
-          window.location.reload();
+          // window.location.reload();
         });
-        // window.location.reload();
       } else {
         alert("Registration Successful! Please Login");
         data.value.isRegistration = false;
