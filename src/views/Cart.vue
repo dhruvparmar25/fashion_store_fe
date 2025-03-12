@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    <!-- Left Side - Bag -->
     <div class="bag">
       <div class="title"><h4>Shopping Bag</h4></div>
       <div v-if="cart.length > 0" class="cart-items">
@@ -9,14 +8,11 @@
           <div class="cart-item-details">
             <h5>{{ item.name }}</h5>
             <p>Price: ₹{{ item.price }}</p>
-
-            <!-- 🔹 Quantity Control -->
             <div class="quantity-control">
               <button @click="decreaseQuantity(item)" class="qty-btn">-</button>
               <span>{{ item.quantity }}</span>
               <button @click="increaseQuantity(item)" class="qty-btn">+</button>
             </div>
-
             <button @click="removeFromCart(item.id)" class="remove-btn">
               Remove
             </button>
@@ -25,8 +21,6 @@
       </div>
       <p v-else class="empty-cart">Your cart is empty.</p>
     </div>
-
-    <!-- Right Side - Summary -->
     <div class="summary">
       <div class="title"><h4>Order Summary</h4></div>
       <p>
@@ -45,7 +39,6 @@ import { ref, computed, onMounted } from "vue";
 
 const cart = ref([]);
 
-// 📌 Load Cart from Local Storage
 const loadCart = () => {
   const storedCart = localStorage.getItem("cart");
   if (storedCart) {
@@ -53,18 +46,15 @@ const loadCart = () => {
   }
 };
 
-// 📌 Save Updated Cart to Local Storage
 const saveCart = () => {
   localStorage.setItem("cart", JSON.stringify(cart.value));
 };
 
-// 🔹 Increase Quantity
 const increaseQuantity = (item) => {
   item.quantity++;
   saveCart();
 };
 
-// 🔹 Decrease Quantity (Minimum: 1)
 const decreaseQuantity = (item) => {
   if (item.quantity > 1) {
     item.quantity--;
@@ -74,13 +64,11 @@ const decreaseQuantity = (item) => {
   saveCart();
 };
 
-// ❌ Remove Item from Cart
 const removeFromCart = (id) => {
   cart.value = cart.value.filter((item) => item.id !== id);
   saveCart();
 };
 
-// 📌 Computed Properties for Total Items & Price
 const totalItems = computed(() =>
   cart.value.reduce((sum, item) => sum + item.quantity, 0)
 );
@@ -94,7 +82,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 💠 Main Container */
 .main {
   width: 90%;
   max-width: 1200px;
@@ -106,7 +93,6 @@ onMounted(() => {
   padding: 2rem 0;
 }
 
-/* 🛒 Bag Section */
 .bag {
   width: 65%;
   background: #fff;
@@ -122,7 +108,6 @@ onMounted(() => {
   margin-bottom: 15px;
 }
 
-/* 🏷 Cart Items */
 .cart-items {
   display: flex;
   flex-direction: column;
@@ -146,7 +131,6 @@ onMounted(() => {
   box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 🖼 Product Image */
 .cart-item-image {
   width: 80px;
   height: 80px;
@@ -155,7 +139,6 @@ onMounted(() => {
   border: 1px solid #ddd;
 }
 
-/* 📋 Item Details */
 .cart-item-details {
   flex: 1;
   display: flex;
@@ -174,7 +157,6 @@ onMounted(() => {
   color: #777;
 }
 
-/* 🔹 Quantity Control */
 .quantity-control {
   display: flex;
   align-items: center;
@@ -197,7 +179,6 @@ onMounted(() => {
   background: #0056b3;
 }
 
-/* ❌ Remove Button */
 .remove-btn {
   background: #ff4d4d;
   color: white;
@@ -212,7 +193,6 @@ onMounted(() => {
   background: #e60000;
 }
 
-/* 📌 Empty Cart Message */
 .empty-cart {
   font-size: 16px;
   color: #777;
@@ -220,7 +200,6 @@ onMounted(() => {
   margin-top: 10px;
 }
 
-/* 📦 Summary Section */
 .summary {
   width: 30%;
   background: #f8f8f8;
@@ -241,7 +220,6 @@ onMounted(() => {
   color: #111;
 }
 
-/* ✅ Checkout Button */
 .checkout-btn {
   width: 100%;
   background: #28a745;
@@ -259,7 +237,6 @@ onMounted(() => {
   background: #218838;
 }
 
-/* 🔹 Responsive Design */
 @media (max-width: 768px) {
   .main {
     flex-direction: column;
