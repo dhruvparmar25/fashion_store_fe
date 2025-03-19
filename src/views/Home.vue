@@ -1,6 +1,6 @@
 <template>
-  <Home />
-  <!-- <Slider /> -->
+  <!-- <Home /> -->
+  <Slider />
   <Offer />
   <FeaturedProduct />
   <Banner />

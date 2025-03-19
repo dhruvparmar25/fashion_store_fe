@@ -9,8 +9,8 @@
       <div class="detail">
         <div class="productdetail">
           <div class="brand">{{ product.brand }}</div>
-          <p class="desc">{{ product.description }}</p>
-          <div class="name">{{ product.name }}</div>
+
+          <div class="name" style="margin-top: 1rem">{{ product.name }}</div>
           <div class="combine">
             <h4 class="price">
               <i class="fa-solid fa-indian-rupee-sign"></i> {{ product.price }}
@@ -143,8 +143,9 @@ const addToCart = () => {
 }
 .combine {
   display: flex;
-  justify-content: stretch;
+  justify-content: space-between;
   align-items: center;
+  margin-top: 1rem;
 }
 .price {
   font-family: "Montserrat";
@@ -159,6 +160,7 @@ const addToCart = () => {
   font-size: 16px;
   line-height: 24px;
   color: rgb(0, 140, 45);
+  margin-right: 200px;
 }
 .category {
   font-family: "Montserrat";
@@ -167,13 +169,13 @@ const addToCart = () => {
   color: white;
   border: 1px solid rgb(115, 115, 115);
   font-size: 14px;
-  padding: 0.5rem;
+  padding: 5px;
 }
 .rating {
   font-family: "Montserrat";
   font-size: 14px;
   font-weight: 700;
-  margin-top: 0.5rem;
+  margin-right: 200px;
 }
 .rating i {
   color: gold;
@@ -187,6 +189,7 @@ const addToCart = () => {
   border: 1px solid rgb(115, 115, 115);
   padding: 5px;
   width: fit-content;
+  margin-right: 200px;
 }
 .addtocart {
   background-color: #ffd232;
@@ -200,7 +203,7 @@ const addToCart = () => {
   border: none;
   border-radius: 10px;
   color: rgb(41, 45, 53);
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 .addtocart i {
   margin-right: 1rem;

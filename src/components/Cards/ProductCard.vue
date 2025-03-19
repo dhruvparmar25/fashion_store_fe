@@ -1,5 +1,10 @@
 <template>
-  <div class="products">
+  <div
+    class="products"
+    @click="goToDetails(product)"
+    :product="product"
+    :key="product._id"
+  >
     <div class="productcard">
       <img :src="product.image" />
       <div class="container">
@@ -10,7 +15,18 @@
   </div>
 </template>
 <script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const props = defineProps(["product"]);
+
+const goToDetails = (item) => {
+  if (!item?._id) return; // If the product doesn't have an ID, do nothing
+  router.push({
+    name: "ProductDetail", // Navigate to the ProductDetail page
+    params: { id: item?._id }, // Pass the product ID as a parameter
+  });
+};
 </script>
 <style scoped>
 .products {

@@ -1,12 +1,16 @@
 <template>
   <section class="login">
+    <!-- Main container for login/registration section -->
     <div class="main">
+      <!-- Left section displaying an image -->
       <div class="image">
         <img
           src="https://images.bewakoof.com/t640/men-s-blue-the-panda-way-oversized-t-shirt-580637-1676876264-1.jpg"
           alt="Fashion T-shirt"
         />
       </div>
+
+      <!-- Right section containing the login/registration form -->
       <div class="text">
         <img src="/public/Fashion.png" alt="Fashion Logo" />
         <h3>
@@ -14,6 +18,7 @@
         </h3>
         <div class="box">
           <form @submit.prevent="saveData">
+            <!-- Display Name input field if registration is true -->
             <input
               v-if="data.isRegistration"
               v-model="data.name"
@@ -23,6 +28,7 @@
             />
             <br />
 
+            <!-- Always display Email input field -->
             <input
               type="text"
               v-model="data.email"
@@ -31,6 +37,7 @@
             />
             <br />
 
+            <!-- Always display Password input field -->
             <input
               v-model="data.password"
               name="Password"
@@ -39,10 +46,12 @@
             />
             <br />
 
+            <!-- Submit button with dynamic text -->
             <button type="submit">
               {{ data.isRegistration ? "Registration" : "Login" }}
             </button>
 
+            <!-- Toggle between Login and Registration forms -->
             <p @click="toggleForm">
               {{
                 data.isRegistration
@@ -63,6 +72,7 @@ import axios from "axios";
 import router from "@/router/router";
 import { getHeader } from "@/utils/helpers";
 
+// Reactive state to manage form data (login/registration)
 const data = ref({
   isRegistration: false,
   name: "",
@@ -70,10 +80,12 @@ const data = ref({
   password: "",
 });
 
+// Toggle between registration and login form
 const toggleForm = () => {
   data.value.isRegistration = !data.value.isRegistration;
 };
 
+// Handle form submission (login or registration)
 const saveData = () => {
   const endpoint = data.value.isRegistration ? "register" : "login";
   const headers = data.value.isRegistration ? {} : getHeader();
@@ -84,6 +96,7 @@ const saveData = () => {
     })
     .then((res) => {
       if (!data.value.isRegistration) {
+        // Store token and user data on successful login
         localStorage.setItem("token", res.data?.token || "");
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
         alert("Login Successful!");
@@ -107,6 +120,7 @@ const saveData = () => {
 </script>
 
 <style scoped>
+/* Main layout styling */
 .main {
   width: 90%;
   height: 100vh;
@@ -117,6 +131,7 @@ const saveData = () => {
   padding: 1rem;
 }
 
+/* Image styling */
 .image {
   width: 50%;
   height: 100%;
@@ -127,6 +142,7 @@ const saveData = () => {
   height: 100%;
 }
 
+/* Form container styling */
 .text {
   width: 50%;
   height: 100%;
@@ -134,11 +150,13 @@ const saveData = () => {
   padding: 2rem;
 }
 
+/* Logo image styling */
 .text img {
   width: 100px;
   border-radius: 50%;
 }
 
+/* Form heading styling */
 .text > h3 {
   font-family: "Montserrat";
   font-size: 20px;
@@ -147,6 +165,7 @@ const saveData = () => {
   text-transform: uppercase;
 }
 
+/* Form box styling */
 .box {
   margin: auto;
   width: 400px;
@@ -156,11 +175,13 @@ const saveData = () => {
   padding: 1rem;
 }
 
+/* Input and button common styling */
 .box input,
 .box button {
   width: 80%;
 }
 
+/* Input field styling */
 .box input {
   height: 40px;
   border: 1px solid #ccc;
@@ -170,6 +191,7 @@ const saveData = () => {
   margin-top: 1rem;
 }
 
+/* Submit button styling */
 .box button {
   height: 40px;
   border: none;
@@ -182,10 +204,12 @@ const saveData = () => {
   margin: 1rem 0;
 }
 
+/* Button hover effect */
 .box button:hover {
   background-color: rgba(0, 0, 255, 0.726);
 }
 
+/* Styling for toggle text */
 .box p {
   color: skyblue;
   cursor: pointer;

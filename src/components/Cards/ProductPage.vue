@@ -1,7 +1,9 @@
 <template>
+  <!-- Product card displaying information about each product -->
   <router-link :to="`/product/${product.id}`" class="prddetail">
     <div class="cards">
       <div class="imag">
+        <!-- Display product tags if available -->
         <div
           v-if="product?.tags?.length"
           v-for="tag in product.tags"
@@ -10,7 +12,6 @@
           {{ tag.label }}
         </div>
         <img :src="product.image" style="width: 100%" />
-
         <div class="offer">{{ product.offer }}</div>
       </div>
 
@@ -38,10 +39,12 @@
 </template>
 
 <script setup>
+// Receive product data as a prop
 const props = defineProps(["product"]);
 </script>
 
 <style scoped>
+/* Scoped styling for product card */
 .prddetail {
   cursor: pointer;
   text-decoration: none;

@@ -2,7 +2,7 @@
   <section class="featured">
     <div class="ftitle">
       <h1>Featured Products</h1>
-      <p>VIEW ALL</p>
+      <router-link to="/product"><button>View All</button></router-link>
     </div>
     <div class="productContainer">
       <ProductCard v-for="prd in prds.slice(0, 5)" :product="prd" />
@@ -38,14 +38,22 @@ onMounted(async () => {
   font-size: 22px;
   font-weight: 700;
   line-height: normal;
-  color: rgb(33, 37, 41);
+  background-color: black;
+  color: white;
+  padding: 0.5rem;
   letter-spacing: 0.5rem;
   text-transform: uppercase;
 }
-.ftitle p {
-  font-weight: 700;
-  font-size: 16px;
-  color: rgb(51, 51, 51);
+.ftitle button {
+  background-color: white;
+  border: none;
+  font-size: 14px;
+  padding: 5px;
+}
+.ftitle button:hover {
+  background-color: black;
+  color: white;
+  border-radius: 10px;
 }
 .featured {
   height: fit-content;

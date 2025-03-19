@@ -1,83 +1,35 @@
 <template>
-  <section class="banner">
-    <div class="grid-wrapper">
-      <div v-for="baner in Banners" class="images">
-        <img :src="baner.link" />
-      </div>
+  <div class="main">
+    <div class="cards" v-for="image in images">
+      <img :src="image" />
     </div>
-    <div class="btn">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-    </div>
-  </section>
+  </div>
 </template>
 <script setup>
 import { ref } from "vue";
 
-const Banners = ref([
-  {
-    link: "https://themewagon.github.io/stylish/images/card-image1.jpg",
-  },
-  {
-    link: "https://themewagon.github.io/stylish/images/card-image2.jpg",
-  },
-  {
-    link: "https://themewagon.github.io/stylish/images/card-image3.jpg",
-  },
-  {
-    link: "https://themewagon.github.io/stylish/images/card-image5.jpg",
-  },
-  {
-    link: "https://themewagon.github.io/stylish/images/card-image6.jpg",
-  },
-  {
-    link: "https://themewagon.github.io/stylish/images/card-image2.jpg",
-  },
+const images = ref([
+  "https://images.bewakoof.com/uploads/grid/app/1x1-GPT-common-1-ezgif-com-optimize-1742310024.gif",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-March13-HC-Joggers-common-1742100923.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/ik-creative-1x1-1741858082.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-March-HC-ViralLaunch-cricket-1741837560.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/Buy-2-OS-Men-1x1-HC-banner-1742210559.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-common-pants-1742288499.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-CFT-comm-1742100925.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-JEANS-EDIT-Common-1742223055.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-March13-HC-PJs-common--2--1741863421.jpg",
 ]);
 </script>
+
 <style scoped>
-.banner {
-  width: 90%;
-  margin: auto;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-.grid-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 1rem;
-}
-.images {
-  border-radius: 20px;
+.main {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   overflow: hidden;
 }
-img {
-  width: 100%;
-  height: 100%;
-}
-
-.btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
-.btn button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-top: 2rem;
-  background-color: #e1e1e1;
-  outline: none;
-  border: none;
-  color: transparent;
-}
-.btn button:hover {
-  background-color: #ce071e;
-}
-.btn button:active {
-  background-color: #ce071e;
+.cards img {
+  width: 438px;
+  padding: 1rem;
 }
 </style>

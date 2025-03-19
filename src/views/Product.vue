@@ -1,48 +1,66 @@
 <template>
+  {{ productMetas }}
+
   <section class="productpages">
+    <!-- FilterComponent: Displays filters for categories and brands -->
     <FilterComponent class="sticky">
       <!-- Category Filter -->
       <div class="categoress">
         <header>
-          <h3><i class="fa-solid fa-circle"></i>Category</h3>
+          <h3>Category</h3>
           <button @click="toggleCategory">
             {{ isCategoryView ? "∧" : "∨" }}
           </button>
         </header>
-        <div class="categoryList">
-          <label class="content" :class="{ 'view-content': isCategoryView }">
-            <input type="checkbox" value="T-Shirt" /> T-Shirt
-          </label>
-          <label class="content" :class="{ 'view-content': isCategoryView }">
-            <input type="checkbox" value="Vest" /> Vest
-          </label>
-          <label class="content" :class="{ 'view-content': isCategoryView }">
-            <input type="checkbox" value="Sweatshirt" /> Sweatshirt
-          </label>
-        </div>
+
+        <label
+          v-for="category in categories"
+          :key="category._id"
+          class="content"
+          :class="{ 'view-content': isCategoryView }"
+        >
+          <input
+            type="checkbox"
+            :value="category"
+            v-model="selectedCategories"
+            @change="filterProducts($event, 'category')"
+          />
+          {{ category }}
+        </label>
       </div>
 
       <!-- Brand Filter -->
       <div class="brandfilter">
         <header>
-          <h3><i class="fa-solid fa-circle"></i>Brand</h3>
+          <h3>Type</h3>
           <button @click="toggleBrand">
             {{ isBrandView ? "∧" : "∨" }}
           </button>
         </header>
         <div class="brandList">
           <label class="content" :class="{ 'view-content': isBrandView }">
-            <input type="checkbox" value="Boogy®" /> Boogy®
+            <input
+              type="radio"
+              value="Men"
+              v-model="selectedTypes"
+              @change="filterProducts($event, 'type')"
+            />
+            Men
           </label>
           <label class="content" :class="{ 'view-content': isBrandView }">
-            <input type="checkbox" value="Nike" /> Nike
-          </label>
-          <label class="content" :class="{ 'view-content': isBrandView }">
-            <input type="checkbox" value="Adidas" /> Adidas
+            <input
+              type="radio"
+              value="Women"
+              v-model="selectedTypes"
+              @change="filterProducts($event, 'type')"
+            />
+            Women
           </label>
         </div>
       </div>
     </FilterComponent>
+
+    <!-- Product Listing Section -->
     <div class="products">
       <ProductPage
         v-for="prdlist in prdlists"
@@ -55,54 +73,133 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import ProductPage from "@/components/Cards/ProductPage.vue";
 import FilterComponent from "@/components/Filters/FilterComponent.vue";
 import axios from "axios";
 
+// Reactive variables
 const isCategoryView = ref(false);
 const isBrandView = ref(false);
-const router = useRouter();
 const prdlists = ref([]);
+const productMetas = ref({ category: [], type: [] });
+const categories = ref([]); // Stores fetched categories
+const selectedCategories = ref([]); // Stores selected categories
+const selectedTypes = ref([]); // Stores selected types
 
-const goToProductDetail = (id) => {
-  router.push(`/product/${id}`);
-};
+const router = useRouter();
 
+// Toggle functions
 const toggleCategory = () => {
   isCategoryView.value = !isCategoryView.value;
 };
-
 const toggleBrand = () => {
   isBrandView.value = !isBrandView.value;
 };
+
+// Navigate to product details
 const goToDetails = (item) => {
-  console.log(item?._id);
   if (!item?._id) return;
-  router.push({
-    name: "ProductDetail",
-    params: {
-      id: item?._id,
-    },
-  });
+  router.push({ name: "ProductDetail", params: { id: item._id } });
 };
-onMounted(async () => {
-  await axios
-    .get("http://localhost:3000/api/product")
-    .then((resp) => {
-      prdlists.value = resp.data;
-      console.warn(resp.data);
-    })
-    .catch((error) => {
-      console.log("Error Fetching Products", error);
+
+// // Fetch products
+// const fetchProducts = async () => {
+//   try {
+//     const response = await axios.get("http://localhost:3000/api/product", {
+//       params: productMetas.value,
+//     });
+//     prdlists.value = response.data;
+//   } catch (error) {
+//     console.error("Error Fetching Products", error);
+//   }
+// };
+
+// // Fetch categories
+// const fetchCategories = async () => {
+//   try {
+//     const response = await axios.get("http://localhost:3000/api/category");
+//     categories.value = response.data; // Store categories
+//   } catch (error) {
+//     console.error("Error Fetching Categories", error);
+//   }
+// };
+
+// // Filter products based on selected categories and types
+// const filterProducts = (event, filterType) => {
+//   const val = event.target.value;
+
+//   if (filterType === "category") {
+//     if (productMetas.value.category.includes(val)) {
+//       productMetas.value.category = productMetas.value.category.filter(
+//         (f) => f !== val
+//       );
+//     } else {
+//       productMetas.value.category.push(val);
+//     }
+//   } else if (filterType === "type") {
+//     if (productMetas.value.type.includes(val)) {
+//       productMetas.value.type = productMetas.value.type.filter(
+//         (f) => f !== val
+//       );
+//     } else {
+//       productMetas.value.type.push(val);
+//     }
+//   }
+//   fetchProducts();
+// };
+
+const fetchProducts = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/api/product", {
+      params: productMetas.value,
     });
+    prdlists.value = response.data;
+  } catch (error) {
+    console.error("Error Fetching Products", error);
+  }
+};
+
+// Fetch categories
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/api/category");
+    categories.value = response.data; // Store categories
+  } catch (error) {
+    console.error("Error Fetching Categories", error);
+  }
+};
+
+///Filter products based on selected categories and types
+const filterProducts = (event, filterType) => {
+  const val = event.target.value;
+
+  if (filterType === "category") {
+    // Checkbox Logic: Multiple Selection Allowed
+    if (productMetas.value.category.includes(val)) {
+      productMetas.value.category = productMetas.value.category.filter(
+        (f) => f !== val
+      );
+    } else {
+      productMetas.value.category.push(val);
+    }
+  } else if (filterType === "type") {
+    productMetas.value.type = val; // Directly assign the selected value
+  }
+
+  fetchProducts(); // Call fetchProducts after updating filters
+};
+
+// Fetch data on component mount
+onMounted(() => {
+  fetchProducts();
+  fetchCategories();
 });
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-
+/* Scoped styles for the Product page */
 .productpages {
   width: 92%;
   margin: auto;
@@ -110,26 +207,32 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
 }
+
 .fillter {
   width: 18%;
   height: 100vh;
   font-size: 2rem;
   font-weight: 700;
 }
+
 .cattitle {
   font-size: 16px;
   text-transform: uppercase;
 }
 
+/* Product grid style */
 .products {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 78%;
 }
+
+/* Styling for the filter sections */
 .content {
   display: none;
 }
+
 .view-content {
   display: block;
 }
@@ -142,19 +245,18 @@ onMounted(async () => {
 
 header {
   display: flex;
-  justify-content: stretch;
+  justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
 }
+
 header h3 {
   font-size: 16px;
-  border-radius: 10px;
+  text-transform: capitalize;
+  font-family: monospace;
+  font-weight: 700;
 }
-header > h3 i {
-  border-radius: 50%;
-  color: rgb(199, 203, 212);
-  margin-right: 0.5rem;
-}
+
 button {
   color: black;
   border-radius: 10px;
@@ -165,18 +267,16 @@ button {
 
 label,
 input {
-  font-family: "Monster";
   font-size: 16px;
-  width: 300;
-  color: rgb(54, 53, 55);
+  text-transform: capitalize;
+  font-family: monospace;
+  font-weight: 500;
 }
 
-.categoryList {
-  margin-top: 0.5rem;
-}
 .categoress {
   border-top: 1px solid #c7cbd4;
 }
+
 .sticky {
   position: sticky;
   top: 0;

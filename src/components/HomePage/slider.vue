@@ -1,113 +1,82 @@
 <template>
-  <div class="banner-container">
-    <div
-      class="slider"
-      :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
-    >
-      <div v-for="(image, index) in images" :key="index" class="slide">
-        <img :src="image" alt="Banner Image" />
+  <div class="main">
+    <button class="prev">&#8592;</button>
+    <div class="cards" ref="carouselContainer">
+      <div class="card" v-for="(image, index) in images" :key="index">
+        <router-link to="/product"> <img :src="image" /></router-link>
       </div>
     </div>
-    <div class="dots">
-      <span
-        v-for="(image, index) in images"
-        :key="index"
-        @click="goToSlide(index)"
-        :class="{ active: currentIndex === index }"
-      ></span>
-    </div>
+    <button class="next">&#8594;</button>
   </div>
 </template>
 
-<script>
-import { ref, onMounted, onUnmounted, watch } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
 
-export default {
-  setup() {
-    const images = ref([
-      "https://staticm247.kalkifashion.com/media/wysiwyg/3-mobile-home-mehfilen-500x707-01-03-25.jpg?w=500",
-      "https://staticm247.kalkifashion.com/media/wysiwyg/2-slider-banner-mehfilen-1640x615-01-03-25.jpg?w=1440",
-      "https://staticm247.kalkifashion.com/media/wysiwyg/4-slider-banner-mehfilen-1640x615-01-03-25.jpg?w=1440",
-    ]);
+const images = ref([
+  "https://images.bewakoof.com/uploads/grid/app/1x1-GPT-common-1-ezgif-com-optimize-1742310024.gif",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-March13-HC-Joggers-common-1742100923.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/ik-creative-1x1-1741858082.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-March-HC-ViralLaunch-cricket-1741837560.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/Buy-2-OS-Men-1x1-HC-banner-1742210559.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-common-pants-1742288499.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-CFT-comm-1742100925.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-JEANS-EDIT-Common-1742223055.jpg",
+  "https://images.bewakoof.com/uploads/grid/app/1x1-March13-HC-PJs-common--2--1741863421.jpg",
+]);
 
-    const currentIndex = ref(0);
-    let interval = null;
-
-    const goToSlide = (index) => {
-      currentIndex.value = index;
-      resetAutoSlide(); // जब user dot पर click करे, तो auto-slide reset हो
-    };
-
-    const nextSlide = () => {
-      currentIndex.value = (currentIndex.value + 1) % images.value.length;
-    };
-
-    const startAutoSlide = () => {
-      interval = setInterval(nextSlide, 3000);
-    };
-
-    const stopAutoSlide = () => {
-      if (interval) clearInterval(interval);
-    };
-
-    const resetAutoSlide = () => {
-      stopAutoSlide();
-      startAutoSlide();
-    };
-
-    onMounted(() => {
-      startAutoSlide();
-    });
-
-    onUnmounted(() => {
-      stopAutoSlide();
-    });
-
-    return {
-      images,
-      currentIndex,
-      goToSlide,
-    };
-  },
+const scrollCarousel = () => {
+  const container = document.querySelector(".cards");
+  container.scrollBy({
+    left: 438,
+    behavior: "smooth",
+  });
 };
+
+onMounted(() => {
+  setInterval(scrollCarousel, 3000);
+});
 </script>
 
 <style scoped>
-.banner-container {
-  position: relative;
-  width: 100%;
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cards {
+  display: flex;
   overflow: hidden;
-  max-width: 1200px;
-  margin: auto;
-}
-.slider {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-.slide {
-  min-width: 100%;
-}
-.slide img {
   width: 100%;
-  display: block;
+  max-width: 100%;
+  justify-content: flex-start;
+  transition: transform 1s ease-in-out;
 }
-.dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
+
+.card {
+  min-width: 438px;
+  height: auto;
+  padding: 1rem;
+  border: none;
 }
-.dots span {
-  width: 10px;
-  height: 10px;
-  background: #ccc;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s;
+
+.cards img {
+  width: 100%;
+  height: auto;
 }
-.dots span.active {
-  background: #333;
+
+button.prev,
+button.next {
+  height: 30px;
+  background: #000000d4;
+  color: white;
+  border: none;
+  text-align: center;
+  padding: 0px 8px;
+  border-radius: 100%;
+  margin: 0.5rem;
+  align-items: center;
+  width: 30px;
 }
 </style>
