@@ -1,8 +1,6 @@
 <template>
   <section class="login">
-    <!-- Main container for login/registration section -->
     <div class="main">
-      <!-- Left section displaying an image -->
       <div class="image">
         <img
           src="https://images.bewakoof.com/t640/men-s-blue-the-panda-way-oversized-t-shirt-580637-1676876264-1.jpg"
@@ -10,7 +8,6 @@
         />
       </div>
 
-      <!-- Right section containing the login/registration form -->
       <div class="text">
         <img src="/public/Fashion.png" alt="Fashion Logo" />
         <h3>
@@ -26,6 +23,9 @@
               name="Name"
               placeholder="Enter Name"
             />
+            <h6 style="color: red" v-if="data.isRegistration">
+              {{ errorMsg.validateName }}
+            </h6>
             <br />
 
             <!-- Always display Email input field -->
@@ -35,6 +35,7 @@
               name="Email"
               placeholder="Enter Email"
             />
+            <h6 style="color: red">{{ errorMsg.validateEmail }}</h6>
             <br />
 
             <!-- Always display Password input field -->
@@ -44,6 +45,7 @@
               placeholder="Enter Password"
               type="password"
             />
+            <h6 style="color: red">{{ errorMsg.validatePassword }}</h6>
             <br />
 
             <!-- Submit button with dynamic text -->
@@ -80,13 +82,60 @@ const data = ref({
   password: "",
 });
 
+const errorMsg = ref({
+  isValid: true,
+  validateName: "",
+  validateEmail: "",
+  validatePassword: "",
+});
+
+const validationForm = () => {
+  let isValid = true;
+
+  if (data.value.isRegistration && !data.value.name) {
+    errorMsg.value.validateName = "Name is Required";
+    isValid = false;
+  } else {
+    errorMsg.value.validateName = "";
+  }
+
+  if (!data.value.email || !/\S+@\S+\.\S+/.test(data.value.email)) {
+    errorMsg.value.validateEmail = "Valid Email is Required";
+    isValid = false;
+  } else {
+    errorMsg.value.validateEmail = "";
+  }
+
+  if (!data.value.password || data.value.password.length < 6) {
+    errorMsg.value.validatePassword = "Password must be at least 6 characters";
+    isValid = false;
+  } else {
+    errorMsg.value.validatePassword = "";
+  }
+
+  errorMsg.value.isValid = isValid;
+
+  return isValid;
+};
+
 // Toggle between registration and login form
 const toggleForm = () => {
   data.value.isRegistration = !data.value.isRegistration;
+  console.log("Form toggled, isRegistration:", data.value.isRegistration);
+
+  data.value.name = "";
+  data.value.email = "";
+  data.value.password = "";
+
+  errorMsg.value.validateName = "";
+  errorMsg.value.validateEmail = "";
+  errorMsg.value.validatePassword = "";
 };
 
-// Handle form submission (login or registration)
+// Save Data function
 const saveData = () => {
+  if (!validationForm()) return; // ✅ Agar validation fail ho, to function ko yahin stop kar do
+
   const endpoint = data.value.isRegistration ? "register" : "login";
   const headers = data.value.isRegistration ? {} : getHeader();
 
@@ -96,13 +145,10 @@ const saveData = () => {
     })
     .then((res) => {
       if (!data.value.isRegistration) {
-        // Store token and user data on successful login
         localStorage.setItem("token", res.data?.token || "");
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
         alert("Login Successful!");
-        router.push("/").then(() => {
-          // window.location.reload();
-        });
+        router.push("/");
       } else {
         alert("Registration Successful! Please Login");
         data.value.isRegistration = false;
@@ -159,10 +205,11 @@ const saveData = () => {
 /* Form heading styling */
 .text > h3 {
   font-family: "Montserrat";
-  font-size: 20px;
+  font-size: 24px;
   color: #2c3e50;
   font-weight: 600;
   text-transform: uppercase;
+  margin-bottom: 2rem;
 }
 
 /* Form box styling */
@@ -188,7 +235,6 @@ const saveData = () => {
   border-radius: 5px;
   padding: 10px;
   font-size: 16px;
-  margin-top: 1rem;
 }
 
 /* Submit button styling */
@@ -201,7 +247,7 @@ const saveData = () => {
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
-  margin: 1rem 0;
+  /* margin: 1rem 0; */
 }
 
 /* Button hover effect */
@@ -213,5 +259,11 @@ const saveData = () => {
 .box p {
   color: skyblue;
   cursor: pointer;
+}
+.box h6 {
+  margin: 0%;
+  padding: 0%;
+  margin: 0.5rem;
+  text-align: center;
 }
 </style>

@@ -187,6 +187,7 @@ onMounted(() => {
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s;
+  width: fit-content;
 }
 
 .remove-btn:hover {

@@ -1,9 +1,7 @@
 <template>
-  {{ productMetas }}
-
+  <!-- Main Product Pages Section -->
   <section class="productpages">
-    <!-- FilterComponent: Displays filters for categories and brands -->
-    <FilterComponent class="sticky">
+    <FilterComponent class="sticky" @update-products="updateProductList">
       <!-- Category Filter -->
       <div class="categoress">
         <header>
@@ -13,6 +11,7 @@
           </button>
         </header>
 
+        <!-- Render categories dynamically from categories array -->
         <label
           v-for="category in categories"
           :key="category._id"
@@ -22,14 +21,15 @@
           <input
             type="checkbox"
             :value="category"
-            v-model="selectedCategories"
+            :checked="productMetas.category?.includes(category)"
             @change="filterProducts($event, 'category')"
           />
           {{ category }}
         </label>
       </div>
-
-      <!-- Brand Filter -->
+      <!-- {{ isCategoryView }}
+      {{ isBrandView }} -->
+      <!-- Brand Filter (Type) -->
       <div class="brandfilter">
         <header>
           <h3>Type</h3>
@@ -38,11 +38,12 @@
           </button>
         </header>
         <div class="brandList">
+          <!-- Radio buttons for "Men" and "Women" types -->
           <label class="content" :class="{ 'view-content': isBrandView }">
             <input
               type="radio"
               value="Men"
-              v-model="selectedTypes"
+              :checked="productMetas.type === 'Men'"
               @change="filterProducts($event, 'type')"
             />
             Men
@@ -50,8 +51,8 @@
           <label class="content" :class="{ 'view-content': isBrandView }">
             <input
               type="radio"
+              :checked="productMetas.type === 'Women'"
               value="Women"
-              v-model="selectedTypes"
               @change="filterProducts($event, 'type')"
             />
             Women
@@ -62,6 +63,7 @@
 
     <!-- Product Listing Section -->
     <div class="products">
+      <!-- Display products dynamically from prdlists -->
       <ProductPage
         v-for="prdlist in prdlists"
         :key="prdlist._id"
@@ -70,27 +72,61 @@
       />
     </div>
   </section>
+
+  <!-- Pagination Section -->
+  <div class="pagination">
+    <!-- Pagination buttons -->
+    <div class="prev">&laquo;</div>
+    <div class="page1">1</div>
+    <div class="page2">2</div>
+    <div class="page3">3</div>
+    <div class="page4">4</div>
+    <div class="next">&raquo;</div>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import ProductPage from "@/components/Cards/ProductPage.vue";
 import FilterComponent from "@/components/Filters/FilterComponent.vue";
 import axios from "axios";
 
-// Reactive variables
-const isCategoryView = ref(false);
-const isBrandView = ref(false);
-const prdlists = ref([]);
-const productMetas = ref({ category: [], type: [] });
-const categories = ref([]); // Stores fetched categories
-const selectedCategories = ref([]); // Stores selected categories
-const selectedTypes = ref([]); // Stores selected types
-
 const router = useRouter();
+const route = useRoute();
+const productMetas = ref({ category: [], type: null });
+const isCategoryView = ref(!!productMetas.value?.category?.length);
+const isBrandView = ref(!!productMetas.value?.type);
+const prdlists = ref([]);
+const categories = ref([]);
+const selectedCategories = ref([]);
+const selectedTypes = ref([]);
 
-// Toggle functions
+// Watch for changes in route query and refetch products accordingly
+watch(
+  () => route.query,
+  () => {
+    setQuery();
+  },
+  { deep: true }
+);
+const setQuery = () => {
+  console.log("chechk", route.query);
+
+  if (Object.values(route.query).length) {
+    const q = route.query;
+    if (typeof q.category === "string" && q.category) {
+      q.category = [q.category];
+    }
+    productMetas.value = { ...productMetas.value, ...q };
+    fetchProducts();
+  } else {
+    productMetas.value = { category: [], type: null };
+    fetchProducts();
+  }
+  isCategoryView.value = !!productMetas.value?.category?.length;
+  isBrandView.value = !!productMetas.value?.type?.length;
+};
 const toggleCategory = () => {
   isCategoryView.value = !isCategoryView.value;
 };
@@ -98,58 +134,14 @@ const toggleBrand = () => {
   isBrandView.value = !isBrandView.value;
 };
 
-// Navigate to product details
 const goToDetails = (item) => {
   if (!item?._id) return;
-  router.push({ name: "ProductDetail", params: { id: item._id } });
+
+  productMetas.value = { category: [], type: null };
+  router.push({ name: "ProductDetail", params: { id: item._id }, query: {} });
 };
 
-// // Fetch products
-// const fetchProducts = async () => {
-//   try {
-//     const response = await axios.get("http://localhost:3000/api/product", {
-//       params: productMetas.value,
-//     });
-//     prdlists.value = response.data;
-//   } catch (error) {
-//     console.error("Error Fetching Products", error);
-//   }
-// };
-
-// // Fetch categories
-// const fetchCategories = async () => {
-//   try {
-//     const response = await axios.get("http://localhost:3000/api/category");
-//     categories.value = response.data; // Store categories
-//   } catch (error) {
-//     console.error("Error Fetching Categories", error);
-//   }
-// };
-
-// // Filter products based on selected categories and types
-// const filterProducts = (event, filterType) => {
-//   const val = event.target.value;
-
-//   if (filterType === "category") {
-//     if (productMetas.value.category.includes(val)) {
-//       productMetas.value.category = productMetas.value.category.filter(
-//         (f) => f !== val
-//       );
-//     } else {
-//       productMetas.value.category.push(val);
-//     }
-//   } else if (filterType === "type") {
-//     if (productMetas.value.type.includes(val)) {
-//       productMetas.value.type = productMetas.value.type.filter(
-//         (f) => f !== val
-//       );
-//     } else {
-//       productMetas.value.type.push(val);
-//     }
-//   }
-//   fetchProducts();
-// };
-
+// Fetch products based on current filters
 const fetchProducts = async () => {
   try {
     const response = await axios.get("http://localhost:3000/api/product", {
@@ -161,22 +153,21 @@ const fetchProducts = async () => {
   }
 };
 
-// Fetch categories
+// Fetch categories for the category filter
 const fetchCategories = async () => {
   try {
     const response = await axios.get("http://localhost:3000/api/category");
-    categories.value = response.data; // Store categories
+    categories.value = response.data;
   } catch (error) {
     console.error("Error Fetching Categories", error);
   }
 };
 
-///Filter products based on selected categories and types
+// Filter products based on selected categories or types
 const filterProducts = (event, filterType) => {
   const val = event.target.value;
 
   if (filterType === "category") {
-    // Checkbox Logic: Multiple Selection Allowed
     if (productMetas.value.category.includes(val)) {
       productMetas.value.category = productMetas.value.category.filter(
         (f) => f !== val
@@ -184,22 +175,35 @@ const filterProducts = (event, filterType) => {
     } else {
       productMetas.value.category.push(val);
     }
+    productMetas.value.type = null;
   } else if (filterType === "type") {
-    productMetas.value.type = val; // Directly assign the selected value
+    productMetas.value.type = val;
+    productMetas.value.category = [];
   }
 
-  fetchProducts(); // Call fetchProducts after updating filters
+  router.push({
+    name: "Product",
+    query: {
+      type: productMetas.value.type || undefined,
+      category: productMetas.value.category.length
+        ? productMetas.value.category
+        : undefined,
+    },
+  });
+  fetchProducts();
 };
 
-// Fetch data on component mount
+const updateProductList = (newProducts) => {
+  prdlists.value = newProducts;
+};
+
 onMounted(() => {
-  fetchProducts();
   fetchCategories();
+  setQuery();
 });
 </script>
 
 <style scoped>
-/* Scoped styles for the Product page */
 .productpages {
   width: 92%;
   margin: auto;
@@ -220,7 +224,6 @@ onMounted(() => {
   text-transform: uppercase;
 }
 
-/* Product grid style */
 .products {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -228,7 +231,6 @@ onMounted(() => {
   width: 78%;
 }
 
-/* Styling for the filter sections */
 .content {
   display: none;
 }
@@ -251,10 +253,10 @@ header {
 }
 
 header h3 {
-  font-size: 16px;
-  text-transform: capitalize;
-  font-family: monospace;
+  font-size: 17px;
+  text-transform: math-auto;
   font-weight: 700;
+  letter-spacing: 2px;
 }
 
 button {
@@ -280,5 +282,19 @@ input {
 .sticky {
   position: sticky;
   top: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+.pagination div.active {
+  background-color: dodgerblue;
+  color: white;
+}
+.pagination div:hover:not(.active) {
+  background-color: #ddd;
 }
 </style>

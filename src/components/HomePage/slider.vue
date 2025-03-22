@@ -1,12 +1,10 @@
 <template>
   <div class="main">
-    <button class="prev">&#8592;</button>
     <div class="cards" ref="carouselContainer">
       <div class="card" v-for="(image, index) in images" :key="index">
         <router-link to="/product"> <img :src="image" /></router-link>
       </div>
     </div>
-    <button class="next">&#8594;</button>
   </div>
 </template>
 
@@ -24,15 +22,31 @@ const images = ref([
   "https://images.bewakoof.com/uploads/grid/app/1x1-JEANS-EDIT-Common-1742223055.jpg",
   "https://images.bewakoof.com/uploads/grid/app/1x1-March13-HC-PJs-common--2--1741863421.jpg",
 ]);
+const carouselContainer = ref(null);
 
 const scrollCarousel = () => {
-  const container = document.querySelector(".cards");
-  container.scrollBy({
-    left: 438,
-    behavior: "smooth",
-  });
-};
+  if (carouselContainer.value) {
+    const cardWidth =
+      carouselContainer.value.querySelector(".card").offsetWidth;
+    carouselContainer.value.scrollBy({
+      left: cardWidth,
+      behavior: "smooth",
+    });
 
+    setTimeout(() => {
+      if (
+        carouselContainer.value.scrollLeft +
+          carouselContainer.value.clientWidth >=
+        carouselContainer.value.scrollWidth
+      ) {
+        carouselContainer.value.scrollTo({
+          left: 0,
+          behavior: "smooth",
+        });
+      }
+    }, 1000);
+  }
+};
 onMounted(() => {
   setInterval(scrollCarousel, 3000);
 });
@@ -66,7 +80,7 @@ onMounted(() => {
   height: auto;
 }
 
-button.prev,
+/* button.prev,
 button.next {
   height: 30px;
   background: #000000d4;
@@ -78,5 +92,5 @@ button.next {
   margin: 0.5rem;
   align-items: center;
   width: 30px;
-}
+} */
 </style>

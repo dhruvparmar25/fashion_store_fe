@@ -1,14 +1,40 @@
 <template>
   <div class="fillter">
     <div class="srch">
-      <input type="text" placeholder="Search.." name="search" />
-      <button type="button"><i class="fa fa-search"></i></button>
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Search.."
+        @keyup.enter="fetchProducts"
+        name="search"
+      />
+      <button @click="fetchProducts">
+        <i class="fa fa-search"></i>
+      </button>
     </div>
 
     <div class="cattitle">Product Filters</div>
     <slot></slot>
   </div>
 </template>
+<script setup>
+import axios from "axios";
+import { ref } from "vue";
+
+const searchQuery = ref("");
+const emit = defineEmits(["update-products"]);
+
+const fetchProducts = async () => {
+  try {
+    const resp = await axios.get("http://localhost:3000/api/product", {
+      params: { q: searchQuery.value },
+    });
+    emit("update-products", resp.data);
+  } catch (error) {
+    console.error("Error fetching products", error);
+  }
+};
+</script>
 
 <style scoped>
 .fillter {
@@ -35,10 +61,12 @@
 }
 
 .fillter input {
+  width: 140px;
   padding: 6px;
-  margin-top: 8px;
-  font-size: 8px;
+  margin: 1rem 0rem;
+  font-size: 12px;
   border: none;
+  border-radius: 10px;
 }
 
 .fillter button {
