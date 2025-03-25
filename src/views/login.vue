@@ -15,7 +15,6 @@
         </h3>
         <div class="box">
           <form @submit.prevent="saveData">
-            <!-- Display Name input field if registration is true -->
             <input
               v-if="data.isRegistration"
               v-model="data.name"
@@ -28,7 +27,6 @@
             </h6>
             <br />
 
-            <!-- Always display Email input field -->
             <input
               type="text"
               v-model="data.email"
@@ -38,7 +36,6 @@
             <h6 style="color: red">{{ errorMsg.validateEmail }}</h6>
             <br />
 
-            <!-- Always display Password input field -->
             <input
               v-model="data.password"
               name="Password"
@@ -48,21 +45,61 @@
             <h6 style="color: red">{{ errorMsg.validatePassword }}</h6>
             <br />
 
-            <!-- Submit button with dynamic text -->
             <button type="submit">
-              {{ data.isRegistration ? "Registration" : "Login" }}
+              {{ data.isRegistration ? "Register" : "Login" }}
             </button>
 
-            <!-- Toggle between Login and Registration forms -->
+            <p
+              class="forget"
+              v-if="!data.isRegistration"
+              @click="openForgetPasswordModal"
+            >
+              Forget Password?
+            </p>
+
             <p @click="toggleForm">
               {{
                 data.isRegistration
                   ? "Already have an account? Login"
-                  : "Don't have an account? Registration"
+                  : "Don't have an account? Register"
               }}
             </p>
           </form>
         </div>
+      </div>
+    </div>
+
+    <!-- Forget Password Modal -->
+    <div v-if="data.showForgetPasswordModal" class="modal">
+      <div class="modal-content">
+        <h3>Reset Password</h3>
+        <input
+          type="email"
+          v-model="data.resetEmail"
+          placeholder="Enter your email"
+        />
+        <h6 style="color: red">{{ errorMsg.validateResetEmail }}</h6>
+        <button @click="sendResetLink">Send Reset Link</button>
+        <button @click="closeForgetPasswordModal">Close</button>
+      </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div v-if="data.resetToken" class="modal reset-modal">
+      <div class="modal-content">
+        <h3>Reset Your Password</h3>
+        <input
+          type="password"
+          v-model="data.newPassword"
+          placeholder="Enter New Password"
+        />
+        <input
+          type="password"
+          v-model="data.confirmPassword"
+          placeholder="Confirm New Password"
+        />
+        <button @click="resetPassword">Reset Password</button>
+        <button @click="closeResetPasswordModal">Close</button>
       </div>
     </div>
   </section>
@@ -80,6 +117,11 @@ const data = ref({
   name: "",
   email: "",
   password: "",
+  showForgetPasswordModal: false,
+  resetEmail: "",
+  resetToken: "",
+  newPassword: "",
+  confirmPassword: "",
 });
 
 const errorMsg = ref({
@@ -87,8 +129,24 @@ const errorMsg = ref({
   validateName: "",
   validateEmail: "",
   validatePassword: "",
+  validateResetEmail: "",
+  validateNewPassword: "",
 });
 
+// Toggle between registration and login form
+const toggleForm = () => {
+  data.value.isRegistration = !data.value.isRegistration;
+
+  data.value.name = "";
+  data.value.email = "";
+  data.value.password = "";
+
+  errorMsg.value.validateName = "";
+  errorMsg.value.validateEmail = "";
+  errorMsg.value.validatePassword = "";
+};
+
+// Form validation function
 const validationForm = () => {
   let isValid = true;
 
@@ -118,23 +176,88 @@ const validationForm = () => {
   return isValid;
 };
 
-// Toggle between registration and login form
-const toggleForm = () => {
-  data.value.isRegistration = !data.value.isRegistration;
-  console.log("Form toggled, isRegistration:", data.value.isRegistration);
-
-  data.value.name = "";
-  data.value.email = "";
-  data.value.password = "";
-
-  errorMsg.value.validateName = "";
-  errorMsg.value.validateEmail = "";
-  errorMsg.value.validatePassword = "";
+// Forget Password Modal functionality
+const openForgetPasswordModal = () => {
+  data.value.showForgetPasswordModal = true;
+  setTimeout(() => {
+    document.querySelector(".modal").classList.add("show");
+  }, 10);
 };
 
-// Save Data function
+const closeForgetPasswordModal = () => {
+  document.querySelector(".modal").classList.remove("show");
+  setTimeout(() => {
+    data.value.showForgetPasswordModal = false;
+    data.value.resetEmail = "";
+    errorMsg.value.validateResetEmail = "";
+  }, 300); // Smooth transition
+};
+
+const sendResetLink = () => {
+  if (!data.value.resetEmail || !/\S+@\S+\.\S+/.test(data.value.resetEmail)) {
+    errorMsg.value.validateResetEmail = "Valid Email is Required";
+    return;
+  }
+
+  axios
+    .post(`${import.meta.env.VITE_API_BASE_URL}forgot-password`, {
+      email: data.value.resetEmail,
+    })
+    .then((res) => {
+      alert("Reset link sent to your email!");
+      data.value.resetToken = res.data.token;
+
+      closeForgetPasswordModal();
+      openResetPasswordModal();
+    })
+    .catch((err) => {
+      alert("Error sending reset link!");
+      console.error(err);
+    });
+};
+
+const openResetPasswordModal = () => {
+  setTimeout(() => {
+    document.querySelector(".reset-modal").classList.add("show");
+  }, 10);
+};
+
+const closeResetPasswordModal = () => {
+  document.querySelector(".reset-modal").classList.remove("show");
+  setTimeout(() => {
+    data.value.resetToken = "";
+    data.value.newPassword = "";
+    data.value.confirmPassword = "";
+  }, 300);
+};
+
+const resetPassword = () => {
+  if (data.value.newPassword !== data.value.confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  axios
+    .post(
+      `${import.meta.env.VITE_API_BASE_URL}verify_password/${data.value.resetToken}`,
+      {
+        password: data.value.newPassword,
+        confirmPassword: data.value.confirmPassword,
+      }
+    )
+    .then(() => {
+      alert("Password Reset Successfully!");
+      closeResetPasswordModal();
+    })
+    .catch((err) => {
+      alert("Error resetting password!");
+      console.error("Error Response:", err.response?.data || err);
+    });
+};
+
+// Save form data (login or registration)
 const saveData = () => {
-  if (!validationForm()) return; // ✅ Agar validation fail ho, to function ko yahin stop kar do
+  if (!validationForm()) return; // Stop execution if validation fails
 
   const endpoint = data.value.isRegistration ? "register" : "login";
   const headers = data.value.isRegistration ? {} : getHeader();
@@ -247,7 +370,6 @@ const saveData = () => {
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
-  /* margin: 1rem 0; */
 }
 
 /* Button hover effect */
@@ -256,14 +378,77 @@ const saveData = () => {
 }
 
 /* Styling for toggle text */
-.box p {
+.box p,
+.forget {
   color: skyblue;
   cursor: pointer;
 }
+
 .box h6 {
-  margin: 0%;
-  padding: 0%;
+  margin: 0;
+  padding: 0;
   margin: 0.5rem;
   text-align: center;
+}
+
+.forget {
+  margin-top: 0.5rem;
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+/* Modal open class */
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+/* Show modal */
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal.show .modal-content {
+  transform: translateY(0);
+}
+
+/* Close button styling */
+.modal-content button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background: skyblue;
+  color: white;
+}
+
+.modal-content button:hover {
+  background: rgba(0, 0, 255, 0.726);
 }
 </style>
