@@ -8,6 +8,7 @@
           <div class="cart-item-details">
             <h5>{{ item.name }}</h5>
             <p>Price: ₹{{ item.price }}</p>
+            <p>Size : {{ item.size }}</p>
             <div class="quantity-control">
               <button @click="decreaseQuantity(item)" class="qty-btn">-</button>
               <span>{{ item.quantity }}</span>
@@ -35,38 +36,61 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 
 const cart = ref([]);
 
-const loadCart = () => {
-  const storedCart = localStorage.getItem("cart");
-  if (storedCart) {
-    cart.value = JSON.parse(storedCart);
+const loadCart = async () => {
+  try {
+    const res = await axios.get("http://localhost:3000/api/cart", {});
+    cart.value = res.data.item || [];
+  } catch (error) {
+    console.error("error loading cart:", error);
   }
 };
 
-const saveCart = () => {
-  localStorage.setItem("cart", JSON.stringify(cart.value));
+const increaseQuantity = async (item) => {
+  try {
+    await axios.put(
+      `http://localhost:3000/api/cart/${item.productId}`,
+
+      { quantity: item.quantity + 1 },
+      { withCredentials: transformWithEsbuild }
+    );
+    item.quantity++;
+  } catch (error) {
+    console.error("Error updating Quantity:", error);
+  }
 };
 
-const increaseQuantity = (item) => {
-  item.quantity++;
-  saveCart();
-};
-
-const decreaseQuantity = (item) => {
+const decreaseQuantity = async (item) => {
   if (item.quantity > 1) {
-    item.quantity--;
+    try {
+      await axios.put(
+        `http://localhost:3000/api/cart/${item.productId}`,
+
+        { quantity: item.quantity - 1 },
+        { withCredentials: true }
+      );
+      item.quantity--;
+    } catch (error) {
+      console.error("Error updating Quantity:", error);
+    }
   } else {
-    cart.value = cart.value.filter((cartItem) => cartItem.id !== item.id);
+    removeFromCart(item.productId);
   }
-  saveCart();
 };
 
-const removeFromCart = (id) => {
-  cart.value = cart.value.filter((item) => item.id !== id);
-  saveCart();
+const removeFromCart = async (id) => {
+  try {
+    await axios.delete(`http://localhost:3000/api/cart/${id}`, {
+      withCredentials: true,
+    });
+    cart.value = cart.value.filter((item) => item.productId !== id);
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+  }
 };
 
 const totalItems = computed(() =>

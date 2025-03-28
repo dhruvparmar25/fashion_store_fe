@@ -11,7 +11,7 @@
     <!-- Dynamic Offer Message -->
     <div class="offer">
       <p class="offerText">
-        <strong>Special Offer</strong>: {{ offerMessage }}
+        <strong>Fashion Store</strong>: Welcome To Our Store
       </p>
     </div>
 
@@ -32,27 +32,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import router from "@/router/router";
+import { useAuth } from "@/composables/useAuth";
+import { ref } from "vue";
 
-const isLoggedIn = ref(false);
-const offerMessage = ref("Free Shipping on all orders above $100");
-
-// Check if user is logged in
-const checkLoginStatus = () => {
-  isLoggedIn.value = !!localStorage.getItem("token");
-};
-
-// Logout function
-const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  isLoggedIn.value = false;
-  router.push("/login");
-};
-
-// On component mount, check login status
-onMounted(checkLoginStatus);
+const { isLoggedIn, logout } = useAuth();
+// const offerMessage = ref("Free Shipping on all orders Above $100");
 </script>
 
 <style scoped>

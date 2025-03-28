@@ -11,6 +11,19 @@
           <div class="brand">{{ product.brand }}</div>
 
           <div class="name" style="margin-top: 1rem">{{ product.name }}</div>
+          <div class="lable">Select size</div>
+          <div class="size">
+            <!-- {{ console.log(product.size) }} -->
+            <label class="Size" v-for="s in sizes" :key="s">
+              <input
+                type="radio"
+                name="size"
+                :value="s"
+                v-model="selectSize"
+              />{{ s }}
+            </label>
+          </div>
+
           <div class="combine">
             <h4 class="price">
               <i class="fa-solid fa-indian-rupee-sign"></i> {{ product.price }}
@@ -52,10 +65,12 @@ const route = useRoute();
 const router = useRouter();
 const product = ref(null);
 const cart = ref([]);
+const selectSize = ref(null);
+const sizes = ref([]);
 
 onMounted(async () => {
-  console.log("Route Params:", route.params);
-  console.log("Product ID:", route.params.id);
+  // console.log("Route Params:", route.params);
+  // console.log("Product ID:", route.params.id);
 
   const productId = route.params.id;
 
@@ -69,15 +84,25 @@ onMounted(async () => {
       `http://localhost:3000/api/product/${productId}`
     );
     product.value = response.data;
+    if (product.value.size) {
+      sizes.value = product.value.size.flat();
+    }
   } catch (error) {
     console.error("Error fetching product details:", error);
   }
+  loadCart();
 });
 
-const loadCart = () => {
-  const storedCart = localStorage.getItem("cart");
-  if (storedCart) {
-    cart.value = JSON.parse(storedCart);
+const loadCart = async () => {
+  try {
+    const res = await axios.get("http://localhost:3000/api/cart", {
+      headers: { Authorization: `Bearer${localStorage.getItem("token")}` },
+    });
+
+    console.log("Cart API Response:", res.data);
+    cart.value = res.data.item || res.data || [];
+  } catch (error) {
+    console.error("error loading cart:", error);
   }
 };
 
@@ -85,21 +110,36 @@ const saveCart = () => {
   localStorage.setItem("cart", JSON.stringify(cart.value));
 };
 
-const addToCart = () => {
+const addToCart = async () => {
   if (!product.value) return;
 
-  const existingItem = cart.value.find((item) => item.id === product.value.id);
-
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.value.push({ ...product.value, quantity: 1 });
+  if (!selectSize.value) {
+    alert("Please Select A size Before Adding to cart");
+    return;
   }
 
-  saveCart();
-  alert("Product added to cart!");
-
-  router.push("/cart");
+  try {
+    await axios.post(
+      "http://localhost:3000/api/cart",
+      [
+        {
+          productId: route.params.id,
+          quantity: 1,
+          size: selectSize.value,
+          price: product.value.price,
+        },
+      ],
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+      console.log(selectSize.value)
+    );
+    router.push("/cart");
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+  }
 };
 </script>
 
@@ -128,12 +168,47 @@ const addToCart = () => {
   padding: 0%;
   margin: 0;
 }
+.lable {
+  margin: 1rem 0rem;
+}
 .brand,
+.lable {
+  font-size: "Montserrat";
+  font-size: 1rem;
+  font-weight: 500;
+}
 .name {
   font-family: "Montserrat";
-  font-size: 18px;
+  font-size: 2rem;
   font-weight: 700;
   color: black;
+  border-bottom: 1px solid #d5d9d9;
+}
+
+.size {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.size > label {
+  width: 50px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid #d5d9d9;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+.size label input {
+  display: none;
+}
+.size label:has(input:checked) {
+  background-color: black;
+  color: white;
 }
 .desc,
 .design {

@@ -6,8 +6,6 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import Cart from "@/views/Cart.vue";
 import Login from "@/views/login.vue";
 import Contact from "@/views/contact.vue";
-import Men from "@/views/Men.vue";
-import Women from "@/views/Women.vue";
 
 // Define application routes
 const routes = [
@@ -48,16 +46,6 @@ const routes = [
     path: "/cart",
     name: "cart",
     component: Cart, // Shopping cart page
-  },
-  {
-    path: "/men",
-    name: "Men",
-    component: Men, // Blog page
-  },
-  {
-    path: "/women",
-    name: "Women",
-    component: Women, // About page
   },
 ];
 

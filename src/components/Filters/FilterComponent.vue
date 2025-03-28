@@ -55,8 +55,8 @@ const fetchProducts = async () => {
   margin-bottom: 10px;
 }
 .srch {
-  display: contents;
-  justify-content: space-between;
+  display: flex;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -70,13 +70,11 @@ const fetchProducts = async () => {
 }
 
 .fillter button {
-  float: right;
-  padding: 5px 10px;
-  margin-top: 20px;
-  margin-right: 25px;
+  padding: 4px;
   background: #ddd;
-  font-size: 9px;
+  font-size: 13px;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 

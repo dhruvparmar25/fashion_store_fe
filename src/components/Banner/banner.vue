@@ -1,15 +1,42 @@
 <template>
   <h1>Category</h1>
   <section class="banner">
-    <div class="image1">
+    <div @click="openType('Men')" class="image1">
       <img src="/public/Men.jpg" />
     </div>
-    <div class="image2">
+    <div @click="openType('Women')" class="image2">
       <img src="/public/women.jpg" />
     </div>
   </section>
 </template>
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const categories = ref([]);
+const router = useRouter();
+
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/api/category");
+    categories.value = response.data;
+  } catch (error) {
+    console.error("Error fetching categories", error);
+  }
+};
+
+onMounted(() => {
+  fetchCategories();
+});
+
+const openType = (type) => {
+  router.push({
+    name: "Product",
+    query: { type: type, category: undefined },
+  });
+};
+</script>
 <style scoped>
 h1 {
   width: fit-content;
@@ -23,13 +50,13 @@ h1 {
   text-transform: uppercase;
   margin-left: 1rem;
 }
-.banner {
+section.banner {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   width: 90%;
   margin: auto;
-  /* margin: 5rem 0rem; */
+  margin-left: 5rem;
 }
 img {
   width: 90%;
