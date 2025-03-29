@@ -44,6 +44,7 @@ import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 
 const cart = ref([]);
+// console.log("Cart", cart);
 
 const loadCart = async () => {
   try {
@@ -51,16 +52,27 @@ const loadCart = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value = res.data;
+    // console.log("Cart Object:", cart.value);
+    // console.log("Total Items in Cart:", cart.value.items?.length);
+    // console.log("First Item:", cart.value.items?.[0]);
   } catch (error) {
     console.error("Error loading cart:", error);
   }
 };
 
 const increaseQuantity = async (item) => {
+  if (!item || !item.productId?._id) {
+    console.error("Invalid Product ID");
+    return;
+  }
   try {
-    await axios.put(`http://localhost:3000/api/cart/${item.productId}`, {
-      quantity: item.quantity + 1,
-    });
+    await axios.put(
+      `http://localhost:3000/api/cart/${item.productId._id}`,
+      {
+        quantity: item.quantity + 1,
+      },
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    );
     item.quantity++;
   } catch (error) {
     console.error("Error updating quantity:", error);
@@ -68,29 +80,39 @@ const increaseQuantity = async (item) => {
 };
 
 const decreaseQuantity = async (item) => {
+  if (!item || !item.productId?._id) {
+    console.error("Invalid Product ID");
+    return;
+  }
   if (item.quantity > 1) {
     try {
-      await axios.put(`http://localhost:3000/api/cart/${item.productId}`, {
-        quantity: item.quantity - 1,
-      });
+      await axios.put(
+        `http://localhost:3000/api/cart/${item.productId._id}`,
+        {
+          quantity: item.quantity - 1,
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       item.quantity--;
     } catch (error) {
       console.error("Error updating quantity:", error);
     }
   } else {
-    removeFromCart(item.productId);
+    removeFromCart(item.productId._id);
   }
 };
 
 const removeFromCart = async (item) => {
-  console.log("Cliked item:", item);
+  // console.log("Cliked item:", item);
   if (!item || !item._id) {
     console.error("Error:Product ID is missing!");
     return;
   }
   const id = item._id;
-  console.log("Removing Item ID:", id);
-  console.log("Token", localStorage.getItem("token"));
+  // console.log("Removing Item ID:", id);
+  // console.log("Token", localStorage.getItem("token"));
 
   try {
     await axios.delete(`http://localhost:3000/api/cart/${id}`, {
@@ -100,9 +122,9 @@ const removeFromCart = async (item) => {
   } catch (error) {
     console.error("Error Removing Item from cart:", error);
   }
-  console.log("Removing Item ID:", id);
-  console.log("Token:", localStorage.getItem("token"));
-  console.log("Cart Items:", cart.value.items);
+  // console.log("Removing Item ID:", id);
+  // console.log("Token:", localStorage.getItem("token"));
+  // console.log("Cart Items:", cart.value.items);
 };
 
 const totalItems = computed(() =>

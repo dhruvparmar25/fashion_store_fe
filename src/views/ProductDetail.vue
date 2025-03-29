@@ -97,7 +97,7 @@ const loadCart = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
 
-    console.log("Cart API Response:", res.data);
+    // console.log("Cart API Response:", res.data);
     cart.value = res.data.item || res.data || [];
   } catch (error) {
     console.error("error loading cart:", error);
