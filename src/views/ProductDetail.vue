@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ product }} -->
   <section class="productdetail" v-if="product">
     <div class="main">
       <div class="image">
@@ -14,7 +15,7 @@
           <div class="lable">Select size</div>
           <div class="size">
             <!-- {{ console.log(product.size) }} -->
-            <label class="Size" v-for="s in sizes" :key="s">
+            <label class="Size" v-for="s in product.size" :key="s">
               <input
                 type="radio"
                 name="size"
@@ -84,9 +85,6 @@ onMounted(async () => {
       `http://localhost:3000/api/product/${productId}`
     );
     product.value = response.data;
-    if (product.value.size) {
-      sizes.value = product.value.size.flat();
-    }
   } catch (error) {
     console.error("Error fetching product details:", error);
   }
@@ -96,7 +94,7 @@ onMounted(async () => {
 const loadCart = async () => {
   try {
     const res = await axios.get("http://localhost:3000/api/cart", {
-      headers: { Authorization: `Bearer${localStorage.getItem("token")}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
 
     console.log("Cart API Response:", res.data);
@@ -133,8 +131,7 @@ const addToCart = async () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      },
-      console.log(selectSize.value)
+      }
     );
     router.push("/cart");
   } catch (error) {

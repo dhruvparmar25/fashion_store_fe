@@ -2,19 +2,23 @@
   <div class="main">
     <div class="bag">
       <div class="title"><h4>Shopping Bag</h4></div>
-      <div v-if="cart.length > 0" class="cart-items">
-        <div v-for="item in cart" :key="item.id" class="cart-item">
-          <img :src="item.image" alt="product image" class="cart-item-image" />
+      <div v-if="cart?.items?.length > 0" class="cart-items">
+        <div v-for="item in cart?.items || []" :key="item.id" class="cart-item">
+          <img
+            :src="item?.productId.image"
+            alt="product image"
+            class="cart-item-image"
+          />
           <div class="cart-item-details">
-            <h5>{{ item.name }}</h5>
-            <p>Price: ₹{{ item.price }}</p>
-            <p>Size : {{ item.size }}</p>
+            <h5>{{ item?.productId?.name }}</h5>
+            <p>Price: ₹{{ item?.productId.price }}</p>
+            <p>Size : {{ item?.size }}</p>
             <div class="quantity-control">
               <button @click="decreaseQuantity(item)" class="qty-btn">-</button>
               <span>{{ item.quantity }}</span>
               <button @click="increaseQuantity(item)" class="qty-btn">+</button>
             </div>
-            <button @click="removeFromCart(item.id)" class="remove-btn">
+            <button @click="removeFromCart(item)" class="remove-btn">
               Remove
             </button>
           </div>
@@ -43,61 +47,72 @@ const cart = ref([]);
 
 const loadCart = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/cart", {});
-    cart.value = res.data.item || [];
+    const res = await axios.get("http://localhost:3000/api/cart", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    cart.value = res.data;
   } catch (error) {
-    console.error("error loading cart:", error);
+    console.error("Error loading cart:", error);
   }
 };
 
 const increaseQuantity = async (item) => {
   try {
-    await axios.put(
-      `http://localhost:3000/api/cart/${item.productId}`,
-
-      { quantity: item.quantity + 1 },
-      { withCredentials: transformWithEsbuild }
-    );
+    await axios.put(`http://localhost:3000/api/cart/${item.productId}`, {
+      quantity: item.quantity + 1,
+    });
     item.quantity++;
   } catch (error) {
-    console.error("Error updating Quantity:", error);
+    console.error("Error updating quantity:", error);
   }
 };
 
 const decreaseQuantity = async (item) => {
   if (item.quantity > 1) {
     try {
-      await axios.put(
-        `http://localhost:3000/api/cart/${item.productId}`,
-
-        { quantity: item.quantity - 1 },
-        { withCredentials: true }
-      );
+      await axios.put(`http://localhost:3000/api/cart/${item.productId}`, {
+        quantity: item.quantity - 1,
+      });
       item.quantity--;
     } catch (error) {
-      console.error("Error updating Quantity:", error);
+      console.error("Error updating quantity:", error);
     }
   } else {
     removeFromCart(item.productId);
   }
 };
 
-const removeFromCart = async (id) => {
+const removeFromCart = async (item) => {
+  console.log("Cliked item:", item);
+  if (!item || !item._id) {
+    console.error("Error:Product ID is missing!");
+    return;
+  }
+  const id = item._id;
+  console.log("Removing Item ID:", id);
+  console.log("Token", localStorage.getItem("token"));
+
   try {
     await axios.delete(`http://localhost:3000/api/cart/${id}`, {
-      withCredentials: true,
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    cart.value = cart.value.filter((item) => item.productId !== id);
+    cart.value.items = cart.value?.items?.filter((i) => i._id !== id);
   } catch (error) {
-    console.error("Error removing item from cart:", error);
+    console.error("Error Removing Item from cart:", error);
   }
+  console.log("Removing Item ID:", id);
+  console.log("Token:", localStorage.getItem("token"));
+  console.log("Cart Items:", cart.value.items);
 };
 
 const totalItems = computed(() =>
-  cart.value.reduce((sum, item) => sum + item.quantity, 0)
+  cart.value?.items?.reduce((sum, item) => sum + item.quantity, 0)
 );
 const totalPrice = computed(() =>
-  cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  cart.value?.items?.reduce(
+    (sum, item) => sum + item?.productId.price * item.quantity,
+    0
+  )
 );
 
 onMounted(() => {
