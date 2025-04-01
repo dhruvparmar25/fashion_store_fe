@@ -70,16 +70,16 @@ const selectSize = ref(null);
 const sizes = ref([]);
 
 onMounted(async () => {
-  // console.log("Route Params:", route.params);
-  // console.log("Product ID:", route.params.id);
+  fetchData();
+  loadCart();
+});
 
+const fetchData = async () => {
   const productId = route.params.id;
-
   if (!productId) {
     console.error("Product ID not found!");
     return;
   }
-
   try {
     const response = await axios.get(
       `http://localhost:3000/api/product/${productId}`
@@ -88,24 +88,16 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error fetching product details:", error);
   }
-  loadCart();
-});
-
+};
 const loadCart = async () => {
   try {
     const res = await axios.get("http://localhost:3000/api/cart", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-
-    // console.log("Cart API Response:", res.data);
     cart.value = res.data.item || res.data || [];
   } catch (error) {
     console.error("error loading cart:", error);
   }
-};
-
-const saveCart = () => {
-  localStorage.setItem("cart", JSON.stringify(cart.value));
 };
 
 const addToCart = async () => {

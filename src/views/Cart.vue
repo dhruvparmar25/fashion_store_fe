@@ -34,7 +34,9 @@
       <p>
         Total Price: ₹<span>{{ totalPrice }}</span>
       </p>
-      <button class="checkout-btn">Proceed to Checkout</button>
+      <button @click="checkout" class="checkout-btn">
+        Proceed to Checkout
+      </button>
     </div>
   </div>
 </template>
@@ -42,9 +44,10 @@
 <script setup>
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 const cart = ref([]);
-// console.log("Cart", cart);
+const router = useRouter();
 
 const loadCart = async () => {
   try {
@@ -52,9 +55,11 @@ const loadCart = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value = res.data;
-    // console.log("Cart Object:", cart.value);
-    // console.log("Total Items in Cart:", cart.value.items?.length);
-    // console.log("First Item:", cart.value.items?.[0]);
+
+    if (cart.value && cart.value._id) {
+      localStorage.setItem("cartId", cart.value._id);
+    }
+    console.log(cart.value._id);
   } catch (error) {
     console.error("Error loading cart:", error);
   }
@@ -111,8 +116,6 @@ const removeFromCart = async (item) => {
     return;
   }
   const id = item._id;
-  // console.log("Removing Item ID:", id);
-  // console.log("Token", localStorage.getItem("token"));
 
   try {
     await axios.delete(`http://localhost:3000/api/cart/${id}`, {
@@ -122,9 +125,6 @@ const removeFromCart = async (item) => {
   } catch (error) {
     console.error("Error Removing Item from cart:", error);
   }
-  // console.log("Removing Item ID:", id);
-  // console.log("Token:", localStorage.getItem("token"));
-  // console.log("Cart Items:", cart.value.items);
 };
 
 const totalItems = computed(() =>
@@ -136,6 +136,10 @@ const totalPrice = computed(() =>
     0
   )
 );
+
+const checkout = () => {
+  router.push("/order");
+};
 
 onMounted(() => {
   loadCart();
