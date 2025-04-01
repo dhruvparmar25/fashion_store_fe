@@ -101,4 +101,48 @@ const placeOrder = async () => {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.order-container h2 {
+  text-transform: uppercase;
+  padding: 1rem;
+}
+
+form {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+}
+label {
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+button.order-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+button.order-btn:hover {
+  background-color: #0056b3;
+}
+</style>
