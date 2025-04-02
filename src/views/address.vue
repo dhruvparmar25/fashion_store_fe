@@ -1,6 +1,6 @@
 <template>
   <div class="order-container">
-    <h2>Checkout</h2>
+    <h2>Delivery Address</h2>
     <form @submit.prevent="placeOrder">
       <div class="form-group">
         <label>Full Name:</label><br />
@@ -66,6 +66,8 @@
 import axios from "axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { toast } from "vue3-toastify"; // Importing toast from vue3-toastify
+import "vue3-toastify/dist/index.css"; // Importing toastify CSS
 
 const router = useRouter();
 const address = ref({
@@ -82,7 +84,7 @@ const placeOrder = async () => {
   try {
     const cartId = localStorage.getItem("cartId");
     if (!cartId) {
-      alert("Cart is empty!");
+      toast.error("Cart is empty!");
       return;
     }
     console.log("using cart ID:", cartId);
@@ -92,12 +94,12 @@ const placeOrder = async () => {
       { address: address.value },
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
-    alert("Order placed successfully");
+    toast.success("Order placed successfully");
     localStorage.removeItem("cartId");
     router.push("/orders");
   } catch (error) {
     console.error("Order failed:", error);
-    alert("Order failed");
+    toast.error("Order failed");
   }
 };
 </script>

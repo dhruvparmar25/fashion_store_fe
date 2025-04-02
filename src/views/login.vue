@@ -110,6 +110,7 @@ import { ref } from "vue";
 import axios from "axios";
 import router from "@/router/router";
 import { getHeader } from "@/utils/helpers";
+import { toast } from "vue3-toastify";
 
 // Reactive state to manage form data (login/registration)
 const data = ref({
@@ -204,14 +205,14 @@ const sendResetLink = () => {
       email: data.value.resetEmail,
     })
     .then((res) => {
-      alert("Reset link sent to your email!");
+      toast.warning("Reset link sent to your email!");
       data.value.resetToken = res.data.token;
 
       closeForgetPasswordModal();
       openResetPasswordModal();
     })
     .catch((err) => {
-      alert("Error sending reset link!");
+      toast.error("Error sending reset link!");
       console.error(err);
     });
 };
@@ -233,7 +234,7 @@ const closeResetPasswordModal = () => {
 
 const resetPassword = () => {
   if (data.value.newPassword !== data.value.confirmPassword) {
-    alert("Passwords do not match!");
+    toast.warning("Passwords do not match!");
     return;
   }
 
@@ -246,11 +247,11 @@ const resetPassword = () => {
       }
     )
     .then(() => {
-      alert("Password Reset Successfully!");
+      toast.success("Password Reset Successfully!");
       closeResetPasswordModal();
     })
     .catch((err) => {
-      alert("Error resetting password!");
+      toast.error("Error resetting password!");
       console.error("Error Response:", err.response?.data || err);
     });
 };
@@ -270,15 +271,19 @@ const saveData = () => {
       if (!data.value.isRegistration) {
         localStorage.setItem("token", res.data?.token || "");
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
-        alert("Login Successful!");
-        router.push("/");
+        toast.success("Login Successful!", {
+          autoClose: 1000,
+          positiont: "top-right",
+          theme: "colored",
+          onClose: () => router.push("/"),
+        });
       } else {
-        alert("Registration Successful! Please Login");
+        toast.success("Registration Successful! Please Login");
         data.value.isRegistration = false;
       }
     })
     .catch((err) => {
-      alert(
+      toast.error(
         data.value.isRegistration
           ? "Registration Failed!"
           : "Invalid Email or Password"

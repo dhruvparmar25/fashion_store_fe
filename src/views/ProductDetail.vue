@@ -61,6 +61,7 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import { toast } from "vue3-toastify";
 
 const route = useRoute();
 const router = useRouter();
@@ -104,7 +105,7 @@ const addToCart = async () => {
   if (!product.value) return;
 
   if (!selectSize.value) {
-    alert("Please Select A size Before Adding to cart");
+    toast.info("Please Select A size Before Adding to cart");
     return;
   }
 
@@ -125,9 +126,17 @@ const addToCart = async () => {
         },
       }
     );
-    router.push("/cart");
+
+    toast.success("Product Added In Cart!", {
+      autoClose: 1000,
+      position: "top-right",
+      theme: "colored",
+      onClose: () => router.push("/cart"),
+    });
   } catch (error) {
-    console.error("Error adding to cart:", error);
+    console.log("Error adding to cart:", error);
+    const errorMessage = error.response?.data?.msg || "somthing went a wrong";
+    toast.error(errorMessage);
   }
 };
 </script>

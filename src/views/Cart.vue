@@ -34,7 +34,7 @@
       <p>
         Total Price: ₹<span>{{ totalPrice }}</span>
       </p>
-      <button @click="checkout" class="checkout-btn">
+      <button @click="checkout()" class="checkout-btn">
         Proceed to Checkout
       </button>
     </div>
@@ -45,6 +45,7 @@
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { toast } from "vue3-toastify";
 
 const cart = ref([]);
 const router = useRouter();
@@ -122,6 +123,7 @@ const removeFromCart = async (item) => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value.items = cart.value?.items?.filter((i) => i._id !== id);
+    toast.success("Product Remove From Cart");
   } catch (error) {
     console.error("Error Removing Item from cart:", error);
   }
@@ -138,7 +140,7 @@ const totalPrice = computed(() =>
 );
 
 const checkout = () => {
-  router.push("/order");
+  router.push("/address");
 };
 
 onMounted(() => {
