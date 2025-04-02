@@ -62,6 +62,7 @@
     </form>
   </div>
 </template>
+
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
@@ -88,21 +89,25 @@ const placeOrder = async () => {
       return;
     }
     console.log("using cart ID:", cartId);
-
     const res = await axios.post(
       `http://localhost:3000/api/orders/${cartId}`,
       { address: address.value },
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
-    toast.success("Order placed successfully");
+    toast.success(" Delivery Address added successfully", {
+      autoClose: 2000,
+      position: "top-right",
+      onClose: () => router.push("/orders"),
+    });
     localStorage.removeItem("cartId");
-    router.push("/orders");
   } catch (error) {
-    console.error("Order failed:", error);
-    toast.error("Order failed");
+    console.error("Address failed:", error);
+    const errorMessage = error.response?.data?.msg || "somthing went a wrong";
+    toast.error(errorMessage);
   }
 };
 </script>
+
 <style scoped>
 .order-container h2 {
   text-transform: uppercase;

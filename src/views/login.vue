@@ -22,9 +22,7 @@
               name="Name"
               placeholder="Enter Name"
             />
-            <h6 style="color: red" v-if="data.isRegistration">
-              {{ errorMsg.validateName }}
-            </h6>
+
             <br />
 
             <input
@@ -33,7 +31,6 @@
               name="Email"
               placeholder="Enter Email"
             />
-            <h6 style="color: red">{{ errorMsg.validateEmail }}</h6>
             <br />
 
             <input
@@ -42,7 +39,6 @@
               placeholder="Enter Password"
               type="password"
             />
-            <h6 style="color: red">{{ errorMsg.validatePassword }}</h6>
             <br />
 
             <button type="submit">
@@ -78,7 +74,6 @@
           v-model="data.resetEmail"
           placeholder="Enter your email"
         />
-        <h6 style="color: red">{{ errorMsg.validateResetEmail }}</h6>
         <button @click="sendResetLink">Send Reset Link</button>
         <button @click="closeForgetPasswordModal">Close</button>
       </div>
@@ -125,15 +120,6 @@ const data = ref({
   confirmPassword: "",
 });
 
-const errorMsg = ref({
-  isValid: true,
-  validateName: "",
-  validateEmail: "",
-  validatePassword: "",
-  validateResetEmail: "",
-  validateNewPassword: "",
-});
-
 // Toggle between registration and login form
 const toggleForm = () => {
   data.value.isRegistration = !data.value.isRegistration;
@@ -141,10 +127,6 @@ const toggleForm = () => {
   data.value.name = "";
   data.value.email = "";
   data.value.password = "";
-
-  errorMsg.value.validateName = "";
-  errorMsg.value.validateEmail = "";
-  errorMsg.value.validatePassword = "";
 };
 
 // Form validation function
@@ -152,7 +134,7 @@ const validationForm = () => {
   let isValid = true;
 
   if (data.value.isRegistration && !data.value.name) {
-    errorMsg.value.validateName = "Name is Required";
+    // errorMsg.value.validateName = "Name is Required";
     isValid = false;
   } else {
     errorMsg.value.validateName = "";
@@ -190,13 +172,13 @@ const closeForgetPasswordModal = () => {
   setTimeout(() => {
     data.value.showForgetPasswordModal = false;
     data.value.resetEmail = "";
-    errorMsg.value.validateResetEmail = "";
+    // errorMsg.value.validateResetEmail = "";
   }, 300); // Smooth transition
 };
 
 const sendResetLink = () => {
   if (!data.value.resetEmail || !/\S+@\S+\.\S+/.test(data.value.resetEmail)) {
-    errorMsg.value.validateResetEmail = "Valid Email is Required";
+    // errorMsg.value.validateResetEmail = "Valid Email is Required";
     return;
   }
 
@@ -214,6 +196,8 @@ const sendResetLink = () => {
     .catch((err) => {
       toast.error("Error sending reset link!");
       console.error(err);
+      const errorMessage = err.response?.data?.msg || "somthing went a wrong";
+      toast.error(errorMessage);
     });
 };
 
@@ -253,12 +237,14 @@ const resetPassword = () => {
     .catch((err) => {
       toast.error("Error resetting password!");
       console.error("Error Response:", err.response?.data || err);
+      const errorMessage = err.response?.data?.msg || "somthing went a wrong";
+      toast.error(errorMessage);
     });
 };
 
 // Save form data (login or registration)
 const saveData = () => {
-  if (!validationForm()) return; // Stop execution if validation fails
+  // if (!validationForm()) return; // Stop execution if validation fails
 
   const endpoint = data.value.isRegistration ? "register" : "login";
   const headers = data.value.isRegistration ? {} : getHeader();
@@ -272,10 +258,17 @@ const saveData = () => {
         localStorage.setItem("token", res.data?.token || "");
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
         toast.success("Login Successful!", {
-          autoClose: 1000,
+          autoClose: 2000,
           positiont: "top-right",
           theme: "colored",
           onClose: () => router.push("/"),
+        });
+        router.push("/");
+        toast.success("Product Added In Cart!", {
+          autoClose: 2000, // ✅ 2 sec tak toast dikhega
+          position: "top-right",
+          theme: "colored",
+          onClose: () => router.push("/cart"), // ✅ Redirect after toast closes
         });
       } else {
         toast.success("Registration Successful! Please Login");
@@ -283,11 +276,13 @@ const saveData = () => {
       }
     })
     .catch((err) => {
-      toast.error(
+      console.error(
         data.value.isRegistration
           ? "Registration Failed!"
           : "Invalid Email or Password"
       );
+      const errorMessage = err.response?.data?.msg || "somthing went a wrong";
+      toast.error(errorMessage);
       console.error("Error:", err);
     });
 };
@@ -363,6 +358,7 @@ const saveData = () => {
   border-radius: 5px;
   padding: 10px;
   font-size: 16px;
+  margin-bottom: 1rem;
 }
 
 /* Submit button styling */
