@@ -8,6 +8,7 @@ import Login from "@/views/login.vue";
 import Contact from "@/views/contact.vue";
 import Orders from "@/views/orders.vue";
 import Address from "@/views/address.vue";
+import Admin from "@/views/admin.vue";
 
 // Define application routes
 const routes = [
@@ -59,6 +60,7 @@ const routes = [
     name: "orders",
     component: Orders,
   },
+  { path: "/admin", name: "admin", component: Admin },
 ];
 
 // Create and configure the Vue Router

@@ -136,7 +136,17 @@ const addToCart = async () => {
   } catch (error) {
     console.log("Error adding to cart:", error);
     const errorMessage = error.response?.data?.msg || "somthing went a wrong";
-    toast.error(errorMessage);
+    if (error.response?.data?.status_code === "E_UNAUTHORIZED_ACCESS") {
+      localStorage.clear();
+      toast.error("Session expired! Please login again.", {
+        autoClose: 1000,
+        position: "top-right",
+        theme: "colored",
+        onClose: () => router.push("/login"),
+      });
+    } else {
+      toast.error(errorMessage);
+    }
   }
 };
 </script>

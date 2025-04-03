@@ -36,7 +36,6 @@ import { useAuth } from "@/composables/useAuth";
 import { ref } from "vue";
 
 const { isLoggedIn, logout } = useAuth();
-// const offerMessage = ref("Free Shipping on all orders Above $100");
 </script>
 
 <style scoped>

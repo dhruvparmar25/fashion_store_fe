@@ -6,6 +6,7 @@ export function useAuth() {
   const isLoggedIn = ref(!!localStorage.getItem("token"));
 
   const logout = () => {
+    localStorage.clear();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     isLoggedIn.value = false;

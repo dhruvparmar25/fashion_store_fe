@@ -32,13 +32,17 @@
               placeholder="Enter Email"
             />
             <br />
-
-            <input
-              v-model="data.password"
-              name="Password"
-              placeholder="Enter Password"
-              type="password"
-            />
+            <div class="password-field">
+              <input
+                v-model="data.password"
+                name="Password"
+                placeholder="Enter Password"
+                :type="showPassword ? 'text' : 'password'"
+              />
+              <span @click="togglePassword('password')">
+                <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+              </span>
+            </div>
             <br />
 
             <button type="submit">
@@ -83,16 +87,28 @@
     <div v-if="data.resetToken" class="modal reset-modal">
       <div class="modal-content">
         <h3>Reset Your Password</h3>
-        <input
-          type="password"
-          v-model="data.newPassword"
-          placeholder="Enter New Password"
-        />
-        <input
-          type="password"
-          v-model="data.confirmPassword"
-          placeholder="Confirm New Password"
-        />
+        <div class="password-field">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            v-model="data.newPassword"
+            placeholder="Enter New Password"
+          />
+          <span @click="togglePassword('password')">
+            <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+          </span>
+        </div>
+        <div class="password-field">
+          <input
+            :type="showConfirmPassword ? 'text' : 'password'"
+            v-model="data.confirmPassword"
+            placeholder="Confirm New Password"
+          />
+          <span @click="togglePassword('confirm')">
+            <i
+              :class="showConfirmPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+            ></i>
+          </span>
+        </div>
         <button @click="resetPassword">Reset Password</button>
         <button @click="closeResetPasswordModal">Close</button>
       </div>
@@ -120,6 +136,44 @@ const data = ref({
   confirmPassword: "",
 });
 
+const saveData = () => {
+  const endpoint = data.value.isRegistration ? "register" : "login";
+  const headers = data.value.isRegistration ? {} : getHeader();
+
+  axios
+    .post(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, data.value, {
+      headers,
+    })
+    .then((res) => {
+      if (!data.value.isRegistration) {
+        localStorage.setItem("token", res.data?.token || "");
+        localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
+        toast.success("Login Successful!", {
+          autoClose: 2000,
+          positiont: "top-right",
+          theme: "colored",
+          onClose: () => {
+            if (res.data?.user?.role === "admin") {
+              router.push("/admin");
+            } else {
+              router.push("/");
+            }
+          },
+        });
+      } else {
+        toast.success("Registration Successful! Please Login");
+        data.value.isRegistration = false;
+      }
+    })
+    .catch((err) => {
+      const errorMessage = err.response?.data?.msg || "somthing went a wrong";
+      toast.error(errorMessage);
+      console.error("Error:", err);
+    });
+};
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+
 // Toggle between registration and login form
 const toggleForm = () => {
   data.value.isRegistration = !data.value.isRegistration;
@@ -128,35 +182,12 @@ const toggleForm = () => {
   data.value.email = "";
   data.value.password = "";
 };
-
-// Form validation function
-const validationForm = () => {
-  let isValid = true;
-
-  if (data.value.isRegistration && !data.value.name) {
-    // errorMsg.value.validateName = "Name is Required";
-    isValid = false;
-  } else {
-    errorMsg.value.validateName = "";
+const togglePassword = (field) => {
+  if (field === "password") {
+    showPassword.value = !showPassword.value;
+  } else if (field === "confirm") {
+    showConfirmPassword.value = !showConfirmPassword.value;
   }
-
-  if (!data.value.email || !/\S+@\S+\.\S+/.test(data.value.email)) {
-    errorMsg.value.validateEmail = "Valid Email is Required";
-    isValid = false;
-  } else {
-    errorMsg.value.validateEmail = "";
-  }
-
-  if (!data.value.password || data.value.password.length < 6) {
-    errorMsg.value.validatePassword = "Password must be at least 6 characters";
-    isValid = false;
-  } else {
-    errorMsg.value.validatePassword = "";
-  }
-
-  errorMsg.value.isValid = isValid;
-
-  return isValid;
 };
 
 // Forget Password Modal functionality
@@ -239,51 +270,6 @@ const resetPassword = () => {
       console.error("Error Response:", err.response?.data || err);
       const errorMessage = err.response?.data?.msg || "somthing went a wrong";
       toast.error(errorMessage);
-    });
-};
-
-// Save form data (login or registration)
-const saveData = () => {
-  // if (!validationForm()) return; // Stop execution if validation fails
-
-  const endpoint = data.value.isRegistration ? "register" : "login";
-  const headers = data.value.isRegistration ? {} : getHeader();
-
-  axios
-    .post(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, data.value, {
-      headers,
-    })
-    .then((res) => {
-      if (!data.value.isRegistration) {
-        localStorage.setItem("token", res.data?.token || "");
-        localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
-        toast.success("Login Successful!", {
-          autoClose: 2000,
-          positiont: "top-right",
-          theme: "colored",
-          onClose: () => router.push("/"),
-        });
-        router.push("/");
-        toast.success("Product Added In Cart!", {
-          autoClose: 2000, // ✅ 2 sec tak toast dikhega
-          position: "top-right",
-          theme: "colored",
-          onClose: () => router.push("/cart"), // ✅ Redirect after toast closes
-        });
-      } else {
-        toast.success("Registration Successful! Please Login");
-        data.value.isRegistration = false;
-      }
-    })
-    .catch((err) => {
-      console.error(
-        data.value.isRegistration
-          ? "Registration Failed!"
-          : "Invalid Email or Password"
-      );
-      const errorMessage = err.response?.data?.msg || "somthing went a wrong";
-      toast.error(errorMessage);
-      console.error("Error:", err);
     });
 };
 </script>
@@ -451,5 +437,27 @@ const saveData = () => {
 
 .modal-content button:hover {
   background: rgba(0, 0, 255, 0.726);
+}
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  width: 81%;
+  padding-right: 40px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-left: 35px;
+}
+
+.password-field span {
+  position: absolute;
+  right: 40px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
 }
 </style>
