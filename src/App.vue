@@ -1,14 +1,19 @@
 <template>
   <Navbar />
-  <MainNav />
+  <MainNav v-if="!route.name?.includes('admin')" />
   <div><router-view></router-view></div>
-  <Footer />
+  <Modal />
+  <Footer v-if="!route.name?.includes('admin')" />
 </template>
 
 <script setup>
 import Navbar from "./components/Navbar/Navbar.vue";
 import MainNav from "./components/Navbar/MainNav.vue";
 import Footer from "./components/Footer/footer.vue";
+import { useRoute } from "vue-router";
+import Admin from "./components/Admin/Admin.vue";
+import Modal from "./components/commons/Modal.vue";
+const route = useRoute();
 </script>
 
 <style>
