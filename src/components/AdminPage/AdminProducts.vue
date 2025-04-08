@@ -1,5 +1,98 @@
 <template>
   <h1>Product Page</h1>
+  <div class="addPrd">
+    <form @submit.prevent="AddAdminProducts">
+      <h2>Add Product</h2>
+      <div class="detail">
+        <label>Product Name:</label><br />
+        <input
+          type="text"
+          v-model="form.name"
+          placeholder="Enter product name"
+          required
+        />
+      </div>
+      <div class="brand">
+        <label>Brand:</label><br />
+        <input
+          type="text"
+          v-model="form.brand"
+          placeholder="Example:@Boogy"
+          required
+        />
+      </div>
+      <div class="type">
+        <label>Type:</label><br />
+        <input
+          type="text"
+          v-model="form.type"
+          placeholder="Example:@Men"
+          required
+        />
+      </div>
+      <div class="add-price">
+        <label>Price :[Indian ₹]</label><br />
+        <input type="number" v-model="form.price" required />
+      </div>
+      <div class="size">
+        <label>Size:</label><br />
+        <input type="checkbox" v-model="form.size" value="S" />S
+        <input type="checkbox" v-model="form.size" value="M" />M
+        <input type="checkbox" v-model="form.size" value="L" />L
+        <input type="checkbox" v-model="form.size" value="XL" />Xl
+        <input type="checkbox" v-model="form.size" value="XXL" />XXl
+      </div>
+      <div class="offer">
+        <label>Offer:</label><br />
+        <input placeholder="14%" type="text" v-model="form.offer" required />
+      </div>
+      <div class="design">
+        <label>Design:</label><br />
+        <input
+          type="text"
+          v-model="form.design"
+          placeholder="Enter design"
+          required
+        />
+      </div>
+      <div class="rating">
+        <label>Rating:[1 to 5]</label><br />
+        <input
+          type="number"
+          v-model="form.rating"
+          min="1"
+          max="5"
+          step="1"
+          required
+        />
+      </div>
+      <div class="add-category">
+        <label>Category:</label><br />
+        <input
+          type="text"
+          v-model="form.category"
+          placeholder="Enter category"
+          required
+        />
+      </div>
+      <div class="label">
+        <label>Label:</label><br />
+        <input
+          type="text"
+          v-model="form.label"
+          placeholder="Enter label"
+          required
+        />
+      </div>
+      <div class="image">
+        <label for="image-upload"> Product Image : </label><br />
+        <input @change="uploadImage" type="file" accept="image/*" required />
+      </div>
+      <div class="submit">
+        <button type="button" @click="AddAdminProducts">Add Product</button>
+      </div>
+    </form>
+  </div>
   <div class="top">
     <div class="srch">
       <input
@@ -41,19 +134,6 @@
       </div>
     </div>
   </div>
-  <div class="addPrd">
-    <form action="">
-      <div class="brand">
-        <label>Brand:</label><br />
-        <input
-          type="text"
-          v-model="form.brand"
-          placeholder="Example:@Boogy"
-          required
-        />
-      </div>
-    </form>
-  </div>
 </template>
 <script setup>
 import axios from "axios";
@@ -63,13 +143,13 @@ import { toast } from "vue3-toastify";
 const form = ref({
   brand: "",
   price: "",
-  size: "",
+  size: [],
   offer: "",
   design: "",
   rating: "",
   category: "",
   label: "",
-  images: [],
+  image: "",
 });
 const searchQuery = ref("");
 const products = ref([]);
@@ -89,12 +169,27 @@ const fetchAdminProducts = async () => {
     console.log("Error Fetching Products", error);
   }
 };
+const uploadImage = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      form.value.image = reader.result; // yeh image ka base64 URL set karega
+      console.log("Image preview URL:", form.value.image);
+    };
+    reader.readAsDataURL(file); // file ko base64 string mein convert karta hai
+  }
+};
 
 const AddAdminProducts = async () => {
   try {
-    const res = await axios.post("http://localhost:3000/api/admin/products", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await axios.post(
+      "http://localhost:3000/api/admin/products",
+      form.value,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
   } catch (error) {}
 };
 
@@ -193,5 +288,71 @@ const removeAdminProduct = async (product) => {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+/* form */
+.addPrd {
+  max-width: 500px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI" sans-serif;
+}
+.addPrd h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+.addPrd div {
+  margin-bottom: 15px;
+}
+.addPrd label {
+  font-weight: 600;
+  display: block;
+  color: #555;
+}
+.addPrd input[type="text"],
+.addPrd input[type="number"] {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.3s;
+}
+.addPrd input[type="text"]:focus,
+.addPrd input[type="number"]:focus {
+  border-color: #3498db;
+}
+.addPrd .size input[type="checkbox"] {
+  margin-right: 5px;
+  font-size: 18px;
+}
+.addPrd .size label {
+  margin-right: 10px;
+}
+
+.image input[type="file"] {
+  color: red;
+}
+.submit {
+  text-align: center;
+}
+
+.submit button {
+  background-color: #27ae60;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.submit button:hover {
+  background-color: #219150;
 }
 </style>
