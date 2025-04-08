@@ -1,143 +1,234 @@
 <template>
-  <h1>Product Page</h1>
-  <div class="addPrd">
-    <form @submit.prevent="AddAdminProducts">
-      <h2>Add Product</h2>
-      <div class="detail">
-        <label>Product Name:</label><br />
-        <input
-          type="text"
-          v-model="form.name"
-          placeholder="Enter product name"
-          required
-        />
-      </div>
-      <div class="brand">
-        <label>Brand:</label><br />
-        <input
-          type="text"
-          v-model="form.brand"
-          placeholder="Example:@Boogy"
-          required
-        />
-      </div>
-      <div class="type">
-        <label>Type:</label><br />
-        <input
-          type="text"
-          v-model="form.type"
-          placeholder="Example:@Men"
-          required
-        />
-      </div>
-      <div class="add-price">
-        <label>Price :[Indian ₹]</label><br />
-        <input type="number" v-model="form.price" required />
-      </div>
-      <div class="size">
-        <label>Size:</label><br />
-        <input type="checkbox" v-model="form.size" value="S" />S
-        <input type="checkbox" v-model="form.size" value="M" />M
-        <input type="checkbox" v-model="form.size" value="L" />L
-        <input type="checkbox" v-model="form.size" value="XL" />Xl
-        <input type="checkbox" v-model="form.size" value="XXL" />XXl
-      </div>
-      <div class="offer">
-        <label>Offer:</label><br />
-        <input placeholder="14%" type="text" v-model="form.offer" required />
-      </div>
-      <div class="design">
-        <label>Design:</label><br />
-        <input
-          type="text"
-          v-model="form.design"
-          placeholder="Enter design"
-          required
-        />
-      </div>
-      <div class="rating">
-        <label>Rating:[1 to 5]</label><br />
-        <input
-          type="number"
-          v-model="form.rating"
-          min="1"
-          max="5"
-          step="1"
-          required
-        />
-      </div>
-      <div class="add-category">
-        <label>Category:</label><br />
-        <input
-          type="text"
-          v-model="form.category"
-          placeholder="Enter category"
-          required
-        />
-      </div>
-      <div class="label">
-        <label>Label:</label><br />
-        <input
-          type="text"
-          v-model="form.label"
-          placeholder="Enter label"
-          required
-        />
-      </div>
-      <div class="image">
-        <label for="image-upload"> Product Image : </label><br />
-        <input @change="uploadImage" type="file" accept="image/*" required />
-      </div>
-      <div class="submit">
-        <button type="button" @click="AddAdminProducts">Add Product</button>
-      </div>
-    </form>
-  </div>
-  <div class="top">
-    <div class="srch">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search.."
-        @keyup.enter="fetchAdminProducts"
-        name="search"
-      />
-      <button @click="fetchAdminProducts">
-        <i class="fa fa-search"></i>
-      </button>
-    </div>
-    <div class="prd-btn"><button>+ Add Product</button></div>
-  </div>
-  <div class="produts-cards">
-    <div class="admin-cards">
-      <div class="card-detail" v-for="product in products" :key="product._id">
-        <div class="card-img">
-          <img :src="product.image" />
+  <section class="admin-products">
+    <div class="fillter-section">
+      <FilterComponent class="sticky" @update-products="updateProductList">
+        <div class="prd-btn"><button>+ Add Product</button></div>
+        <div class="srch">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search.."
+            @keyup.enter="fetchAdminProducts"
+            name="search"
+          />
+          <button @click="fetchAdminProducts">
+            <i class="fa fa-search"></i>
+          </button>
         </div>
-        <div class="title">
-          <h4>{{ product.name }}</h4>
-        </div>
-        <div class="card-field">
-          <div class="price">₹ {{ product.price }}</div>
-          <div class="category">
-            {{ product.category }}
-          </div>
-        </div>
-        <div class="card-field">
-          <div class="edit"><button type="button">Edit</button></div>
-          <div class="remove">
-            <button @click="removeAdminProduct(product)" type="button">
-              Remove
+        <div class="categoress">
+          <header>
+            <h3>Category</h3>
+            <button @click="toggleCategory">
+              {{ isCategoryView ? "∧" : "∨" }}
             </button>
+          </header>
+          <label
+            v-for="category in categories"
+            :key="category._id"
+            class="content"
+            :class="{ 'view-content': isCategoryView }"
+          >
+            <input
+              type="checkbox"
+              :value="category"
+              :checked="productMetas.category?.includes(category)"
+              @change="filterProducts($event, 'category')"
+            />
+            {{ category }}
+          </label>
+        </div>
+
+        <!-- Brand Filter (Type) -->
+        <div class="brandfilter">
+          <header>
+            <h3>Type</h3>
+            <button @click="toggleBrand">
+              {{ isBrandView ? "∧" : "∨" }}
+            </button>
+          </header>
+          <div class="brandList">
+            <!-- Radio buttons for "Men" and "Women" types -->
+            <label class="content" :class="{ 'view-content': isBrandView }">
+              <input
+                type="radio"
+                value="Men"
+                :checked="productMetas.type === 'Men'"
+                @change="filterProducts($event, 'type')"
+              />
+              Men
+            </label>
+            <label class="content" :class="{ 'view-content': isBrandView }">
+              <input
+                type="radio"
+                value="Women"
+                :checked="productMetas.type === 'Women'"
+                @change="filterProducts($event, 'type')"
+              />
+              Women
+            </label>
+          </div>
+        </div>
+      </FilterComponent>
+    </div>
+    <div class="prd-section">
+      <div class="produts-cards">
+        <div class="admin-cards">
+          <div
+            class="card-detail"
+            v-for="product in products"
+            :key="product._id"
+          >
+            <div class="card-img">
+              <img :src="product.image" />
+            </div>
+            <div class="title">
+              <h4>{{ product.name }}</h4>
+            </div>
+            <div class="card-field">
+              <div class="price">₹ {{ product.price }}</div>
+              <div class="category">
+                {{ product.category }}
+              </div>
+            </div>
+            <div class="card-field">
+              <div class="edit"><button type="button">Edit</button></div>
+              <div class="remove">
+                <button @click="removeAdminProduct(product)" type="button">
+                  Remove
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <!-- <div class="addPrd">
+        <form @submit.prevent="AddAdminProducts">
+          <h2>Add Product</h2>
+          <div class="detail">
+            <label>Product Name:</label><br />
+            <input
+              type="text"
+              v-model="form.name"
+              placeholder="Enter product name"
+              required
+            />
+          </div>
+          <div class="brand">
+            <label>Brand:</label><br />
+            <input
+              type="text"
+              v-model="form.brand"
+              placeholder="Example:@Boogy"
+              required
+            />
+          </div>
+          <div class="type">
+            <label>Type:</label><br />
+            <input
+              type="text"
+              v-model="form.type"
+              placeholder="Example:@Men"
+              required
+            />
+          </div>
+          <div class="add-price">
+            <label>Price :[Indian ₹]</label><br />
+            <input type="number" v-model="form.price" required />
+          </div>
+          <div class="size">
+            <label>Size:</label><br />
+            <input type="checkbox" v-model="form.size" value="S" />S
+            <input type="checkbox" v-model="form.size" value="M" />M
+            <input type="checkbox" v-model="form.size" value="L" />L
+            <input type="checkbox" v-model="form.size" value="XL" />Xl
+            <input type="checkbox" v-model="form.size" value="XXL" />XXl
+          </div>
+          <div class="offer">
+            <label>Offer:</label><br />
+            <input
+              placeholder="14%"
+              type="text"
+              v-model="form.offer"
+              required
+            />
+          </div>
+          <div class="design">
+            <label>Design:</label><br />
+            <input
+              type="text"
+              v-model="form.design"
+              placeholder="Enter design"
+              required
+            />
+          </div>
+          <div class="rating">
+            <label>Rating:[1 to 5]</label><br />
+            <input
+              type="number"
+              v-model="form.rating"
+              min="1"
+              max="5"
+              step="1"
+              required
+            />
+          </div>
+          <div class="add-category">
+            <label>Category:</label><br />
+            <input
+              type="text"
+              v-model="form.category"
+              placeholder="Enter category"
+              required
+            />
+          </div>
+          <div class="label">
+            <label>Label:</label><br />
+            <input
+              type="text"
+              v-model="form.label"
+              placeholder="Enter label"
+              required
+            />
+          </div>
+          <div class="image">
+            <label for="image-upload"> Product Image : </label><br />
+            <input
+              @change="uploadImage"
+              type="file"
+              accept="image/*"
+              required
+            />
+          </div>
+          <div class="submit">
+            <button type="button" @click="AddAdminProducts">Add Product</button>
+          </div>
+        </form>
+      </div> -->
     </div>
+  </section>
+  <div class="pagination">
+    <!-- Pagination buttons -->
+    <button @click="prePage" :disabled="currenPage === 1" class="prev">
+      &laquo;
+    </button>
+    <button
+      v-for="page in paginationNumbers"
+      :key="page"
+      @click="changePage(page)"
+      :class="{ active: currenPage === page }"
+    >
+      {{ page }}
+    </button>
+    <button @click="nextPage" :disabled="products.length < perPage">
+      &raquo;
+    </button>
   </div>
 </template>
 <script setup>
+import FilterComponent from "../Filters/FilterComponent.vue";
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 
 const form = ref({
@@ -151,46 +242,158 @@ const form = ref({
   label: "",
   image: "",
 });
+
+const route = useRoute();
+const router = useRouter();
+const productMetas = ref({ category: [], type: null });
+const isCategoryView = ref(!!productMetas.value?.category?.length);
+const isBrandView = ref(!!productMetas.value?.type);
+const categories = ref([]);
+const imageFile = ref(null);
 const searchQuery = ref("");
 const products = ref([]);
-onMounted(() => {
-  fetchAdminProducts();
+const currenPage = ref(1);
+const perPage = 12;
+
+const paginationNumbers = computed(() => {
+  return [1, 2, 3, 4];
 });
+onMounted(() => {
+  setQuery();
+  fetchCategories();
+});
+
+watch(
+  () => route.query,
+  () => {
+    setQuery();
+  },
+  { deep: true }
+);
+const toggleCategory = () => {
+  isCategoryView.value = !isCategoryView.value;
+};
+const toggleBrand = () => {
+  isBrandView.value = !isBrandView.value;
+};
+
+const setQuery = () => {
+  if (Object.values(route.query).length) {
+    const q = route.query;
+
+    if (typeof q.category === "string" && q.category) {
+      q.category = [q.category];
+    }
+    productMetas.value = { ...productMetas.value, ...q };
+    if (q.category?.length) {
+      productMetas.value.type = null;
+    }
+
+    fetchAdminProducts();
+  } else {
+    productMetas.value = { category: [], type: null };
+    fetchAdminProducts();
+  }
+  isCategoryView.value = !!productMetas.value?.category?.length;
+  isBrandView.value = !!productMetas.value?.type?.length;
+};
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/admin/category"
+    );
+    categories.value = response.data;
+  } catch (error) {
+    console.error("Error Fetching Categories", error);
+  }
+};
+
+const filterProducts = (event, filterType) => {
+  const val = event.target.value;
+  if (filterType === "category") {
+    if (productMetas.value.category.includes(val)) {
+      productMetas.value.category = productMetas.value.category.filter(
+        (f) => f !== val
+      );
+    } else {
+      productMetas.value.category.push(val);
+    }
+    productMetas.value.type = null;
+  } else if (filterType === "type") {
+    productMetas.value.type = val;
+    productMetas.value.category = [];
+  }
+  router.push({
+    name: "adminproducts",
+    query: {
+      type: productMetas.value.type || undefined,
+      category: productMetas.value.category.length
+        ? productMetas.value.category
+        : undefined,
+    },
+  });
+  fetchAdminProducts();
+};
+
+const updateProductList = (newProducts) => {
+  products.value = newProducts;
+};
 
 const fetchAdminProducts = async () => {
   try {
+    const params = {
+      ...productMetas.value,
+      q: searchQuery.value,
+    };
     const res = await axios.get("http://localhost:3000/api/admin/products", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      params: { q: searchQuery.value }, // <-- search query bhej rahe hai
+      params,
     });
     products.value = res.data;
+    emit("update-products", res.data);
     console.log("Fetched products:", res.data);
   } catch (error) {
     console.log("Error Fetching Products", error);
   }
 };
-const uploadImage = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      form.value.image = reader.result; // yeh image ka base64 URL set karega
-      console.log("Image preview URL:", form.value.image);
-    };
-    reader.readAsDataURL(file); // file ko base64 string mein convert karta hai
-  }
-};
 
+const uploadImage = (event) => {
+  imageFile.value = event.target.files[0];
+};
 const AddAdminProducts = async () => {
   try {
+    const formData = new FormData();
+
+    formData.append("name", form.value.name);
+    formData.append("brand", form.value.brand);
+    formData.append("type", form.value.type);
+    formData.append("price", form.value.price);
+    formData.append("size", JSON.stringify(form.value.size));
+    formData.append("offer", form.value.offer);
+    formData.append("design", form.value.design);
+    formData.append("rating", form.value.rating);
+    formData.append("category", form.value.category);
+    formData.append("label", form.value.label);
+    if (imageFile.value) {
+      formData.append("image", imageFile.value);
+    }
+
     const res = await axios.post(
       "http://localhost:3000/api/admin/products",
-      form.value,
+      formData,
       {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
       }
     );
-  } catch (error) {}
+    toast.success("Product Added Successfully");
+    fetchAdminProducts();
+  } catch (error) {
+    console.error("Error Adding Product", error);
+    toast.error("Error Adding Product");
+  }
 };
 
 //Remove Product
@@ -210,14 +413,29 @@ const removeAdminProduct = async (product) => {
     console.error("Error Removing Item :", error);
   }
 };
+const changePage = (page) => {
+  currenPage.value = page;
+  router.push({ name: "adminproducts", query: { ...route.query, page } });
+  fetchAdminProducts();
+};
+const prePage = () => {
+  if (currenPage.value > 1) changePage(--currenPage.value);
+};
+const nextPage = () => {
+  if (products.value.length === perPage) changePage(++currenPage.value);
+};
 </script>
 
 <style scoped>
+.admin-products {
+  display: flex;
+  justify-content: space-between;
+}
 .admin-cards {
   height: auto;
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 .card-detail {
@@ -225,10 +443,15 @@ const removeAdminProduct = async (product) => {
   border-radius: 10px;
   background-color: rgba(231, 229, 229, 0.938);
 }
+.card-img {
+  width: 80%;
+  margin: auto;
+}
 .card-img img {
   width: 100%;
+  margin: auto;
   border-radius: 10px;
-  margin-bottom: 1rem;
+  margin: auto;
 }
 .title h4 {
   font-size: 14px;
@@ -258,6 +481,7 @@ const removeAdminProduct = async (product) => {
 }
 .edit button,
 .prd-btn button {
+  font-size: 14px;
   background-color: lightblue;
 }
 .remove button {
@@ -289,6 +513,32 @@ const removeAdminProduct = async (product) => {
   justify-content: space-around;
   align-items: center;
 }
+.srch input {
+  width: 140px;
+  padding: 6px;
+  margin: 1rem 0rem;
+  font-size: 12px;
+  border: none;
+  border-radius: 10px;
+}
+.sticky,
+.fillter-section {
+  position: sticky;
+  top: 0;
+}
+.srch button {
+  padding: 4px;
+  background: #ddd;
+  font-size: 13px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.srch button:hover {
+  background: #ccc;
+}
+
 /* form */
 .addPrd {
   max-width: 500px;
@@ -336,6 +586,15 @@ const removeAdminProduct = async (product) => {
 .image input[type="file"] {
   color: red;
 }
+.categoress {
+  border-top: 1px solid #c7cbd4;
+}
+.content {
+  display: none;
+}
+.view-content {
+  display: block;
+}
 .submit {
   text-align: center;
 }
@@ -354,5 +613,111 @@ const removeAdminProduct = async (product) => {
 
 .submit button:hover {
   background-color: #219150;
+}
+.categoress {
+  border-top: 1px solid #c7cbd4;
+}
+
+.content {
+  display: none;
+}
+
+.view-content {
+  display: block;
+}
+
+.content {
+  display: none;
+}
+
+.view-content {
+  display: block;
+}
+
+.fillter button {
+  background-color: yellow;
+  border: none;
+  text-decoration: dotted;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+header h3 {
+  font-size: 17px;
+  text-transform: math-auto;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+button {
+  color: black;
+  border-radius: 10px;
+  font-size: 12px;
+  width: 40px;
+  font-weight: 700;
+}
+
+label,
+input {
+  font-size: 16px;
+  text-transform: capitalize;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+.categoress {
+  border-top: 1px solid #c7cbd4;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+
+.srch input {
+  width: 140px;
+  padding: 6px;
+  margin: 1rem 0rem;
+  font-size: 12px;
+  border: none;
+  border-radius: 10px;
+}
+
+.srch button {
+  padding: 4px;
+  background: #ddd;
+  font-size: 13px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.srch button:hover {
+  background: #ccc;
+}
+
+.pagination {
+  display: flex;
+  /* padding-left: 0; */
+  /* list-style: none; */
+  justify-content: center;
+  gap: 1rem;
+}
+.pagination button {
+  color: black;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 40px;
+  text-align: center;
+  border: none;
+}
+.pagination button.active {
+  background-color: black;
+  color: white;
 }
 </style>

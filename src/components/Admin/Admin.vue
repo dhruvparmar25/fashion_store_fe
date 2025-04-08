@@ -43,12 +43,12 @@ const user = () => {
 <style scoped>
 .dsb {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
 }
 .field {
   width: 15%;
-  height: 88.5vh;
+  height: 100vh;
   background-color: #ccc;
   padding: 1rem;
   position: sticky;
@@ -56,8 +56,6 @@ const user = () => {
   bottom: 0;
 }
 .detail {
-  width: 85%;
-  padding: 1rem;
   overflow-y: auto;
 }
 .field nav h4 {
