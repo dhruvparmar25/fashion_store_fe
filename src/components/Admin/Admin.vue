@@ -2,12 +2,22 @@
   <section class="dsb">
     <div class="field">
       <nav>
-        <h4>Dashboard</h4>
+        <img src="/./public/Fashion.png" />
+        <label><i class="fa-solid fa-house"></i>Dashboard</label>
         <div class="main-menu">
-          <div @click="cart()">Carts</div>
-          <div @click="order()">Orders</div>
-          <div @click="product()">Products</div>
-          <div @click="user()">Users</div>
+          <div @click="cart()" :class="{ active: activeTab === 'Cart' }">
+            <label><i class="fa-solid fa-cart-shopping"></i>Carts</label>
+          </div>
+          <div @click="order()" :class="{ active: activeTab === 'Order' }">
+            <label><i class="fas fa-clipboard-check"></i>Orders</label>
+          </div>
+          <div @click="product()" :class="{ active: activeTab === 'Product' }">
+            <label><i class="fas fa-box-open"></i>Products</label>
+          </div>
+          <div @click="user()" :class="{ active: activeTab === 'User' }">
+            <label><i class="fa-solid fa-users"></i>Users</label>
+          </div>
+          <button class="logout-btn" @click="logout">Logout</button>
         </div>
       </nav>
     </div>
@@ -26,6 +36,9 @@ import Admincarts from "../AdminPage/Admincarts.vue";
 import AdminOrders from "../AdminPage/AdminOrders.vue";
 import AdminProducts from "../AdminPage/AdminProducts.vue";
 import AdminUser from "../AdminPage/AdminUser.vue";
+import { useAuth } from "@/composables/useAuth";
+
+const { logout } = useAuth();
 const activeTab = ref("");
 const cart = () => {
   activeTab.value = "Cart";
@@ -49,19 +62,42 @@ const user = () => {
 .field {
   width: 15%;
   height: 100vh;
-  background-color: #ccc;
+  background-color: #004b60;
   padding: 1rem;
   position: sticky;
   top: 0;
   bottom: 0;
+  font-family: "inter", sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  color: rgb(255, 255, 255);
 }
 .detail {
   overflow-y: auto;
 }
-.field nav h4 {
+.field nav label {
+  width: 100%;
+  padding: 0.5rem;
   margin-bottom: 1rem;
+  border-radius: 10px;
+}
+.main-menu > div label {
+  font-family: "inter", sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  color: rgb(255, 255, 255);
+}
+.main-menu > div i,
+.field nav label i {
+  color: white;
+  margin-right: 10px;
 }
 
+.field nav img {
+  width: 100%;
+  height: 75px;
+  margin-bottom: 1rem;
+}
 .main-menu > div {
   cursor: pointer;
   margin-bottom: 1rem;
@@ -70,5 +106,27 @@ const user = () => {
 }
 .main-menu > div:hover {
   color: blue;
+}
+.field nav label:hover {
+  background-color: #63848e;
+}
+.main-menu > div.active label {
+  background-color: #26829c;
+  border-radius: 10px;
+}
+
+.logout-btn {
+  background-color: lightcoral;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.logout-btn:hover {
+  background-color: red;
 }
 </style>

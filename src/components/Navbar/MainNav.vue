@@ -71,7 +71,7 @@ nav {
 }
 
 .logo img {
-  width: 50px;
+  width: 100px;
   margin-left: 1rem;
 }
 

@@ -64,10 +64,21 @@ const routes = [
     name: "orders",
     component: Orders,
   },
-  { path: "/admin", name: "admin", component: Admin },
+  {
+    path: "/admin",
+    name: "admin",
+    component: Admin,
+    children: [
+      {
+        path: "products",
+        name: "adminproducts",
+        component: AdminProducts,
+      },
+      // other admin routes
+    ],
+  },
   { path: "/admincarts", name: "admincarts", component: Admincarts },
   { path: "/adminorders", name: "adminorders", component: AdminOrders },
-  { path: "/adminproducts", name: "adminproducts", component: AdminProducts },
   { path: "/adminuser", name: "adminuser", component: AdminUser },
 ];
 

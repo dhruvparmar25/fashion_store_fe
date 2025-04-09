@@ -2,7 +2,9 @@
   <section class="admin-products">
     <div class="fillter-section">
       <FilterComponent class="sticky" @update-products="updateProductList">
-        <div class="prd-btn"><button>+ Add Product</button></div>
+        <div class="prd-btn">
+          <button @click="openAddModal">+ Add Product</button>
+        </div>
         <div class="srch">
           <input
             type="text"
@@ -91,7 +93,11 @@
               </div>
             </div>
             <div class="card-field">
-              <div class="edit"><button type="button">Edit</button></div>
+              <div class="edit">
+                <button @click="openEditModal(product)" type="button">
+                  Edit
+                </button>
+              </div>
               <div class="remove">
                 <button @click="removeAdminProduct(product)" type="button">
                   Remove
@@ -101,109 +107,114 @@
           </div>
         </div>
       </div>
-      <!-- <div class="addPrd">
-        <form @submit.prevent="AddAdminProducts">
-          <h2>Add Product</h2>
-          <div class="detail">
-            <label>Product Name:</label><br />
-            <input
-              type="text"
-              v-model="form.name"
-              placeholder="Enter product name"
-              required
-            />
-          </div>
-          <div class="brand">
-            <label>Brand:</label><br />
-            <input
-              type="text"
-              v-model="form.brand"
-              placeholder="Example:@Boogy"
-              required
-            />
-          </div>
-          <div class="type">
-            <label>Type:</label><br />
-            <input
-              type="text"
-              v-model="form.type"
-              placeholder="Example:@Men"
-              required
-            />
-          </div>
-          <div class="add-price">
-            <label>Price :[Indian ₹]</label><br />
-            <input type="number" v-model="form.price" required />
-          </div>
-          <div class="size">
-            <label>Size:</label><br />
-            <input type="checkbox" v-model="form.size" value="S" />S
-            <input type="checkbox" v-model="form.size" value="M" />M
-            <input type="checkbox" v-model="form.size" value="L" />L
-            <input type="checkbox" v-model="form.size" value="XL" />Xl
-            <input type="checkbox" v-model="form.size" value="XXL" />XXl
-          </div>
-          <div class="offer">
-            <label>Offer:</label><br />
-            <input
-              placeholder="14%"
-              type="text"
-              v-model="form.offer"
-              required
-            />
-          </div>
-          <div class="design">
-            <label>Design:</label><br />
-            <input
-              type="text"
-              v-model="form.design"
-              placeholder="Enter design"
-              required
-            />
-          </div>
-          <div class="rating">
-            <label>Rating:[1 to 5]</label><br />
-            <input
-              type="number"
-              v-model="form.rating"
-              min="1"
-              max="5"
-              step="1"
-              required
-            />
-          </div>
-          <div class="add-category">
-            <label>Category:</label><br />
-            <input
-              type="text"
-              v-model="form.category"
-              placeholder="Enter category"
-              required
-            />
-          </div>
-          <div class="label">
-            <label>Label:</label><br />
-            <input
-              type="text"
-              v-model="form.label"
-              placeholder="Enter label"
-              required
-            />
-          </div>
-          <div class="image">
-            <label for="image-upload"> Product Image : </label><br />
-            <input
-              @change="uploadImage"
-              type="file"
-              accept="image/*"
-              required
-            />
-          </div>
-          <div class="submit">
-            <button type="button" @click="AddAdminProducts">Add Product</button>
-          </div>
-        </form>
-      </div> -->
+      <!-- Add Product -->
+      <Modal v-if="shoeModal" @close="shoeModal = false">
+        <div class="addPrd">
+          <form @submit.prevent="AddAdminProducts">
+            <h2>Add Product</h2>
+            <div class="detail">
+              <label>Product Name:</label>
+              <input
+                type="text"
+                v-model="form.name"
+                placeholder="Enter product name"
+                required
+              />
+            </div>
+            <div class="brand">
+              <label>Brand:</label>
+              <input
+                type="text"
+                v-model="form.brand"
+                placeholder="Example:@Boogy"
+                required
+              />
+            </div>
+            <div class="type">
+              <label>Type:</label>
+              <input
+                type="text"
+                v-model="form.type"
+                placeholder="Example:@Men"
+                required
+              />
+            </div>
+            <div class="add-price">
+              <label>Price :[Indian ₹]</label>
+              <input type="number" v-model="form.price" required />
+            </div>
+            <div class="size">
+              <label>Size:</label>
+              <input type="checkbox" v-model="form.size" value="S" />S
+              <input type="checkbox" v-model="form.size" value="M" />M
+              <input type="checkbox" v-model="form.size" value="L" />L
+              <input type="checkbox" v-model="form.size" value="XL" />Xl
+              <input type="checkbox" v-model="form.size" value="XXL" />XXl
+            </div>
+            <div class="offer">
+              <label>Offer:</label>
+              <input
+                placeholder="14%"
+                type="text"
+                v-model="form.offer"
+                required
+              />
+            </div>
+            <div class="design">
+              <label>Design:</label>
+              <input
+                type="text"
+                v-model="form.design"
+                placeholder="Enter design"
+                required
+              />
+            </div>
+            <div class="rating">
+              <label>Rating:[1 to 5]</label>
+              <input
+                type="number"
+                v-model="form.rating"
+                min="1"
+                max="5"
+                step="1"
+                required
+              />
+            </div>
+            <div class="add-category">
+              <label>Category:</label>
+              <input
+                type="text"
+                v-model="form.category"
+                placeholder="Enter category"
+                required
+              />
+            </div>
+            <div class="label">
+              <label>Label:</label>
+              <input
+                type="text"
+                v-model="form.label"
+                placeholder="Enter label"
+                required
+              />
+            </div>
+            <div class="image">
+              <label for="image-upload"> Product Image : </label>
+              <input
+                @change="uploadImage"
+                type="file"
+                accept="image/*"
+                required
+              />
+            </div>
+            <div class="submit">
+              <button type="button" @click="AddAdminProducts">
+                Add Product
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
     </div>
   </section>
   <div class="pagination">
@@ -230,6 +241,7 @@ import axios from "axios";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
+import Modal from "../commons/Modal.vue";
 
 const form = ref({
   brand: "",
@@ -255,9 +267,13 @@ const products = ref([]);
 const currenPage = ref(1);
 const perPage = 12;
 
+const shoeModal = ref(false);
+const isEditMode = ref(false);
+const selectProduct = ref(null);
 const paginationNumbers = computed(() => {
   return [1, 2, 3, 4];
 });
+
 onMounted(() => {
   setQuery();
   fetchCategories();
@@ -300,7 +316,10 @@ const setQuery = () => {
 const fetchCategories = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:3000/api/admin/category"
+      "http://localhost:3000/api/admin/category",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
     );
     categories.value = response.data;
   } catch (error) {
@@ -362,37 +381,32 @@ const uploadImage = (event) => {
 };
 const AddAdminProducts = async () => {
   try {
-    const formData = new FormData();
-
-    formData.append("name", form.value.name);
-    formData.append("brand", form.value.brand);
-    formData.append("type", form.value.type);
-    formData.append("price", form.value.price);
-    formData.append("size", JSON.stringify(form.value.size));
-    formData.append("offer", form.value.offer);
-    formData.append("design", form.value.design);
-    formData.append("rating", form.value.rating);
-    formData.append("category", form.value.category);
-    formData.append("label", form.value.label);
-    if (imageFile.value) {
-      formData.append("image", imageFile.value);
-    }
-
     const res = await axios.post(
       "http://localhost:3000/api/admin/products",
-      formData,
+      form.value,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
         },
       }
     );
     toast.success("Product Added Successfully");
-    fetchAdminProducts();
+    shoeModal.value = false;
+    // reset form
+    form.value = {
+      name: "",
+      brand: "",
+      price: "",
+      discounted_price: "",
+      image: "",
+      gender: "",
+      category: "",
+      color: "",
+      size: [],
+    };
   } catch (error) {
-    console.error("Error Adding Product", error);
-    toast.error("Error Adding Product");
+    console.log("Error in adding product:", error);
+    toast.error("Error adding product");
   }
 };
 
@@ -424,8 +438,96 @@ const prePage = () => {
 const nextPage = () => {
   if (products.value.length === perPage) changePage(++currenPage.value);
 };
-</script>
+const openAddModal = () => {
+  isEditMode.value = false;
+  selectProduct.value = null;
 
+  form.value = {
+    name: "",
+    brand: "",
+    type: "",
+    price: "",
+    size: [],
+    offer: "",
+    design: "",
+    rating: "",
+    category: "",
+    label: "",
+    image: "",
+  };
+
+  imageFile.value = null;
+  shoeModal.value = true;
+};
+
+const openEditModal = (product) => {
+  console.log(product);
+  isEditMode.value = true;
+  selectProduct.value = product;
+
+  form.value = {
+    name: product.name,
+    brand: product.brand,
+    type: product.type,
+    price: product.price,
+    size: product.size,
+    offer: product.offer,
+    design: product.design,
+    rating: product.rating,
+    category: product.category,
+    label: product.tags?.[0]?.label,
+    image: product.image,
+  };
+  shoeModal.value = true;
+};
+
+const submitForm = () => {
+  if (isEditMode.value && selectProduct.value) {
+    updateProduct(selectProduct.value._id);
+  } else {
+    AddAdminProducts();
+  }
+};
+
+const updateProduct = async (id) => {
+  try {
+    const formData = new FormData();
+    formData.append("name", form.value.name);
+    formData.append("brand", form.value.brand);
+    formData.append("type", form.value.type);
+    formData.append("price", form.value.price);
+    formData.append("size", JSON.stringify(form.value.size));
+    formData.append("offer", form.value.offer);
+    formData.append("design", form.value.design);
+    formData.append("rating", form.value.rating);
+    formData.append("category", form.value.category);
+    formData.append("label", form.value.label);
+
+    if (imageFile.value) {
+      formData.append("image", imageFile.value);
+    }
+
+    const res = await axios.put(
+      `http://localhost:3000/api/admin/products/${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    toast.success("Product updated successfully");
+    shoeModal.value = false;
+    isEditMode.value = false;
+    selectProduct.value = null;
+    fetchAdminProducts();
+  } catch (error) {
+    console.error("Error updating product:", error);
+    toast.error("Error updating product");
+  }
+};
+</script>
 <style scoped>
 .admin-products {
   display: flex;
@@ -439,16 +541,18 @@ const nextPage = () => {
   gap: 1rem;
 }
 .card-detail {
+  width: 218px;
+  height: 300px;
   padding: 0.5rem;
   border-radius: 10px;
   background-color: rgba(231, 229, 229, 0.938);
 }
 .card-img {
   width: 80%;
-  margin: auto;
+  margin-left: 35px;
 }
 .card-img img {
-  width: 100%;
+  width: 75%;
   margin: auto;
   border-radius: 10px;
   margin: auto;
@@ -456,7 +560,8 @@ const nextPage = () => {
 .title h4 {
   font-size: 14px;
   font-weight: bold;
-  height: 65px;
+  margin-top: 10px;
+  height: 50px;
 }
 .card-field {
   display: flex;
@@ -541,8 +646,7 @@ const nextPage = () => {
 
 /* form */
 .addPrd {
-  max-width: 500px;
-  margin: 50px auto;
+  margin: 1rem;
   background: #fff;
   padding: 25px;
   border-radius: 12px;
@@ -551,11 +655,11 @@ const nextPage = () => {
 }
 .addPrd h2 {
   text-align: center;
-  margin-bottom: 20px;
+
   color: #333;
 }
 .addPrd div {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 .addPrd label {
   font-weight: 600;
@@ -600,6 +704,7 @@ const nextPage = () => {
 }
 
 .submit button {
+  width: fit-content;
   background-color: #27ae60;
   color: white;
   padding: 10px 20px;
@@ -635,9 +740,11 @@ const nextPage = () => {
 }
 
 .fillter button {
-  background-color: yellow;
+  background-color: #0e4a5a;
+  color: white;
   border: none;
-  text-decoration: dotted;
+  font-weight: 500;
+  font-size: 12px;
 }
 
 header {
@@ -707,6 +814,7 @@ input {
   /* list-style: none; */
   justify-content: center;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 .pagination button {
   color: black;
