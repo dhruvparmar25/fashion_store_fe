@@ -43,12 +43,13 @@ h1 {
   font-size: 22px;
   font-weight: 700;
   line-height: normal;
-  background-color: black;
+  background-color: #0e4a5a;
   color: white;
   padding: 0.5rem;
   letter-spacing: 0.5rem;
   text-transform: uppercase;
   margin-left: 1rem;
+  border-radius: 1px 50px 1px 0px;
 }
 section.banner {
   display: flex;
@@ -60,7 +61,13 @@ section.banner {
 }
 img {
   width: 90%;
+  height: 450px;
   border-radius: 0.5rem;
   margin: 1rem;
+}
+.image1,
+.image2 {
+  width: 48%;
+  margin: auto;
 }
 </style>

@@ -87,6 +87,7 @@ nav {
 
 .main-menu a,
 .main-menu div {
+  padding: 5px;
   text-decoration: none;
   color: black;
   transition: color 0.3s ease-in-out;
@@ -94,7 +95,9 @@ nav {
 
 .main-menu a:hover,
 .main-menu > div:hover {
-  color: blue;
+  background-color: #63848e;
+  color: white;
+  border-radius: 10px;
 }
 
 /* Dropdown */

@@ -54,7 +54,9 @@
       </div>
     </div>
   </section>
+
   <p v-else>Loading...</p>
+  <latestProduct />
 </template>
 
 <script setup>
@@ -62,6 +64,7 @@ import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import { toast } from "vue3-toastify";
+import latestProduct from "@/components/LatestProduct/latestProduct.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -274,19 +277,20 @@ const addToCart = async () => {
   width: fit-content;
   margin-right: 200px;
 }
-.addtocart {
-  background-color: #ffd232;
+.addtocart[data-v-95e08fb6] {
+  background-color: #26829c;
   font-family: "Montserrat";
   font-size: 16px;
-  font-weight: 600;
+  /* font-weight: 600; */
   text-transform: uppercase;
   line-height: 24px;
-  padding: 1rem;
+  padding: 10px;
   width: fit-content;
   border: none;
   border-radius: 10px;
-  color: rgb(41, 45, 53);
+  color: white;
   margin-top: 2rem;
+  /* text-align: center; */
 }
 .addtocart i {
   margin-right: 1rem;

@@ -2,6 +2,19 @@
   <!-- Main Product Pages Section -->
   <section class="productpages">
     <FilterComponent class="sticky" @update-products="updateProductList">
+      <!-- srch -->
+      <div class="srch">
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Search.."
+          @keyup.enter="fetchProducts"
+          name="search"
+        />
+        <button @click="fetchProducts">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
       <!-- Category Filter -->
       <div class="categoress">
         <header>
@@ -104,6 +117,7 @@ const productMetas = ref({ category: [], type: null });
 const isCategoryView = ref(!!productMetas.value?.category?.length);
 const isBrandView = ref(!!productMetas.value?.type);
 const prdlists = ref([]);
+const searchQuery = ref("");
 const categories = ref([]);
 const currenPage = ref(1);
 const perPage = 12;
@@ -167,8 +181,12 @@ const goToDetails = (item) => {
 // Fetch products from API
 const fetchProducts = async () => {
   try {
+    const params = {
+      ...productMetas.value,
+      q: searchQuery.value,
+    };
     const response = await axios.get("http://localhost:3000/api/product", {
-      params: productMetas.value,
+      params,
       page: currenPage.value,
       per_page: perPage,
     });
@@ -237,18 +255,18 @@ const nextPage = () => {
 
 <style scoped>
 .productpages {
-  width: 92%;
-  margin: auto;
   height: 100%;
   display: flex;
-  justify-content: space-between;
 }
 
 .fillter {
-  width: 18%;
+  width: 15%;
   height: 100vh;
+  margin-left: 0.5rem;
   font-size: 2rem;
   font-weight: 700;
+  background-color: #004b60;
+  color: white;
 }
 
 .cattitle {
@@ -258,11 +276,11 @@ const nextPage = () => {
 
 .products {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  width: 78%;
+  margin: auto;
+  width: 80%;
 }
-
 .content {
   display: none;
 }
@@ -272,7 +290,7 @@ const nextPage = () => {
 }
 
 .fillter button {
-  background-color: yellow;
+  /* background-color: yellow; */
   border: none;
   text-decoration: dotted;
 }
@@ -310,25 +328,26 @@ input {
 .categoress {
   border-top: 1px solid #c7cbd4;
 }
-
+.srch {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.srch input {
+  width: 140px;
+  padding: 6px;
+  margin: 1rem 0rem;
+  font-size: 12px;
+  border: none;
+  border-radius: 10px;
+}
+.srch button {
+  height: 28px;
+}
 .sticky {
   position: sticky;
   top: 0;
 }
-
-/* .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5rem;
-}
-.pagination div.active {
-  background-color: dodgerblue;
-  color: white;
-}
-.pagination div:hover:not(.active) {
-  background-color: #ddd;
-} */
 
 .pagination {
   display: flex;

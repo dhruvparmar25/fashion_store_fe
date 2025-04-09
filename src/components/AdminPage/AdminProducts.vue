@@ -547,21 +547,21 @@ const updateProduct = async (id) => {
   border-radius: 10px;
   background-color: rgba(231, 229, 229, 0.938);
 }
-.card-img {
-  width: 80%;
-  margin-left: 35px;
+.card-img[data-v-3a026967] {
+  width: 100%;
+  display: flex;
 }
 .card-img img {
-  width: 75%;
+  width: 65%;
   margin: auto;
   border-radius: 10px;
   margin: auto;
 }
-.title h4 {
-  font-size: 14px;
+.title h4[data-v-3a026967] {
+  font-size: 12px;
   font-weight: bold;
   margin-top: 10px;
-  height: 50px;
+  height: 37px;
 }
 .card-field {
   display: flex;

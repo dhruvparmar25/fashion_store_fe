@@ -11,7 +11,7 @@
         >
           {{ tag.label }}
         </div>
-        <img :src="product.image" style="width: 100%" />
+        <img :src="product.image" style="width: 80%" />
         <div class="offer">{{ product.offer }}</div>
       </div>
 
@@ -50,7 +50,9 @@ const props = defineProps(["product"]);
   text-decoration: none;
 }
 .cards {
+  background-color: rgba(231, 229, 229, 0.938);
   transition: 0.3s;
+  border-radius: 10px;
 }
 
 .main {
@@ -76,7 +78,6 @@ const props = defineProps(["product"]);
   font-size: 12px;
   background-color: rgb(105, 104, 106);
   color: white;
-  width: 50px;
   text-align: center;
   border-radius: 10px;
 }
@@ -86,6 +87,7 @@ const props = defineProps(["product"]);
   font-size: 14px;
   line-height: 21px;
   color: rgb(78, 86, 100);
+  height: 35px;
 }
 .combine {
   display: flex;
@@ -115,12 +117,19 @@ const props = defineProps(["product"]);
   font-size: 10px;
   background-color: rgb(105, 104, 106);
   color: white;
-  padding: 0px 2px;
   z-index: 1;
+
+  border-radius: 15px;
+  padding: 2px;
 }
 .imag {
+  display: flex;
   position: relative;
   z-index: 0;
+}
+.imag > img {
+  margin-top: 10px;
+  margin: auto;
 }
 
 .offer {

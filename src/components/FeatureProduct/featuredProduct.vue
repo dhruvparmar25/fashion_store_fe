@@ -38,21 +38,24 @@ onMounted(async () => {
   font-size: 22px;
   font-weight: 700;
   line-height: normal;
-  background-color: black;
+  background-color: #0e4a5a;
   color: white;
   padding: 0.5rem;
   letter-spacing: 0.5rem;
   text-transform: uppercase;
+  border-radius: 1px 50px 1px 0px;
 }
 .ftitle button {
-  background-color: white;
+  background-color: #27829bc9;
   border: none;
   font-size: 14px;
   padding: 5px;
+  color: white;
+
+  border-radius: 10px;
 }
 .ftitle button:hover {
-  background-color: black;
-  color: white;
+  background-color: #01485c;
   border-radius: 10px;
 }
 .featured {
@@ -65,6 +68,9 @@ onMounted(async () => {
   align-items: center;
 }
 .products {
+  padding: 0.5rem;
+  border-radius: 10px;
+  background-color: rgba(231, 229, 229, 0.938);
   margin: 1rem;
 }
 
