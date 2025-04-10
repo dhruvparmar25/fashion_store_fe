@@ -11,7 +11,8 @@
     <!-- Dynamic Offer Message -->
     <div class="offer">
       <p class="offerText">
-        <strong>Fashion Store</strong>: Welcome To Our Store
+        <strong><i class="fas fa-shipping-fast"></i></strong>FREE SHIPPING on
+        all orders above ₹399
       </p>
     </div>
 
@@ -44,7 +45,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 2.5rem;
   color: black;
   border-bottom: 1px solid #adb5bd;
   background-color: #f8f9fa;
@@ -141,5 +142,15 @@ nav {
 
 .x:hover {
   color: #000;
+}
+@media (max-width: 768px) {
+  .offerText {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .offerText {
+    display: none;
+  }
 }
 </style>

@@ -1,27 +1,51 @@
 <template>
   <nav>
     <div class="logo">
-      <img src="/public/Fashion.png" />
+      <router-link to="/"><img src="/public/Fashion.png" /></router-link>
     </div>
-    <div class="main-menu">
-      <router-link to="/">Home</router-link>
-      <div @click="openType('Men')" class="men">Men</div>
-      <div @click="openType('Women')" class="women">Women</div>
+    <div class="hamburger" @click="toggleMenu">
+      <i :class="showMenu ? 'fas fa-times' : 'fas fa-bars'"></i>
+    </div>
+    <div :class="['main-menu', { show: showMenu }]">
+      <router-link to="/" @click="showMenu = false"> Home</router-link>
+      <div
+        @click="
+          openType('Men');
+          showMenu = false;
+        "
+        class="men"
+      >
+        Men
+      </div>
+      <div
+        @click="
+          openType('Women');
+          showMenu = false;
+        "
+        class="women"
+      >
+        Women
+      </div>
       <div class="dropdown">
         <span class="dropbtn">Category</span>
         <div class="dropdown-content">
-          <div @click="openCate(category)" v-for="category in categories">
+          <div
+            @click="
+              openCate(category);
+              showMenu = false;
+            "
+            v-for="category in categories"
+          >
             {{ category }}
           </div>
         </div>
       </div>
 
-      <router-link to="/product">Product</router-link>
-    </div>
-    <div class="main-icon">
-      <router-link to="/cart" class="cart">
-        <i class="fa-solid fa-cart-shopping"></i>
+      <router-link to="/product" @click="showMenu = false">Product</router-link>
+      <router-link to="/cart" @click="showMenu = false" class="cart">
+        Cart <i class="fa-solid fa-cart-shopping"></i>
       </router-link>
+      <!-- <div class="main-icon"></div> -->
     </div>
   </nav>
 </template>
@@ -33,6 +57,11 @@ import { useRouter } from "vue-router";
 
 const categories = ref([]);
 const router = useRouter();
+const showMenu = ref(false);
+
+router.afterEach(() => {
+  showMenu.value = false;
+});
 
 const fetchCategories = async () => {
   try {
@@ -60,6 +89,10 @@ const openType = (type) => {
     query: { type: type, category: undefined },
   });
 };
+
+const toggleMenu = () => {
+  showMenu.value = !showMenu.value;
+};
 </script>
 
 <style scoped>
@@ -68,6 +101,11 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
+}
+.hamburger i {
+  color: black;
+  font-size: 24px;
+  padding: 10px;
 }
 
 .logo img {
@@ -163,5 +201,54 @@ nav {
   border: none;
   cursor: pointer;
   padding: 0;
+}
+.hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  .hamburger i {
+    color: black;
+    padding: 10px;
+  }
+  .main-menu {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: white;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    display: none;
+    z-index: 1000;
+  }
+  .main-menu.show {
+    display: flex;
+  }
+  .main-menu a,
+  .main-menu div {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  .main-icon {
+    position: absolute;
+    top: 105px;
+    right: 100px;
+  }
+  @media (max-width: 480px) {
+    .main-icon {
+      position: absolute;
+      top: 100;
+      right: 20px;
+    }
+  }
 }
 </style>

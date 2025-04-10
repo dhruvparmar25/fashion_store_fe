@@ -27,7 +27,7 @@
 }
 .offer {
   /* width: 30%; */
-  margin: 5rem 1rem;
+  margin: auto;
   position: relative;
   z-index: 5;
   background-color: #f1f1f1;
@@ -38,15 +38,15 @@
   color: #212529;
 }
 .offtext[data-v-11c85b44] {
-    position: absolute;
-    top: 80px;
-    bottom: 0px;
-    right: 0%;
-    z-index: 10;
-    font-size: 141px;
-    font-weight: 700;
-    color: rgb(225, 225, 225);
-    font-family: "Playfair Display", sans-serif;
+  position: absolute;
+  top: 80px;
+  bottom: 0px;
+  right: 0%;
+  z-index: 10;
+  font-size: 141px;
+  font-weight: 700;
+  color: rgb(225, 225, 225);
+  font-family: "Playfair Display", sans-serif;
 }
 .text p {
   font-size: 16px;
@@ -62,5 +62,22 @@ button {
   padding: 0.8em 2.5em;
   font-size: 1.1em;
   letter-spacing: 2px;
+}
+@media (max-width: 480px) {
+  .offtext {
+    display: none;
+  }
+  .text h1 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #212529;
+  }
+  button {
+    background-color: black;
+    color: white;
+
+    border: 1px solid black;
+    padding: 0.5rem 1rem;
+  }
 }
 </style>

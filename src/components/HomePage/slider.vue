@@ -69,7 +69,7 @@ onMounted(() => {
 }
 
 .card {
-  min-width: 438px;
+  min-width: 460px;
   height: auto;
   padding: 1rem;
   border: none;
@@ -80,17 +80,33 @@ onMounted(() => {
   height: auto;
 }
 
-/* button.prev,
-button.next {
-  height: 30px;
-  background: #000000d4;
-  color: white;
-  border: none;
-  text-align: center;
-  padding: 0px 8px;
-  border-radius: 100%;
-  margin: 0.5rem;
-  align-items: center;
-  width: 30px;
-} */
+@media (max-width: 1024px) {
+  .card {
+    min-width: 511px;
+  }
+  .cards img {
+    width: 100%;
+    height: auto;
+  }
+}
+@media (max-width: 768px) {
+  .card {
+    min-width: 380px;
+  }
+  .cards img {
+    width: 100%;
+    height: auto;
+  }
+}
+@media (max-width: 480px) {
+  .card {
+    min-width: 480px;
+    margin: auto;
+  }
+  .cards img {
+    width: 100%;
+    height: auto;
+    margin: auto;
+  }
+}
 </style>
