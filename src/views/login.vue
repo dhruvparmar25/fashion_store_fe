@@ -122,6 +122,7 @@ import axios from "axios";
 import router from "@/router/router";
 import { getHeader } from "@/utils/helpers";
 import { toast } from "vue3-toastify";
+import { useAuth } from "@/composables/useAuth";
 
 // Reactive state to manage form data (login/registration)
 const data = ref({
@@ -136,6 +137,7 @@ const data = ref({
   confirmPassword: "",
 });
 
+const { login } = useAuth();
 const saveData = () => {
   const endpoint = data.value.isRegistration ? "register" : "login";
   const headers = data.value.isRegistration ? {} : getHeader();
@@ -146,6 +148,7 @@ const saveData = () => {
     })
     .then((res) => {
       if (!data.value.isRegistration) {
+        login(res.data?.token || "");
         localStorage.setItem("token", res.data?.token || "");
         localStorage.setItem("user", JSON.stringify(res.data?.user || {}));
         toast.success("Login Successful!", {

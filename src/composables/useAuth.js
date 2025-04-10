@@ -1,10 +1,15 @@
 import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
+const isLoggedIn = ref(!!localStorage.getItem("token"));
+
 export function useAuth() {
   const router = useRouter();
-  const isLoggedIn = ref(!!localStorage.getItem("token"));
 
+  const login = (token) => {
+    localStorage.setItem("token", token);
+    isLoggedIn.value = true;
+  };
   const logout = () => {
     localStorage.clear();
     localStorage.removeItem("token");
@@ -17,5 +22,5 @@ export function useAuth() {
     isLoggedIn.value = !!localStorage.getItem("token");
   });
 
-  return { isLoggedIn, logout };
+  return { isLoggedIn, logout, login };
 }
