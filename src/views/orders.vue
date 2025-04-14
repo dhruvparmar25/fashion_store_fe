@@ -28,7 +28,7 @@
             </div>
 
             <div class="prd-list">
-              {{}}
+              <!-- {{ item }} -->
               <label><strong>Order Id:</strong> {{ order._id }}</label
               ><br />
               <label
@@ -40,13 +40,14 @@
                 ><strong>Quantiy:</strong> {{ item.quantity }} x ₹{{
                   item.productId.price
                 }}</label
-              >
-              <div class="total">
-                <div class="tm">
-                  <strong>Total Amount:</strong> ₹{{ order.totalAmount }}
-                </div>
-              </div>
+              ><br />
+              <label><strong>Price:</strong> {{ item.price }} </label>
             </div>
+          </div>
+          <div class="total">
+            <strong style="margin-right: 1rem">Total Amount : </strong> ₹{{
+              order.totalAmount
+            }}
           </div>
           <div class="btn-group">
             <div class="cancel">
@@ -136,7 +137,8 @@ onMounted(() => {
   border-top: 2px solid #d5d9d9;
   margin-top: 1rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 .total .tm {
   margin-top: 0.5rem;
@@ -150,7 +152,7 @@ onMounted(() => {
 .btn-group {
   grid-column: 2 / span 2;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 2rem;
 }
 .btn-group button {

@@ -33,7 +33,7 @@ const close = () => emit("close");
   max-height: 90vh;
   overflow-y: auto;
   width: 100%;
-  max-width: 750px;
+  max-width: fit-content;
   left: 12rem;
 }
 </style>

@@ -18,7 +18,7 @@
           <td>{{ userdata.name }}</td>
           <td>{{ userdata.email }}</td>
           <td>{{ userdata.role }}</td>
-          <td><button class="remove">Remove</button></td>
+          <td><button class="invoice">Invoice</button></td>
         </tr>
       </tbody>
     </table>
@@ -70,8 +70,8 @@ thead {
   font-weight: 700;
   font-family: "inter";
 }
-.remove {
-  background-color: lightcoral;
+.invoice {
+  background-color: lightblue;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -81,7 +81,7 @@ thead {
   transition: background-color 0.3s ease-in-out;
 }
 
-.remove:hover {
-  background-color: red;
+.invoice:hover {
+  background-color: blue;
 }
 </style>
