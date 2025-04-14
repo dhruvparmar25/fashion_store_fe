@@ -82,7 +82,7 @@ onMounted(() => {
 
 @media (max-width: 1024px) {
   .card {
-    min-width: 511px;
+    min-width: 450px;
   }
   .cards img {
     width: 100%;

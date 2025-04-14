@@ -5,9 +5,6 @@
         <img src="/./public/Fashion.png" />
         <label><i class="fa-solid fa-house"></i>Dashboard</label>
         <div class="main-menu">
-          <div @click="cart()" :class="{ active: activeTab === 'Cart' }">
-            <label><i class="fa-solid fa-cart-shopping"></i>Carts</label>
-          </div>
           <div @click="order()" :class="{ active: activeTab === 'Order' }">
             <label><i class="fas fa-clipboard-check"></i>Orders</label>
           </div>
@@ -17,13 +14,16 @@
           <div @click="user()" :class="{ active: activeTab === 'User' }">
             <label><i class="fa-solid fa-users"></i>Users</label>
           </div>
+          <div @click="Report()" :class="{ active: activeTab === 'Report' }">
+            <label><i class="fa-solid fa-chart-simple"></i>Report</label>
+          </div>
           <button class="logout-btn" @click="logout">Logout</button>
         </div>
       </nav>
     </div>
 
     <div class="detail">
-      <Admincarts v-if="activeTab === 'Cart'" />
+      <AdminReport v-if="activeTab === 'Report'" />
       <AdminOrders v-if="activeTab === 'Order'" />
       <AdminProducts v-if="activeTab === 'Product'" />
       <AdminUser v-if="activeTab === 'User'" />
@@ -32,16 +32,16 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import Admincarts from "../AdminPage/Admincarts.vue";
 import AdminOrders from "../AdminPage/AdminOrders.vue";
 import AdminProducts from "../AdminPage/AdminProducts.vue";
 import AdminUser from "../AdminPage/AdminUser.vue";
+import AdminReport from "../AdminPage/AdminReport.vue";
 import { useAuth } from "@/composables/useAuth";
 
 const { logout } = useAuth();
 const activeTab = ref("");
-const cart = () => {
-  activeTab.value = "Cart";
+const Report = () => {
+  activeTab.value = "Report";
 };
 const order = () => {
   activeTab.value = "Order";

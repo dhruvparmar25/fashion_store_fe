@@ -9,10 +9,10 @@ import Contact from "@/views/contact.vue";
 import Orders from "@/views/orders.vue";
 import Address from "@/views/address.vue";
 import Admin from "@/components/Admin/Admin.vue";
-import Admincarts from "@/components/AdminPage/Admincarts.vue";
 import AdminOrders from "@/components/AdminPage/AdminOrders.vue";
 import AdminProducts from "@/components/AdminPage/AdminProducts.vue";
 import AdminUser from "@/components/AdminPage/AdminUser.vue";
+import AdminReport from "@/components/AdminPage/AdminReport.vue";
 
 // Define application routes
 const routes = [
@@ -77,7 +77,7 @@ const routes = [
       // other admin routes
     ],
   },
-  { path: "/admincarts", name: "admincarts", component: Admincarts },
+  { path: "/adminReport", name: "adminReport", component: AdminReport },
   { path: "/adminorders", name: "adminorders", component: AdminOrders },
   { path: "/adminuser", name: "adminuser", component: AdminUser },
 ];

@@ -94,4 +94,12 @@ onMounted(async () => {
 .container h1 {
   font-weight: 700;
 }
+@media (max-width: 768px) {
+  section.banner {
+    margin-left: 0rem;
+  }
+  .products {
+    margin: 0.5rem;
+  }
+}
 </style>

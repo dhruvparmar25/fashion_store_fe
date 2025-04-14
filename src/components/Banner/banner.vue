@@ -70,4 +70,13 @@ img {
   width: 48%;
   margin: auto;
 }
+@media (max-width: 768px) {
+  section.banner {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+  }
+}
 </style>

@@ -1,4 +1,5 @@
 <template>
+  <div class="title"><h4>Products</h4></div>
   <section class="admin-products">
     <div class="fillter-section">
       <FilterComponent class="sticky" @update-products="updateProductList">
@@ -83,7 +84,7 @@
             <div class="card-img">
               <img :src="product.image" />
             </div>
-            <div class="title">
+            <div class="prd-title">
               <h4>{{ product.name }}</h4>
             </div>
             <div class="card-field">
@@ -529,6 +530,15 @@ const updateProduct = async (id) => {
 };
 </script>
 <style scoped>
+.title {
+  border-bottom: 1px solid #e1e6eb;
+}
+.title h4 {
+  margin: 1rem;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "inter";
+}
 .admin-products {
   display: flex;
   justify-content: space-between;
@@ -557,7 +567,7 @@ const updateProduct = async (id) => {
   border-radius: 10px;
   margin: auto;
 }
-.title h4[data-v-3a026967] {
+.prd-title h4[data-v-3a026967] {
   font-size: 12px;
   font-weight: bold;
   margin-top: 10px;
