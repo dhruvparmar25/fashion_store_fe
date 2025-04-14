@@ -86,8 +86,15 @@
 
   <!-- Pagination Section -->
   <div class="pagination">
+    <Pagination
+      :current-page="currenPage"
+      :total-pages="totalPages"
+      @change="changePage"
+      @prev="prePage"
+      @next="nextPage"
+    />
     <!-- Pagination buttons -->
-    <button @click="prePage" :disabled="currenPage === 1" class="prev">
+    <!-- <button @click="prePage" :disabled="currenPage === 1" class="prev">
       &laquo;
     </button>
     <button
@@ -100,7 +107,7 @@
     </button>
     <button @click="nextPage" :disabled="prdlists.length < perPage">
       &raquo;
-    </button>
+    </button> -->
   </div>
 </template>
 
@@ -110,6 +117,7 @@ import { useRoute, useRouter } from "vue-router";
 import ProductPage from "@/components/Cards/ProductPage.vue";
 import FilterComponent from "@/components/Filters/FilterComponent.vue";
 import axios from "axios";
+import Pagination from "@/components/Pagination/pagination.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -120,12 +128,17 @@ const prdlists = ref([]);
 const searchQuery = ref("");
 const categories = ref([]);
 const currenPage = ref(1);
-const perPage = 12;
+const perPage = ref(12);
+const totalProducts = ref(0);
+
+const totalPages = computed(() => {
+  return Math.ceil(totalProducts.value / perPage.value);
+});
 
 // Pagination numbers (Hardcoded for now, can be dynamic)
-const paginationNumbers = computed(() => {
-  return [1, 2, 3, 4];
-});
+// const paginationNumbers = computed(() => {
+//   return [1, 2, 3, 4];
+// });
 
 // Fetch categories and set initial query on component mount
 onMounted(() => {
@@ -187,10 +200,13 @@ const fetchProducts = async () => {
     };
     const response = await axios.get("http://localhost:3000/api/product", {
       params,
+      ...productMetas.value,
+      q: searchQuery.value,
       page: currenPage.value,
-      per_page: perPage,
+      per_page: perPage.value,
     });
-    prdlists.value = response.data;
+    prdlists.value = response.data.data;
+    totalProducts.value = response.data.total;
   } catch (error) {
     console.error("Error Fetching Products", error);
   }
@@ -249,7 +265,9 @@ const prePage = () => {
   if (currenPage.value > 1) changePage(--currenPage.value);
 };
 const nextPage = () => {
-  if (prdlists.value.length === perPage) changePage(++currenPage.value);
+  if (currenPage.value < totalPages.value) {
+    changePage(currenPage.value + 1);
+  }
 };
 </script>
 
@@ -330,7 +348,7 @@ input {
 }
 .srch {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 .srch input {
@@ -367,80 +385,5 @@ input {
 .pagination button.active {
   background-color: black;
   color: white;
-}
-
-@media (max-width: 1024px) {
-  .products {
-    grid-template-columns: repeat(3, 1fr);
-    width: 95%;
-  }
-  .productpages {
-    flex-direction: column;
-  }
-  .fillter {
-    width: 100%;
-    height: auto;
-    position: static;
-    margin-bottom: 1rem;
-  }
-  .srch {
-    justify-content: space-between;
-  }
-  .srch input {
-    width: 50%;
-  }
-}
-@media (max-width: 768px) {
-  .products {
-    grid-template-columns: repeat(2, 1fr);
-    width: 100%;
-    padding: 0 1rem;
-  }
-  .productpages {
-    flex-direction: column;
-  }
-  .fillter {
-    width: 100%;
-    height: auto;
-    position: static;
-    margin-bottom: 1rem;
-  }
-  .srch {
-    justify-content: space-between;
-  }
-  .srch input {
-    width: 50%;
-  }
-  .pagination button {
-    width: 30px;
-    font-size: 10px;
-  }
-  @media (max-width: 480px) {
-    .srch {
-      justify-content: space-between;
-    }
-    .srch input {
-      width: 50%;
-    }
-    .pagination {
-      flex-wrap: wrap;
-    }
-    .pagination button {
-      width: auto;
-      padding: 5px 10px;
-    }
-    .productpages {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Center children horizontally */
-    }
-
-    .products {
-      width: 100%;
-      max-width: 400px; /* Or whatever width you prefer */
-      grid-template-columns: 1fr;
-    }
-  }
 }
 </style>
