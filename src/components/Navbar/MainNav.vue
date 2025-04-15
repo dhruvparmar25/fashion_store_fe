@@ -43,7 +43,7 @@
 
       <router-link to="/product" @click="showMenu = false">Product</router-link>
       <router-link to="/cart" @click="showMenu = false" class="cart">
-        Cart <i class="fa-solid fa-cart-shopping"></i>
+         <i class="fa-solid fa-cart-shopping"></i>
       </router-link>
       <!-- <div class="main-icon"></div> -->
     </div>

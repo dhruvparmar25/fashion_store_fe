@@ -1,4 +1,5 @@
 <template>
+
   <div class="orders-page">
     <h2>Your Orders</h2>
     <div v-if="orders.length > 0">
@@ -19,12 +20,15 @@
         <div class="item">
           <h4>Ordered Items:</h4>
           <div
-            v-for="item in order.items"
-            :key="item.productId._id"
+          v-for="item in order.items"
+          v-if="order?.items?.length"
+            :key="item.productId?._id"
             class="prd-detail"
           >
+    
+
             <div class="prd-img">
-              <img :src="item.productId.image" />
+              <img :src="item.productId?.image" />
             </div>
 
             <div class="prd-list">
@@ -32,7 +36,8 @@
               <label><strong>Order Id:</strong> {{ order._id }}</label
               ><br />
               <label
-                ><strong>Product Name:</strong> {{ item.productId.name }}</label
+                ><strong>Product Name:</strong>
+                {{ item.productId?.name }}</label
               ><br />
               <label><strong>Product Size:</strong> {{ item.size }} </label
               ><br />
@@ -51,9 +56,9 @@
           </div>
           <div class="btn-group">
             <div class="cancel">
-              <button @click="removeOrders(order._id)">Remove</button>
+              <button @click="removeOrders(order._id)">Cancel Order</button>
             </div>
-            <div class="payment"><button>Payemnt</button></div>
+            <div class="payment"><button>Payment</button></div>
           </div>
         </div>
       </div>

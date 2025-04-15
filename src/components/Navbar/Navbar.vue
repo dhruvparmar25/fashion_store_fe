@@ -19,10 +19,14 @@
     <!-- Menu Section -->
     <div class="menu">
       <router-link to="/contact" class="menu-item">Contact</router-link>
+      <div class="dropdown">
       <div class="user">
         <i class="fa-regular fa-user"></i>
+        <div class="dropdown-content">
+          <router-link to="/orders"><label >MyOrders</label></router-link>
+        </div>
       </div>
-
+    </div>
       <!-- Login / Logout Button -->
       <router-link v-if="!isLoggedIn" to="/login" class="login"
         >Login</router-link
@@ -127,6 +131,41 @@ nav {
   background-color: darkred;
 }
 
+.dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  width: fit-content;
+  padding: .5rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 10;
+}
+
+.dropdown-content div {
+  display: block;
+  padding: 8px 10px;
+  color: black;
+  transition: color 0.3s;
+}
+
+.dropdown-content div:hover {
+  color: blue;
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content label{
+ padding: 5px;
+ color: black;
+}
 /* Social Media Hover Effects */
 .fb:hover {
   color: #1877f2;
