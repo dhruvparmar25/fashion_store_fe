@@ -28,7 +28,6 @@
       <p v-else class="empty-cart">Your cart is empty.</p>
     </div>
     <div class="summary">
-
       <div class="title"><h4>Order Summary</h4></div>
       <p>
         Total Items: <span>{{ totalItems }}</span>
@@ -39,7 +38,7 @@
       <!-- <button @click="checkout()" class="checkout-btn">
         Proceed to Checkout
       </button> -->
-      <Address :cart="cart"/>
+      <Address v-if="cart?.items?.length > 0" :cart="cart" />
     </div>
   </div>
 </template>
@@ -106,23 +105,25 @@ const decreaseQuantity = async (item) => {
       console.error("Error updating quantity:", error);
     }
   } else {
-    removeFromCart(item.productId._id);
+    removeFromCart(item.productId?._id);
   }
 };
 
 const removeFromCart = async (item) => {
-  // console.log("Cliked item:", item);
-  if (!item || !item._id) {
+  console.log("Cliked item:", item.productId?._id);
+  if (!item || !item.productId?._id) {
     console.error("Error:Product ID is missing!");
     return;
   }
-  const id = item._id;
+  const id = item.productId?._id;
 
   try {
     await axios.delete(`http://localhost:3000/api/cart/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    cart.value.items = cart.value?.items?.filter((i) => i._id !== id);
+    cart.value.items = cart.value?.items?.filter(
+      (i) => i.productId?._id !== id
+    );
     toast.success("Product Remove From Cart");
   } catch (error) {
     console.error("Error Removing Item from cart:", error);
@@ -138,33 +139,6 @@ const totalPrice = computed(() =>
     0
   )
 );
-
-// const checkout =  async () => {
-//   try {
-//     const cartId = localStorage.getItem("cartId");
-//     if (!cartId) {
-//       toast.error("Cart is empty!");
-//       return;
-//     }
-//     console.log("using cart ID:", cartId);
-//     const res = await axios.post(
-//       `http://localhost:3000/api/orders/${cartId}`,
-//       { address: address.value },
-//       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-//     );
-//     toast.success(" Delivery Address added successfully", {
-//       autoClose: 2000,
-//       position: "top-right",
-//     });
-//     localStorage.removeItem("cartId");
-//    await completeOrderPayment(res.data)
-
-//   } catch (error) {
-//     console.error("Address failed:", error);
-//     const errorMessage = error.response?.data?.msg || "somthing went a wrong";
-//     toast.error(errorMessage);
-//   }
-// };
 
 onMounted(() => {
   loadCart();

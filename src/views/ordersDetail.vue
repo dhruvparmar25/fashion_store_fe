@@ -1,52 +1,80 @@
-<template class="order">
-  <div class="order-details">
-    <h4>Order details</h4>
-    <table>
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in OrdersDetail.items" :key="index">
-          <td>
-            <div class="prd-detail">
-              <div class="order-img">
-                <img
-                  :src="item.productId?.image"
-                  style="width: 50px; height: 50px"
-                />
-                <div class="prder-detail">
-                  <h6>{{ item.productId?.name }}</h6>
+<template>
+  <div class="order">
+    <div class="order-details">
+      <h4>Order details</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in OrdersDetail.items" :key="index">
+            <td>
+              <div class="prd-detail">
+                <div class="order-img">
+                  <img
+                    :src="item.productId?.image"
+                    style="width: 50px; height: 50px"
+                  />
+                  <div class="prder-detail">
+                    <h6>{{ item.productId?.name }}</h6>
 
-                  <h6>Size:{{ item.size }}</h6>
+                    <h6>Size:{{ item.size }}</h6>
+                  </div>
                 </div>
               </div>
-            </div>
-          </td>
-          <td>
-            <div class="prd-price">
-              {{ item.productId?.price }}
-            </div>
-          </td>
-          <td>
-            <div class="prd-qut">{{ item.quantity }}</div>
-          </td>
-          <td>
-            <div class="prd-price">{{ item.price }}</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="customer-details">
-    <h4>Customer</h4>
-    <div class="detail-customer" v-for="order in OrdersDetail">
-      <!-- {{ order }} -->
-      <div class="cus-name"><strong>Name</strong>{{}}</div>
+            </td>
+            <td>
+              <div class="prd-price">
+                {{ item.productId?.price }}
+              </div>
+            </td>
+            <td>
+              <div class="prd-qut">{{ item.quantity }}</div>
+            </td>
+            <td>
+              <div class="prd-price">{{ item.price }}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="customer-details">
+      <h4>Customer</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="order in OrdersDetail">
+            <td><strong>Name : </strong>{{ order.fullName }}</td>
+            <td>
+              <div class="prd-price">
+                {{ item.productId?.price }}
+              </div>
+            </td>
+            <td>
+              <div class="prd-qut">{{ item.quantity }}</div>
+            </td>
+            <td>
+              <div class="prd-price">{{ item.price }}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="detail-customer" v-for="order in OrdersDetail">
+        <!-- {{ order }} -->
+        <div class="cus-name"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -83,19 +111,21 @@ const fetchOrders = async () => {
 <style scoped>
 .order {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 1rem;
+  border: 1px solid red;
+  width: 100%;
 }
 .order-details {
   width: 70%;
   border-radius: 1px solid #e1e6eb;
   margin: 1rem;
 }
-.cutomer-details {
+.customer-details {
   width: 25%;
   border-radius: 1px solid #e1e6eb;
-  margin: 1rem;
+  padding: 1rem;
 }
+
 table,
 th,
 td {

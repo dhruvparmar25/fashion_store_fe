@@ -17,7 +17,7 @@ export const completeOrderPayment = async (order) => {
   console.log(import.meta.env.VITE_RAZORPAY_TEST_KEY_ID);
   const options = {
     key: import.meta.env.VITE_RAZORPAY_TEST_KEY_ID,
-    amount: (order.order?.amount ?? 0) * 100,
+    amount: ((order.order?.totalAmount || order?.amount) ?? 0) * 100,
     currency: "INR",
     order_id: order.razorpay_order_id,
     prefill: {
