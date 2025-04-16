@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <div class="bag">
+      <!-- {{ cart }} -->
       <div class="title"><h4>Shopping Bag</h4></div>
       <div v-if="cart?.items?.length > 0" class="cart-items">
         <div v-for="item in cart?.items || []" :key="item.id" class="cart-item">
@@ -27,6 +28,7 @@
       <p v-else class="empty-cart">Your cart is empty.</p>
     </div>
     <div class="summary">
+
       <div class="title"><h4>Order Summary</h4></div>
       <p>
         Total Items: <span>{{ totalItems }}</span>
@@ -34,9 +36,10 @@
       <p>
         Total Price: ₹<span>{{ totalPrice }}</span>
       </p>
-      <button @click="checkout()" class="checkout-btn">
+      <!-- <button @click="checkout()" class="checkout-btn">
         Proceed to Checkout
-      </button>
+      </button> -->
+      <Address :cart="cart"/>
     </div>
   </div>
 </template>
@@ -46,8 +49,9 @@ import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
+import Address from "./address.vue";
 
-const cart = ref([]);
+const cart = ref({});
 const router = useRouter();
 
 const loadCart = async () => {
@@ -56,10 +60,6 @@ const loadCart = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value = res.data;
-
-    if (cart.value && cart.value._id) {
-      localStorage.setItem("cartId", cart.value._id);
-    }
     console.log(cart.value._id);
   } catch (error) {
     console.error("Error loading cart:", error);
@@ -139,9 +139,32 @@ const totalPrice = computed(() =>
   )
 );
 
-const checkout = () => {
-  router.push("/address");
-};
+// const checkout =  async () => {
+//   try {
+//     const cartId = localStorage.getItem("cartId");
+//     if (!cartId) {
+//       toast.error("Cart is empty!");
+//       return;
+//     }
+//     console.log("using cart ID:", cartId);
+//     const res = await axios.post(
+//       `http://localhost:3000/api/orders/${cartId}`,
+//       { address: address.value },
+//       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+//     );
+//     toast.success(" Delivery Address added successfully", {
+//       autoClose: 2000,
+//       position: "top-right",
+//     });
+//     localStorage.removeItem("cartId");
+//    await completeOrderPayment(res.data)
+
+//   } catch (error) {
+//     console.error("Address failed:", error);
+//     const errorMessage = error.response?.data?.msg || "somthing went a wrong";
+//     toast.error(errorMessage);
+//   }
+// };
 
 onMounted(() => {
   loadCart();
@@ -161,7 +184,7 @@ onMounted(() => {
 }
 
 .bag {
-  width: 65%;
+  width: 55%;
   background: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -269,7 +292,7 @@ onMounted(() => {
 }
 
 .summary {
-  width: 30%;
+  width: 45%;
   background: #f8f8f8;
   padding: 20px;
   border-radius: 10px;

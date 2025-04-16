@@ -1,9 +1,10 @@
 <template>
   <div class="order-container">
     <h2>Delivery Address</h2>
+
     <form @submit.prevent="placeOrder">
       <div class="form-group">
-        <label>Full Name:</label><br />
+        <label>Full Name:</label>
         <input
           v-model="address.fullName"
           placeholder="Please Enter Your First Name"
@@ -11,7 +12,7 @@
         />
       </div>
       <div class="form-group">
-        <label>PHONE NUMBER</label><br />
+        <label>PHONE NUMBER</label>
         <input
           v-model="address.phoneNumber"
           placeholder="Please Enter Your Phone Number"
@@ -19,7 +20,7 @@
         />
       </div>
       <div class="form-group">
-        <label>Street</label><br />
+        <label>Street</label>
         <input
           v-model="address.street"
           placeholder="Please Enter Your Street Name"
@@ -27,7 +28,7 @@
         />
       </div>
       <div class="form-group">
-        <label>City</label><br />
+        <label>City</label>
         <input
           v-model="address.city"
           placeholder="Please Enter Your City Name"
@@ -35,7 +36,7 @@
         />
       </div>
       <div class="form-group">
-        <label>state</label><br />
+        <label>state</label>
         <input
           v-model="address.state"
           placeholder="Please Enter Your State Name"
@@ -43,7 +44,7 @@
         />
       </div>
       <div class="form-group">
-        <label>Zip Code</label><br />
+        <label>Zip Code</label>
         <input
           v-model="address.zipCode"
           placeholder="Please Enter Your ZipCode Name"
@@ -51,7 +52,7 @@
         />
       </div>
       <div class="form-group">
-        <label>Country</label><br />
+        <label>Country</label>
         <input
           v-model="address.country"
           placeholder="Please Enter Your Country Name"
@@ -64,11 +65,14 @@
 </template>
 
 <script setup>
+import { completeOrderPayment, } from "@/utils/helpers";
 import axios from "axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify"; // Importing toast from vue3-toastify
 import "vue3-toastify/dist/index.css"; // Importing toastify CSS
+
+const props = defineProps(['cart'])
 
 const router = useRouter();
 const address = ref({
@@ -83,7 +87,7 @@ const address = ref({
 
 const placeOrder = async () => {
   try {
-    const cartId = localStorage.getItem("cartId");
+    const cartId = props.cart?._id;
     if (!cartId) {
       toast.error("Cart is empty!");
       return;
@@ -97,9 +101,10 @@ const placeOrder = async () => {
     toast.success(" Delivery Address added successfully", {
       autoClose: 2000,
       position: "top-right",
-      onClose: () => router.push("/orders"),
     });
     localStorage.removeItem("cartId");
+   await completeOrderPayment(res.data)
+
   } catch (error) {
     console.error("Address failed:", error);
     const errorMessage = error.response?.data?.msg || "somthing went a wrong";
@@ -111,45 +116,55 @@ const placeOrder = async () => {
 <style scoped>
 .order-container h2 {
   text-transform: uppercase;
-  padding: 1rem;
+  font-size: 1rem;
+  margin: 1rem 0;
+  text-align: center;
 }
 
 form {
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 700px; /* 👈 Width badha diya */
+  margin: 10px auto;
+  padding: 10px; /* 👈 Height kam karne ke liye padding ghata diya */
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
 }
 
 .form-group {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem; /* 👈 Spacing aur chhota kiya */
 }
+
 label {
-  font-weight: bold;
-  color: #333;
+  font-size: 0.85rem;
+  color: #222;
+  margin-bottom: 0.1rem;
   display: block;
 }
+
 input {
   width: 100%;
-  padding: 10px;
+  padding: 6px 8px; /* 👈 Height kam karne ke liye padding kam */
+  font-size: 0.9rem;
   border: 1px solid #ccc;
-  border-radius: 1rem;
-  font-size: 1rem;
+  border-radius: 4px;
   box-sizing: border-box;
 }
+
 button.order-btn {
   width: 100%;
-  padding: 12px;
+  padding: 8px; /* 👈 Button height bhi kam */
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  margin-top: 8px;
   cursor: pointer;
 }
+
 button.order-btn:hover {
   background-color: #0056b3;
 }
 </style>
+
+

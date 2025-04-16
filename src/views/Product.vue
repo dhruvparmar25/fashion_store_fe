@@ -81,6 +81,7 @@
         @click="goToDetails(prdlist)"
         :product="prdlist"
       />
+      {{ console.log("Product:", prdlists) }}
     </div>
   </section>
 

@@ -13,9 +13,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(order, index) in Orders">
+        <tr v-for="(order, index) in Orders" :key="order._id">
           <!-- {{
-            order
+            order._id
           }} -->
           <td>{{ index + 1 }}</td>
           <td>{{ order._id }}</td>
@@ -24,54 +24,8 @@
           <td>{{ order.totalAmount }}</td>
 
           <td>
-            <button @click="openOrderdetail(order)" class="viewall">
-              viewall
-            </button>
+            <button @click="goToOrders(order)" class="viewall">viewall</button>
           </td>
-          <Modal v-if="showModal" @close="showModal = false">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>TotalAmount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{
-                items
-              }}
-              <tr v-for="(item, idx) in selectOrder.items" :key="idx">
-                <td>
-                  <div class="prd-detail">
-                    <div class="order-img">
-                      <img
-                        :src="item.product?.image"
-                        style="width: 50px; height: 50px"
-                      />
-                      <div class="prder-detail">
-                        <h4>{{ item.product?.name }}</h4>
-
-                        <h6>Size:{{ item.size }}</h6>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="prd-price">
-                    {{ item.product?.price }}
-                  </div>
-                </td>
-                <td>
-                  <div class="prd-qut">{{ item.quantity }}</div>
-                </td>
-                <td>
-                  <div class="prd-price">{{ item.price }}</div>
-                </td>
-              </tr>
-            </tbody>
-            <div v-if="selectOrder" class="orderdetails"></div>
-          </Modal>
         </tr>
       </tbody>
     </table>
@@ -80,15 +34,15 @@
 <script setup>
 import axios from "axios";
 import { onMounted, ref } from "vue";
-import Modal from "../commons/Modal.vue";
+import { useRouter } from "vue-router";
 
 const Orders = ref([]);
-const showModal = ref(false);
-const selectOrder = ref(null);
+const router = useRouter();
 
 onMounted(() => {
   fetchOrders();
 });
+
 const fetchOrders = async () => {
   try {
     const res = await axios.get("http://localhost:3000/api/admin/orders", {
@@ -99,11 +53,7 @@ const fetchOrders = async () => {
     console.log("Error Fetching User", error);
   }
 };
-const openOrderdetail = (order) => {
-  console.log(order);
-  selectOrder.value = order;
-  showModal.value = true;
-};
+
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-GB", {
@@ -111,6 +61,12 @@ const formatDate = (dateStr) => {
     month: "short", // ya "long"
     year: "numeric",
   });
+};
+
+const goToOrders = (order) => {
+  if (!order?._id) return;
+  console.log("orders", order);
+  router.push({ name: "ordersDetail", params: { id: order._id }, query: {} });
 };
 </script>
 <style scoped>
@@ -141,7 +97,7 @@ thead {
   font-family: "inter";
 }
 .viewall {
-  background-color: lightcoral;
+  background-color: lightblue;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -152,7 +108,7 @@ thead {
 }
 
 .viewall:hover {
-  background-color: red;
+  background-color: blue;
 }
 .order-img {
   display: flex;

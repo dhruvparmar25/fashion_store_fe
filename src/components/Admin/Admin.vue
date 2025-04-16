@@ -5,16 +5,16 @@
         <img src="/./public/Fashion.png" />
         <label><i class="fa-solid fa-house"></i>Dashboard</label>
         <div class="main-menu">
-          <div @click="order()" :class="{ active: activeTab === 'Order' }">
+          <div @click="goTo('adminorders')" :class="{ active: activeTab === 'Order' }">
             <label><i class="fas fa-clipboard-check"></i>Orders</label>
           </div>
-          <div @click="product()" :class="{ active: activeTab === 'Product' }">
+          <div @click="goTo('adminproducts')" :class="{ active: activeTab === 'Product' }">
             <label><i class="fas fa-box-open"></i>Products</label>
           </div>
-          <div @click="user()" :class="{ active: activeTab === 'User' }">
+          <div @click="goTo('adminuser')" :class="{ active: activeTab === 'User' }">
             <label><i class="fa-solid fa-users"></i>Users</label>
           </div>
-          <div @click="Report()" :class="{ active: activeTab === 'Report' }">
+          <div @click="goTo('adminreport')" :class="{ active: activeTab === 'Report' }">
             <label><i class="fa-solid fa-chart-simple"></i>Report</label>
           </div>
           <button class="logout-btn" @click="logout">Logout</button>
@@ -23,10 +23,11 @@
     </div>
 
     <div class="detail">
-      <AdminReport v-if="activeTab === 'Report'" />
+      <!-- <AdminReport v-if="activeTab === 'Report'" />
       <AdminOrders v-if="activeTab === 'Order'" />
       <AdminProducts v-if="activeTab === 'Product'" />
-      <AdminUser v-if="activeTab === 'User'" />
+      <AdminUser v-if="activeTab === 'User'" /> -->
+    <router-view></router-view>
     </div>
   </section>
 </template>
@@ -37,21 +38,15 @@ import AdminProducts from "../AdminPage/AdminProducts.vue";
 import AdminUser from "../AdminPage/AdminUser.vue";
 import AdminReport from "../AdminPage/AdminReport.vue";
 import { useAuth } from "@/composables/useAuth";
+import { useRouter } from "vue-router";
 
 const { logout } = useAuth();
-const activeTab = ref("");
-const Report = () => {
-  activeTab.value = "Report";
-};
-const order = () => {
-  activeTab.value = "Order";
-};
-const product = () => {
-  activeTab.value = "Product";
-};
-const user = () => {
-  activeTab.value = "User";
-};
+const router = useRouter()
+const goTo=(name)=>{
+router.push({
+  name
+})
+}
 </script>
 <style scoped>
 .dsb {
@@ -128,5 +123,8 @@ const user = () => {
 
 .logout-btn:hover {
   background-color: red;
+}
+.detail {
+    width: 85%;
 }
 </style>
