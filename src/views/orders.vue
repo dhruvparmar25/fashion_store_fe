@@ -1,5 +1,4 @@
 <template>
-
   <div class="orders-page">
     <h2>Your Orders</h2>
     <div v-if="orders.length > 0">
@@ -20,13 +19,11 @@
         <div class="item">
           <h4>Ordered Items:</h4>
           <div
-          v-for="item in order.items"
-          v-if="order?.items?.length"
+            v-for="item in order.items"
+            v-if="order?.items?.length"
             :key="item.productId?._id"
             class="prd-detail"
           >
-    
-
             <div class="prd-img">
               <img :src="item.productId?.image" />
             </div>
@@ -58,7 +55,9 @@
             <div class="cancel">
               <button @click="removeOrders(order._id)">Cancel Order</button>
             </div>
-            <div class="payment"><button>Payment</button></div>
+            <div class="payment">
+              <button @click="payment(order)">Payment</button>
+            </div>
           </div>
         </div>
       </div>
@@ -68,6 +67,7 @@
 </template>
 
 <script setup>
+import { completeOrderPayment } from "@/utils/helpers";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
@@ -103,6 +103,10 @@ const removeOrders = async (orderId) => {
   } finally {
     remove.value = false;
   }
+};
+
+const payment = async (order) => {
+  await completeOrderPayment(order);
 };
 onMounted(() => {
   loadOrders();

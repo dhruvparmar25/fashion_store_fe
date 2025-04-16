@@ -1,4 +1,4 @@
-<template>
+<template class="order">
   <div class="order-details">
     <h4>Order details</h4>
     <table>
@@ -7,7 +7,7 @@
           <th>Product</th>
           <th>Price</th>
           <th>Quantity</th>
-          <th>TotalAmount</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +42,13 @@
       </tbody>
     </table>
   </div>
+  <div class="customer-details">
+    <h4>Customer</h4>
+    <div class="detail-customer" v-for="order in OrdersDetail">
+      <!-- {{ order }} -->
+      <div class="cus-name"><strong>Name</strong>{{}}</div>
+    </div>
+  </div>
 </template>
 <script setup>
 import axios from "axios";
@@ -71,11 +78,21 @@ const fetchOrders = async () => {
   } catch (error) {
     console.log("Error OrdersDetaills User", error);
   }
-};  
+};
 </script>
 <style scoped>
+.order {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .order-details {
   width: 70%;
+  border-radius: 1px solid #e1e6eb;
+  margin: 1rem;
+}
+.cutomer-details {
+  width: 25%;
   border-radius: 1px solid #e1e6eb;
   margin: 1rem;
 }
