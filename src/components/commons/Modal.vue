@@ -32,8 +32,7 @@ const close = () => emit("close");
   border-radius: 1rem;
   max-height: 90vh;
   overflow-y: auto;
-  width: 100%;
-  max-width: fit-content;
-  left: 12rem;
+  width: 50%;
+  left: 5rem;
 }
 </style>

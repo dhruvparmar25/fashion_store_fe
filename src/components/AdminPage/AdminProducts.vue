@@ -1,5 +1,6 @@
 <template>
   <div class="title"><h4>Products</h4></div>
+
   <section class="admin-products">
     <div class="fillter-section">
       <FilterComponent class="sticky" @update-products="updateProductList">
@@ -81,6 +82,7 @@
             v-for="product in products"
             :key="product._id"
           >
+            {{ product._id }}
             <div class="card-img">
               <img :src="product.image" />
             </div>

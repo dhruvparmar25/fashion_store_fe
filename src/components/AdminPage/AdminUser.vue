@@ -9,7 +9,7 @@
           <th>Name</th>
           <th>Email</th>
           <th>Role</th>
-          <th>Action</th>
+          <!-- <th>Action</th> -->
         </tr>
       </thead>
       <tbody>
@@ -18,7 +18,7 @@
           <td>{{ userdata.name }}</td>
           <td>{{ userdata.email }}</td>
           <td>{{ userdata.role }}</td>
-          <td><button class="invoice">Invoice</button></td>
+          <!-- <td><button class="invoice">Invoice</button></td> -->
         </tr>
       </tbody>
     </table>
