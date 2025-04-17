@@ -47,7 +47,7 @@
               ><br />
               <label
                 ><strong>Quantiy:</strong> {{ item.quantity }} x ₹{{
-                  item.productId?.price
+                  item.productId.price
                 }}</label
               ><br />
               <label><strong>Price:</strong> {{ item.price }} </label>
@@ -59,42 +59,6 @@
             }}
           </div>
           <div class="paymentMessage" v-if="order.status == 'Success'">
-            <div class="bill">
-              <button @click="openBillModal(order)">BillView</button>
-              <Modal v-if="showBillModal" @close="showBillModal = false">
-                <template #default>
-                  <div class="bill-modal">
-                    <h3>Bill Details</h3>
-                    <p><strong>Order ID:</strong> {{ selectedOrder._id }}</p>
-                    <p>
-                      <strong>Total Amount:</strong> ₹{{
-                        selectedOrder.totalAmount
-                      }}
-                    </p>
-                    <p>
-                      <strong>Order Date:</strong>
-                      {{
-                        formatDate(
-                          selectedOrder.updatedAt || selectedOrder.createdAt
-                        )
-                      }}
-                    </p>
-                    <h4>Items:</h4>
-                    <ul>
-                      <li
-                        v-for="item in selectedOrder.items"
-                        :key="item.productId._id"
-                      >
-                        {{ item.productId.name }} - {{ item.quantity }} x ₹{{
-                          item.productId.price
-                        }}
-                        = ₹{{ item.price }}
-                      </li>
-                    </ul>
-                  </div>
-                </template>
-              </Modal>
-            </div>
             <p>Order Completed!!</p>
           </div>
           <div class="btn-group" v-if="order.status !== 'Success'">
@@ -117,16 +81,9 @@ import { completeOrderPayment } from "@/utils/helpers";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
-import Modal from "@/components/commons/Modal.vue";
 
 const orders = ref([]);
 const remove = ref(false);
-const showBillModal = ref(false);
-const selectedOrder = ref(null); // jis order ka bill dikhana hai
-
-onMounted(() => {
-  loadOrders();
-});
 
 const loadOrders = async () => {
   try {
@@ -158,18 +115,9 @@ const removeOrders = async (orderId) => {
   }
 };
 
-const payment = (order) => {
-  completeOrderPayment(order)
-    .then(() => {
-      toast.success("Payment completed successfully!");
-      return loadOrders();
-    })
-    .catch((err) => {
-      console.error("Payment failed:", err);
-      toast.error("Payment failed! Please try again.");
-    });
+const payment = async (order) => {
+  await completeOrderPayment(order);
 };
-
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-GB", {
@@ -178,10 +126,9 @@ const formatDate = (dateStr) => {
     year: "numeric",
   });
 };
-const openBillModal = (order) => {
-  selectedOrder.value = order;
-  showBillModal.value = true;
-};
+onMounted(() => {
+  loadOrders();
+});
 </script>
 
 <style scoped>
