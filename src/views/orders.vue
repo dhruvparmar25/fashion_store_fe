@@ -65,7 +65,57 @@
             <Modal v-if="showBillModal" @close="showBillModal = false">
               <div class="bill-modal">
                 <h3>Bill Details</h3>
-                <p><strong>Order ID:</strong> {{ selectedOrder._id }}</p>
+                <!-- {{ selectedOrder }} -->
+
+                <div class="order-detail">
+                  <div class="main-shop">
+                    <div class="shop-detail">
+                      <div class="logo">
+                        <img
+                          src="/public/Fashion.png"
+                          style="width: 50px; height: 50px"
+                        />
+
+                        <div class="date">
+                          Date:
+                          {{ formatDate(selectedOrder.createdAt) }}
+                        </div>
+                      </div>
+
+                      <div class="invoice">
+                        <h4>INVOICE</h4>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="label">
+                    <h4>Orders Detail</h4>
+                  </div>
+                  <div
+                    class="product-details"
+                    v-for="(item, index) in selectedOrder.items"
+                    :key="index"
+                  >
+                    <div class="product">
+                      {{ item?.productId?.name }}
+                    </div>
+                    <div class="items">
+                      <div class="item-price">
+                        <div class="prd-price">
+                          ₹{{ item.productId?.price }}
+                        </div>
+                      </div>
+                      <div class="item-qty">
+                        <div class="prd-qut">{{ item.quantity }}</div>
+                      </div>
+                      <div class="prd-price">₹{{ item.price }}</div>
+                    </div>
+                  </div>
+                  <div class="total">
+                    <h4>Total Amount : ₹{{ selectedOrder.totalAmount }}</h4>
+                  </div>
+                </div>
+                <!-- <p><strong>Order ID:</strong> {{ selectedOrder._id }}</p>
                 <p>
                   <strong>Total Amount:</strong> ₹{{
                     selectedOrder.totalAmount
@@ -90,7 +140,7 @@
                     }}
                     = ₹{{ item.price }}
                   </li>
-                </ul>
+                </ul> -->
               </div>
             </Modal>
           </div>
@@ -270,5 +320,76 @@ onMounted(() => {
 .bill-modal {
   padding: 1rem;
   min-width: 300px;
+}
+
+.product-details {
+  display: flex;
+  margin: 1rem;
+  justify-content: space-between;
+}
+.order-detail {
+  margin: 2rem;
+  /* width: 60%; */
+  border-radius: 1rem;
+  border: 1px solid #eef0f7;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eef0f7;
+}
+.label h4 {
+  margin: 1rem;
+}
+.order-detail h4,
+.label h4 {
+  font-family: "inter";
+  font-weight: 400;
+  font-size: 18px;
+  color: rgb(0, 0, 0);
+  margin: 1rem;
+}
+.product-details[data-v-7c338ad9] {
+  display: flex;
+  margin: 1rem;
+  justify-content: space-between;
+  border-bottom: 1px solid #eef0f7;
+}
+
+.product {
+  display: flex;
+  gap: 0.5rem;
+}
+.prder-detail p {
+  margin: 0%;
+  font-size: 14px;
+  color: #67779b;
+}
+
+.prder-detail h6 {
+  margin: 0%;
+}
+.items {
+  display: flex;
+  gap: 2rem;
+  font-weight: 600;
+  align-items: center;
+}
+.shop-detail {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.invoice h4 {
+  font-size: 18px;
+  color: black;
+  font-family: "Poppins";
+  line-height: 32px;
+  font-weight: 400;
+}
+.main-shop {
+  border-bottom: 1px solid #eef0f7;
 }
 </style>
