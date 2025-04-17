@@ -6,8 +6,7 @@ export const getHeader = () => {
   return { authorization: `Bearer ${token}` };
 };
 
-export const completeOrderPayment = async (order) => {
-  console.log(import.meta.env.VITE_RAZORPAY_TEST_KEY_ID);
+export const completeOrderPayment = async (order, onSuccessCallback) => {
   const options = {
     key: import.meta.env.VITE_RAZORPAY_TEST_KEY_ID,
     amount: ((order.order?.totalAmount || order?.amount) ?? 0) * 100,
@@ -21,15 +20,22 @@ export const completeOrderPayment = async (order) => {
     theme: {
       color: "#F37254",
     },
-    handler: (res) => {
-      console.log("Orders:", order.order);
-      console.log("Order ID:", order?.order?._id);
-      saveTransation(res?.razorpay_payment_id, order?.order?._id);
-      router.push("/orders");
+    handler: async (res) => {
+      try {
+        await saveTransation(res?.razorpay_payment_id, order?.order?._id);
+        if (typeof onSuccessCallback === "function") {
+          await onSuccessCallback(); // ✅ refresh orders
+        }
+        router.push("/orders");
+      } catch (err) {
+        console.error("Error in payment handler:", err);
+      }
     },
   };
+
   const razorpay = new Razorpay(options);
   razorpay.open();
+
   razorpay.on("payment.failed", (err) => {
     console.log("payment fail", err);
   });

@@ -58,6 +58,7 @@
               order.totalAmount
             }}
           </div>
+          <!-- {{ order.status }} -->
           <div class="paymentMessage" v-if="order.status == 'Success'">
             <p>Order Completed!!</p>
           </div>
@@ -116,7 +117,7 @@ const removeOrders = async (orderId) => {
 };
 
 const payment = async (order) => {
-  await completeOrderPayment(order);
+  await completeOrderPayment(order, loadOrders);
 };
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
