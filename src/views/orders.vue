@@ -3,6 +3,7 @@
     <h2>Your Orders</h2>
     <div v-if="orders.length > 0">
       <div v-for="order in orders" :key="order._id" class="order-item">
+        <!-- {{ order }} -->
         <div class="add">
           <h4>Delivery Address</h4>
           <div class="add-detail">
@@ -17,7 +18,13 @@
         </div>
 
         <div class="item">
-          <h4>Ordered Items:</h4>
+          <div class="item-label">
+            <h4>Ordered Items:</h4>
+
+            <p>
+              Order-Date: {{ formatDate(order.updatedAt || order.createdAt) }}
+            </p>
+          </div>
           <div
             v-for="item in order.items"
             v-if="order?.items?.length"
@@ -51,7 +58,10 @@
               order.totalAmount
             }}
           </div>
-          <div class="btn-group">
+          <div class="paymentMessage" v-if="order.status == 'Success'">
+            <p>Order Completed!!</p>
+          </div>
+          <div class="btn-group" v-if="order.status !== 'Success'">
             <div class="cancel">
               <button @click="removeOrders(order._id)">Cancel Order</button>
             </div>
@@ -108,6 +118,14 @@ const removeOrders = async (orderId) => {
 const payment = async (order) => {
   await completeOrderPayment(order);
 };
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short", // ya "long"
+    year: "numeric",
+  });
+};
 onMounted(() => {
   loadOrders();
 });
@@ -124,6 +142,16 @@ onMounted(() => {
 }
 .orders-page h2 {
   padding: 1rem;
+}
+.item-label {
+  display: flex;
+  justify-content: space-between;
+}
+.item-label p {
+  background-color: black;
+  color: white;
+  padding: 5px;
+  font-size: 14px;
 }
 .prd-detail {
   display: flex;
@@ -157,7 +185,12 @@ onMounted(() => {
   padding: 1rem;
   background-color: #f8f9fa;
 }
-
+.paymentMessage p {
+  font-size: 27px;
+  color: green;
+  text-align: end;
+  font-style: italic;
+}
 .btn-group {
   grid-column: 2 / span 2;
   display: flex;

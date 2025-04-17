@@ -1,19 +1,12 @@
 import axios from "axios";
+import router from "@/router/router";
 
-/**
- * Utility function to get the authorization header with a stored token from local storage.
- * This function is used to add the authorization header when sending requests that require authentication.
- * Headers object containing the authorization token.
- */
 export const getHeader = () => {
   const token = localStorage.getItem("token") || "";
   return { authorization: `Bearer ${token}` };
 };
 
 export const completeOrderPayment = async (order) => {
-  // const script = document.createElement('script');
-  // script.src="https://checkout.razorpay.com/v1/checkout.js"
-  // document.head.appendChild(script)
   console.log(import.meta.env.VITE_RAZORPAY_TEST_KEY_ID);
   const options = {
     key: import.meta.env.VITE_RAZORPAY_TEST_KEY_ID,
@@ -32,6 +25,7 @@ export const completeOrderPayment = async (order) => {
       console.log("Orders:", order.order);
       console.log("Order ID:", order?.order?._id);
       saveTransation(res?.razorpay_payment_id, order?.order?._id);
+      router.push("/orders");
     },
   };
   const razorpay = new Razorpay(options);

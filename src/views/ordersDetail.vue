@@ -1,79 +1,90 @@
 <template>
-  <div class="order">
-    <div class="order-details">
-      <h4>Order details</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in OrdersDetail.items" :key="index">
-            <td>
-              <div class="prd-detail">
-                <div class="order-img">
-                  <img
-                    :src="item.productId?.image"
-                    style="width: 50px; height: 50px"
-                  />
-                  <div class="prder-detail">
-                    <h6>{{ item.productId?.name }}</h6>
-
-                    <h6>Size:{{ item.size }}</h6>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="prd-price">
-                {{ item.productId?.price }}
-              </div>
-            </td>
-            <td>
-              <div class="prd-qut">{{ item.quantity }}</div>
-            </td>
-            <td>
-              <div class="prd-price">{{ item.price }}</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- -->
+  <div class="orders-page">
+    <div class="order-detail">
+      <div class="label">
+        <h4>Orders Detail</h4>
+        <div v-if="OrdersDetail?.items?.length" class="length">
+          {{ OrdersDetail.items.length }}
+        </div>
+      </div>
+      <div
+        class="product-details"
+        v-for="(item, index) in OrdersDetail.items"
+        :key="index"
+      >
+        <div class="product">
+          <div class="order-img">
+            <img
+              :src="item.productId?.image"
+              style="width: fit-content; height: 55px"
+            />
+          </div>
+          <div class="prder-detail">
+            <h6>{{ item.productId?.category }}</h6>
+            <!-- {{ item }} -->
+            <p>Size:{{ item.size }}</p>
+            <p>Gender:{{ item.productId?.type }}</p>
+          </div>
+        </div>
+        <div class="items">
+          <div class="item-price">
+            <div class="prd-price">₹{{ item.productId?.price }}</div>
+          </div>
+          <div class="item-qty">
+            <div class="prd-qut">{{ item.quantity }}</div>
+          </div>
+          <div class="prd-price">₹{{ item.price }}</div>
+        </div>
+      </div>
+      <div class="total">
+        <h4>
+          Total Amount :
+          <strong style="color: black">₹{{ OrdersDetail.totalAmount }}</strong>
+        </h4>
+      </div>
     </div>
-    <div class="customer-details">
-      <h4>Customer</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="order in OrdersDetail">
-            <td><strong>Name : </strong>{{ order.fullName }}</td>
-            <td>
-              <div class="prd-price">
-                {{ item.productId?.price }}
-              </div>
-            </td>
-            <td>
-              <div class="prd-qut">{{ item.quantity }}</div>
-            </td>
-            <td>
-              <div class="prd-price">{{ item.price }}</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="detail-customer" v-for="order in OrdersDetail">
-        <!-- {{ order }} -->
-        <div class="cus-name"></div>
+    <div class="customer-detail">
+      <div class="label">
+        <h4>Customer</h4>
+      </div>
+      <div class="cust-main">
+        <div class="cust-details">
+          <div class="name">
+            <div class="cust-detail">
+              <strong>Name : </strong>{{ OrdersDetail?.address?.fullName }}
+            </div>
+          </div>
+          <div class="conatct-label">
+            <label>Contact-info</label>
+          </div>
+          <div class="mail">
+            <div class="cust-detail">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+              {{ OrdersDetail.userId?.email }}
+            </div>
+          </div>
+          <div class="phone">
+            <div class="cust-detail">
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              {{ OrdersDetail?.address?.phoneNumber }}
+            </div>
+          </div>
+          <!-- address -->
+          <div class="conatct-label">
+            <label> Shipping address</label>
+          </div>
+          <div class="mail">
+            <div class="cust-detail">
+              {{ OrdersDetail.address?.street }}<br />
+              {{ OrdersDetail.address?.city }}
+              <br />
+              {{ OrdersDetail.address?.state }}
+              <br />
+              {{ OrdersDetail.address?.zipCode }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -109,33 +120,105 @@ const fetchOrders = async () => {
 };
 </script>
 <style scoped>
-.order {
+.orders-page {
   display: flex;
   gap: 1rem;
-  border: 1px solid red;
-  width: 100%;
+  align-items: start;
 }
-.order-details {
-  width: 70%;
-  border-radius: 1px solid #e1e6eb;
+.order-detail {
+  margin: 2rem;
+  width: 60%;
+  border-radius: 1rem;
+  border: 1px solid #eef0f7;
+}
+.label {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eef0f7;
+}
+.label h4 {
   margin: 1rem;
 }
-.customer-details {
-  width: 25%;
-  border-radius: 1px solid #e1e6eb;
-  padding: 1rem;
+.order-detail h4,
+.label h4 {
+  font-family: "inter";
+  font-weight: 400;
+  font-size: 18px;
+  color: rgb(0, 0, 0);
+  margin: 1rem;
+}
+.product-details[data-v-7c338ad9] {
+  display: flex;
+  margin: 1rem;
+  justify-content: space-between;
+  border-bottom: 1px solid #eef0f7;
 }
 
-table,
-th,
-td {
-  border: 1px solid #e1e6eb;
-  border-radius: 10px;
-  border-collapse: collapse;
-  width: fit-content;
-  padding: 1rem;
+.product {
+  display: flex;
+  gap: 0.5rem;
 }
-thead {
+.prder-detail p {
+  margin: 0%;
+  font-size: 14px;
+  color: #67779b;
+}
+.length[data-v-7c338ad9] {
+  background-color: #67779b;
+  color: white;
+  width: 25px;
+  text-align: center;
+  border-radius: 50%;
+}
+.prder-detail h6 {
+  margin: 0%;
+}
+.items {
+  display: flex;
+  gap: 2rem;
+  font-weight: 600;
+  align-items: center;
+}
+.customer-detail {
+  border-radius: 1rem;
+  border: 1px solid #eef0f7;
+  margin: 2rem;
+  width: 25%;
+}
+.total {
+  text-align: end;
+}
+.total h4 {
+  color: #6c7788;
+}
+.cust-main {
+  margin: 1rem;
+}
+.name,
+.phone {
+  border-bottom: 1px solid #eef0f7;
+}
+.cust-detail {
+  color: #6c7788;
+  margin: 1rem;
+}
+.cust-detail label {
+  font-size: 16px;
   font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cust-contact {
+  margin: 1rem;
+}
+.cust-detail div {
+  margin-bottom: 5px;
+}
+.conatct-label {
+  margin: 1rem;
+}
+.conatct-label label {
+  font-size: 20px;
+  font-weight: 600;
 }
 </style>

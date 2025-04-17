@@ -24,7 +24,9 @@
           <td>{{ order.totalAmount }}</td>
 
           <td>
-            <button @click="goToOrders(order)" class="viewall">viewall</button>
+            <button @click="goToOrders(order)" class="viewall">
+              OrderDetail
+            </button>
           </td>
         </tr>
       </tbody>
