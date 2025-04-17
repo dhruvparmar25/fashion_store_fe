@@ -61,6 +61,38 @@
           <!-- {{ order.status }} -->
           <div class="paymentMessage" v-if="order.status == 'Success'">
             <p>Order Completed!!</p>
+            <button @click="openBillModal(order)">BillView</button>
+            <Modal v-if="showBillModal" @close="showBillModal = false">
+              <div class="bill-modal">
+                <h3>Bill Details</h3>
+                <p><strong>Order ID:</strong> {{ selectedOrder._id }}</p>
+                <p>
+                  <strong>Total Amount:</strong> ₹{{
+                    selectedOrder.totalAmount
+                  }}
+                </p>
+                <p>
+                  <strong>Order Date:</strong>
+                  {{
+                    formatDate(
+                      selectedOrder.updatedAt || selectedOrder.createdAt
+                    )
+                  }}
+                </p>
+                <h4>Items:</h4>
+                <ul>
+                  <li
+                    v-for="item in selectedOrder.items"
+                    :key="item.productId._id"
+                  >
+                    {{ item.productId.name }} - {{ item.quantity }} x ₹{{
+                      item.productId.price
+                    }}
+                    = ₹{{ item.price }}
+                  </li>
+                </ul>
+              </div>
+            </Modal>
           </div>
           <div class="btn-group" v-if="order.status !== 'Success'">
             <div class="cancel">
@@ -82,9 +114,17 @@ import { completeOrderPayment } from "@/utils/helpers";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
+import Modal from "@/components/commons/Modal.vue";
 
 const orders = ref([]);
 const remove = ref(false);
+const showBillModal = ref(false);
+const selectedOrder = ref(null); // jis order ka bill dikhana hai
+
+const openBillModal = (order) => {
+  selectedOrder.value = order;
+  showBillModal.value = true;
+};
 
 const loadOrders = async () => {
   try {
@@ -225,5 +265,10 @@ onMounted(() => {
   text-align: center;
   font-size: 18px;
   padding: 1rem;
+}
+
+.bill-modal {
+  padding: 1rem;
+  min-width: 300px;
 }
 </style>
