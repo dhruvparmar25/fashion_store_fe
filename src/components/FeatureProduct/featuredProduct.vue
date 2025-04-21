@@ -5,7 +5,11 @@
       <router-link to="/product"><button>View All</button></router-link>
     </div>
     <div class="productContainer">
-      <ProductCard v-for="prd in prds.data" :product="prd" />
+      <ProductCard
+        v-for="prd in prds.data?.slice(0, 5) || []"
+        :key="prd._id"
+        :product="prd"
+      />
     </div>
   </section>
 </template>

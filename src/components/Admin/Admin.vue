@@ -3,18 +3,36 @@
     <div class="field">
       <nav>
         <img src="/./public/Fashion.png" />
-        <label><i class="fa-solid fa-house"></i>Dashboard</label>
+
         <div class="main-menu">
-          <div @click="goTo('adminorders')" :class="{ active: activeTab === 'Order' }">
+          <div
+            @click="goTo('dashboard')"
+            :class="{ active: activeTab === 'dashboard' }"
+          >
+            <label><i class="fa-solid fa-house"></i>Dashboard</label>
+          </div>
+          <div
+            @click="goTo('adminorders')"
+            :class="{ active: activeTab === 'Order' }"
+          >
             <label><i class="fas fa-clipboard-check"></i>Orders</label>
           </div>
-          <div @click="goTo('adminproducts')" :class="{ active: activeTab === 'Product' }">
+          <div
+            @click="goTo('adminproducts')"
+            :class="{ active: activeTab === 'Product' }"
+          >
             <label><i class="fas fa-box-open"></i>Products</label>
           </div>
-          <div @click="goTo('adminuser')" :class="{ active: activeTab === 'User' }">
+          <div
+            @click="goTo('adminuser')"
+            :class="{ active: activeTab === 'User' }"
+          >
             <label><i class="fa-solid fa-users"></i>Users</label>
           </div>
-          <div @click="goTo('adminreport')" :class="{ active: activeTab === 'Report' }">
+          <div
+            @click="goTo('adminreport')"
+            :class="{ active: activeTab === 'Report' }"
+          >
             <label><i class="fa-solid fa-chart-simple"></i>Report</label>
           </div>
           <button class="logout-btn" @click="logout">Logout</button>
@@ -23,30 +41,21 @@
     </div>
 
     <div class="detail">
-      <!-- <AdminReport v-if="activeTab === 'Report'" />
-      <AdminOrders v-if="activeTab === 'Order'" />
-      <AdminProducts v-if="activeTab === 'Product'" />
-      <AdminUser v-if="activeTab === 'User'" /> -->
-    <router-view></router-view>
+      <router-view></router-view>
     </div>
   </section>
 </template>
 <script setup>
-import { ref } from "vue";
-import AdminOrders from "../AdminPage/AdminOrders.vue";
-import AdminProducts from "../AdminPage/AdminProducts.vue";
-import AdminUser from "../AdminPage/AdminUser.vue";
-import AdminReport from "../AdminPage/AdminReport.vue";
 import { useAuth } from "@/composables/useAuth";
 import { useRouter } from "vue-router";
 
 const { logout } = useAuth();
-const router = useRouter()
-const goTo=(name)=>{
-router.push({
-  name
-})
-}
+const router = useRouter();
+const goTo = (name) => {
+  router.push({
+    name,
+  });
+};
 </script>
 <style scoped>
 .dsb {
@@ -125,6 +134,6 @@ router.push({
   background-color: red;
 }
 .detail {
-    width: 85%;
+  width: 85%;
 }
 </style>

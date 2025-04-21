@@ -14,6 +14,8 @@ import AdminProducts from "@/components/AdminPage/AdminProducts.vue";
 import AdminUser from "@/components/AdminPage/AdminUser.vue";
 import AdminReport from "@/components/AdminPage/AdminReport.vue";
 import OrdersDetail from "@/views/ordersDetail.vue";
+import path from "node:path";
+import Dashboard from "@/views/Dashboard.vue";
 
 // Define application routes
 const routes = [
@@ -76,7 +78,7 @@ const routes = [
         component: AdminProducts,
       },
       {
-        path: "orders/:id", 
+        path: "orders/:id",
         name: "ordersDetail",
         component: OrdersDetail,
       },
@@ -95,10 +97,13 @@ const routes = [
         name: "adminuser",
         component: AdminUser,
       },
+      {
+        path: "dashboard",
+        name: "dashboard",
+        component: Dashboard,
+      },
     ],
   },
-  
- 
 ];
 
 // Create and configure the Vue Router

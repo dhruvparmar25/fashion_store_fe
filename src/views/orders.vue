@@ -392,4 +392,20 @@ onMounted(() => {
 .main-shop {
   border-bottom: 1px solid #eef0f7;
 }
+.paymentMessage button {
+  background-color: #4caf50; /* Green tone */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* margin-top: 10px;a */
+  float: right;
+}
+
+.paymentMessage button:hover {
+  background-color: #388e3c;
+}
 </style>
