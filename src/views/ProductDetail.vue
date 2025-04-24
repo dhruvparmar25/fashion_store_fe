@@ -1,5 +1,5 @@
 <template>
-  {{ product }}
+  <!-- {{ product }} -->
   <section class="productdetail" v-if="product">
     <div class="main">
       <div class="image">
@@ -38,7 +38,7 @@
             </h4>
           </div>
           <div class="combine">
-            <h6 class="category">{{ product.category }}</h6>
+            <h6 class="category">{{ product.categoryId.name }}</h6>
             <div
               v-if="product.tags?.length"
               v-for="tag in product.tags"
