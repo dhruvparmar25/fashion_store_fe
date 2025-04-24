@@ -98,7 +98,7 @@ const routes = [
         component: AdminUser,
       },
       {
-        path: "dashboard",
+        path: "/admin",
         name: "dashboard",
         component: Dashboard,
       },

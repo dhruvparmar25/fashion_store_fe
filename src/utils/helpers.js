@@ -52,3 +52,18 @@ export const saveTransation = async (paymentId, orderId) => {
   // /transaction/orderId
   // {paymentId}
 };
+
+export const updateImage = async (module, id, file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+  await axios.post(
+    `http://localhost:3000/api/upload/${module}/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+};

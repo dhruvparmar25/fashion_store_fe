@@ -38,7 +38,7 @@
               :checked="productMetas.category?.includes(category)"
               @change="filterProducts($event, 'category')"
             />
-            {{ category }}
+            {{ category.name }}
           </label>
         </div>
 
@@ -82,7 +82,6 @@
             v-for="product in products"
             :key="product._id"
           >
-            {{ product._id }}
             <div class="card-img">
               <img :src="product.image" />
             </div>
@@ -183,14 +182,14 @@
                 required
               />
             </div>
+
             <div class="add-category">
               <label>Category:</label>
-              <input
-                type="text"
-                v-model="form.category"
-                placeholder="Enter category"
-                required
-              />
+              <select v-model="form.categoryId" name="categoryId">
+                <option v-for="cat in categories" :value="cat._id">
+                  {{ cat.name }}
+                </option>
+              </select>
             </div>
             <div class="label">
               <label>Label:</label>
@@ -245,6 +244,8 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import Modal from "../commons/Modal.vue";
+import { updateImage } from "@/utils/helpers";
+import { FileUploadModules } from "@/utils/Enum";
 
 const form = ref({
   brand: "",
@@ -253,7 +254,7 @@ const form = ref({
   offer: "",
   design: "",
   rating: "",
-  category: "",
+  categoryId: "",
   label: "",
   image: "",
 });
@@ -316,18 +317,17 @@ const setQuery = () => {
   isCategoryView.value = !!productMetas.value?.category?.length;
   isBrandView.value = !!productMetas.value?.type?.length;
 };
-const fetchCategories = async () => {
-  try {
-    const response = await axios.get(
-      "http://localhost:3000/api/admin/category",
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
-    categories.value = response.data;
-  } catch (error) {
-    console.error("Error Fetching Categories", error);
-  }
+const fetchCategories = () => {
+  axios
+    .get("http://localhost:3000/api/admin/category", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    })
+    .then((response) => {
+      categories.value = response?.data?.data || [];
+    })
+    .catch((error) => {
+      console.error("Error Fetching Categories", error);
+    });
 };
 
 const filterProducts = (event, filterType) => {
@@ -372,8 +372,6 @@ const fetchAdminProducts = async () => {
       params,
     });
     products.value = res.data;
-    emit("update-products", res.data);
-    console.log("Fetched products:", res.data);
   } catch (error) {
     console.log("Error Fetching Products", error);
   }
@@ -384,15 +382,25 @@ const uploadImage = (event) => {
 };
 const AddAdminProducts = async () => {
   try {
-    const res = await axios.post(
-      "http://localhost:3000/api/admin/products",
-      form.value,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    let action = form.value?._id ? "put" : "post";
+    let path = "http://localhost:3000/api/admin/products";
+    if (form.value?._id) {
+      path += `/${form.value?._id}`;
+    }
+    const res = await axios[action](path, form.value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (res.data?._id && imageFile.value) {
+      await updateImage(
+        FileUploadModules.PRODUCT,
+        res.data?._id,
+        imageFile.value
+      );
+      console.log("dcdvscsccsdc", res.data, imageFile.value);
+    }
+    await fetchAdminProducts();
     toast.success("Product Added Successfully");
     shoeModal.value = false;
     // reset form
@@ -454,7 +462,7 @@ const openAddModal = () => {
     offer: "",
     design: "",
     rating: "",
-    category: "",
+    categoryId: "",
     label: "",
     image: "",
   };
@@ -464,11 +472,12 @@ const openAddModal = () => {
 };
 
 const openEditModal = (product) => {
-  console.log(product);
+  console.log("csdcscdcscdcsdc", product);
   isEditMode.value = true;
   selectProduct.value = product;
 
   form.value = {
+    _id: product?._id,
     name: product.name,
     brand: product.brand,
     type: product.type,
@@ -477,7 +486,7 @@ const openEditModal = (product) => {
     offer: product.offer,
     design: product.design,
     rating: product.rating,
-    category: product.category,
+    categoryId: product.categoryId,
     label: product.tags?.[0]?.label,
     image: product.image,
   };

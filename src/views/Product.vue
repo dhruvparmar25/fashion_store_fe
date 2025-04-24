@@ -33,11 +33,11 @@
         >
           <input
             type="checkbox"
-            :value="category"
-            :checked="productMetas.category?.includes(category)"
+            :value="category._id"
+            :checked="productMetas.categoryId?.includes(category)"
             @change="filterProducts($event, 'category')"
           />
-          {{ category }}
+          {{ category.name }}
         </label>
       </div>
 
@@ -122,8 +122,8 @@ import Pagination from "@/components/Pagination/pagination.vue";
 
 const router = useRouter();
 const route = useRoute();
-const productMetas = ref({ category: [], type: null });
-const isCategoryView = ref(!!productMetas.value?.category?.length);
+const productMetas = ref({ categoryId: [], type: null });
+const isCategoryView = ref(!!productMetas.value?.categoryId?.length);
 const isBrandView = ref(!!productMetas.value?.type);
 const prdlists = ref([]);
 const searchQuery = ref("");
@@ -160,20 +160,20 @@ watch(
 const setQuery = () => {
   if (Object.values(route.query).length) {
     const q = route.query;
-    if (typeof q.category === "string" && q.category) {
-      q.category = [q.category];
+    if (typeof q.categoryId === "string" && q.categoryId) {
+      q.categoryId = [q.categoryId];
     }
     productMetas.value = { ...productMetas.value, ...q };
 
-    if (q.category?.length) {
+    if (q.categoryId?.length) {
       productMetas.value.type = null;
     }
     fetchProducts();
   } else {
-    productMetas.value = { category: [], type: null };
+    productMetas.value = { categoryId: [], type: null };
     fetchProducts();
   }
-  isCategoryView.value = !!productMetas.value?.category?.length;
+  isCategoryView.value = !!productMetas.value?.categoryId?.length;
   isBrandView.value = !!productMetas.value?.type?.length;
 };
 
@@ -188,7 +188,7 @@ const toggleBrand = () => {
 // Navigate to product details page
 const goToDetails = (item) => {
   if (!item?._id) return;
-  productMetas.value = { category: [], type: null };
+  productMetas.value = { categoryId: [], type: null };
   router.push({ name: "ProductDetail", params: { id: item._id }, query: {} });
 };
 
@@ -215,36 +215,42 @@ const fetchProducts = async () => {
 
 // Fetch categories from API
 const fetchCategories = async () => {
-  try {
-    const response = await axios.get("http://localhost:3000/api/category");
-    categories.value = response.data;
-  } catch (error) {
-    console.error("Error Fetching Categories", error);
-  }
+  axios
+    .get("http://localhost:3000/api/category", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    })
+    .then((response) => {
+      categories.value = response?.data?.data || [];
+      console.log("Categories:", response);
+    })
+
+    .catch((error) => {
+      console.error("Error Fetching Categories", error);
+    });
 };
 
 // Filter products based on category or type
 const filterProducts = (event, filterType) => {
   const val = event.target.value;
   if (filterType === "category") {
-    if (productMetas.value.category.includes(val)) {
-      productMetas.value.category = productMetas.value.category.filter(
+    if (productMetas.value.categoryId.includes(val)) {
+      productMetas.value.categoryId = productMetas.value.categoryId.filter(
         (f) => f !== val
       );
     } else {
-      productMetas.value.category.push(val);
+      productMetas.value.categoryId.push(val);
     }
     productMetas.value.type = null;
   } else if (filterType === "type") {
     productMetas.value.type = val;
-    productMetas.value.category = [];
+    productMetas.value.categoryId = [];
   }
   router.push({
     name: "Product",
     query: {
       type: productMetas.value.type || undefined,
-      category: productMetas.value.category.length
-        ? productMetas.value.category
+      category: productMetas.value.categoryId.length
+        ? productMetas.value.categoryId
         : undefined,
     },
   });

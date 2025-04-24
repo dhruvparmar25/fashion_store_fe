@@ -1,5 +1,5 @@
 <template>
-  <!-- {{ product }} -->
+  {{ product }}
   <section class="productdetail" v-if="product">
     <div class="main">
       <div class="image">
