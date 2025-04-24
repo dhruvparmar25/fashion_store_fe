@@ -91,7 +91,7 @@
             <div class="card-field">
               <div class="price">₹ {{ product.price }}</div>
               <div class="category">
-                {{ product.category }}
+                {{ product.category.name }}
               </div>
             </div>
             <div class="card-field">
@@ -190,6 +190,23 @@
                   {{ cat.name }}
                 </option>
               </select>
+
+              <div class="add-cat">
+                <button @click="openCatAddModal = true">+ Category</button>
+              </div>
+
+              <Modal v-if="openCatAddModal" @close="openCatAddModal = false">
+                <div class="cat-label">Add New Category</div>
+                <input
+                  v-model="newCategoryName"
+                  type="text"
+                  placeholder="Enter category name"
+                  class="input"
+                />
+                <div class="cat-sub">
+                  <button @click="addCategories">Add</button>
+                </div>
+              </Modal>
             </div>
             <div class="label">
               <label>Label:</label>
@@ -257,6 +274,7 @@ const form = ref({
   categoryId: "",
   label: "",
   image: "",
+  categoryAdd: "",
 });
 
 const route = useRoute();
@@ -273,6 +291,11 @@ const perPage = 12;
 
 const shoeModal = ref(false);
 const isEditMode = ref(false);
+const openCatAddModal = ref(false);
+const newCategoryName = ref("");
+const showAddCategoryModal = ref(false);
+openCatAddModal.value = false;
+
 const selectProduct = ref(null);
 const paginationNumbers = computed(() => {
   return [1, 2, 3, 4];
@@ -327,6 +350,28 @@ const fetchCategories = () => {
     })
     .catch((error) => {
       console.error("Error Fetching Categories", error);
+    });
+};
+const addCategories = () => {
+  axios
+    .post(
+      "http://localhost:3000/api/admin/category",
+      { name: newCategoryName.value },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    .then((res) => {
+      openCatAddModal.value = false;
+      newCategoryName.value = "";
+      fetchCategories();
+      toast.success("Category added successfully");
+    })
+    .catch((error) => {
+      console.error("Error adding category:", error);
+      toast.error(error?.res?.data?.message || "Error adding category");
     });
 };
 
@@ -432,8 +477,9 @@ const removeAdminProduct = async (product) => {
     await axios.delete(`http://localhost:3000/api/admin/products/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    products.value = products.value.filter((i) => i._id !== id);
     toast.success("product remove");
+
+    products.value = products.value.filter((i) => i._id !== id);
   } catch (error) {
     console.error("Error Removing Item :", error);
   }
@@ -465,6 +511,7 @@ const openAddModal = () => {
     categoryId: "",
     label: "",
     image: "",
+    catAdd: "",
   };
 
   imageFile.value = null;
@@ -679,8 +726,10 @@ const updateProduct = async (id) => {
 
   color: #333;
 }
-.addPrd div {
-  margin-bottom: 10px;
+.addPrd form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 .addPrd label {
   font-weight: 600;
@@ -723,8 +772,24 @@ const updateProduct = async (id) => {
 .submit {
   text-align: center;
 }
-
-.submit button {
+.add-category {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cat-label {
+  font-size: 16px;
+  text-align: center;
+  padding: 1rem;
+  color: black;
+  font-weight: 700;
+}
+.cat-sub {
+  padding: 10px;
+  text-align: center;
+}
+.submit button,
+.cat-sub button {
   width: fit-content;
   background-color: #27ae60;
   color: white;
@@ -735,6 +800,15 @@ const updateProduct = async (id) => {
   font-weight: bold;
   font-size: 16px;
   transition: background-color 0.3s;
+}
+.add-cat button {
+  width: fit-content;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 5px;
+  margin: 1rem;
 }
 
 .submit button:hover {
