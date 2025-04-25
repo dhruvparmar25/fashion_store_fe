@@ -35,15 +35,16 @@
               showMenu = false;
             "
             v-for="category in categories"
+            :key="category._id"
           >
-            {{ category }}
+            {{ category.name }}
           </div>
         </div>
       </div>
 
       <router-link to="/product" @click="showMenu = false">Product</router-link>
       <router-link to="/cart" @click="showMenu = false" class="cart">
-         <i class="fa-solid fa-cart-shopping"></i>
+        <i class="fa-solid fa-cart-shopping"></i>
       </router-link>
       <!-- <div class="main-icon"></div> -->
     </div>
@@ -64,12 +65,18 @@ router.afterEach(() => {
 });
 
 const fetchCategories = async () => {
-  try {
-    const response = await axios.get("http://localhost:3000/api/category");
-    categories.value = response.data;
-  } catch (error) {
-    console.error("Error fetching categories", error);
-  }
+  axios
+    .get("http://localhost:3000/api/category", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    })
+    .then((response) => {
+      categories.value = response?.data?.data || [];
+      console.log("Categories:", response);
+    })
+
+    .catch((error) => {
+      console.error("Error Fetching Categories", error);
+    });
 };
 
 onMounted(() => {
