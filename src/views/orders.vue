@@ -3,17 +3,18 @@
     <h2>Your Orders</h2>
     <div v-if="orders.length > 0">
       <div v-for="order in orders" :key="order._id" class="order-item">
-        <!-- {{ order }} -->
+        {{ console.log(order) }}
         <div class="add">
           <h4>Delivery Address</h4>
           <div class="add-detail">
-            <p><strong>Name:</strong> {{ order.address.fullName }}</p>
-            <p><strong>Mobile No:</strong> {{ order.address.phoneNumber }}</p>
-            <p><strong>Street:</strong> {{ order.address.street }}</p>
-            <p><strong>City:</strong>{{ order.address.city }}</p>
-            <p><strong>State:</strong> {{ order.address.state }}</p>
-            <p><strong>zipCode:</strong> {{ order.address.zipCode }}</p>
-            <p><strong>Country:</strong> {{ order.address.country }}</p>
+            <p><strong>Name:</strong> {{ order.addressId?.fullName }}</p>
+            <p>
+              <strong>Mobile No:</strong> {{ order.addressId?.phoneNumber }}
+            </p>
+            <p><strong>City:</strong> {{ order.addressId?.city }}</p>
+            <p><strong>State:</strong> {{ order.addressId?.state }}</p>
+            <p><strong>zipCode:</strong> {{ order.addressId?.pincode }}</p>
+            <p><strong>Country:</strong> {{ order.addressId?.country }}</p>
           </div>
         </div>
 
@@ -47,7 +48,7 @@
               ><br />
               <label
                 ><strong>Quantiy:</strong> {{ item.quantity }} x ₹{{
-                  item.productId.price
+                  item.price
                 }}</label
               ><br />
               <label><strong>Price:</strong> {{ item.price }} </label>
@@ -116,31 +117,31 @@
                   </div>
                 </div>
                 <!-- <p><strong>Order ID:</strong> {{ selectedOrder._id }}</p>
-                <p>
-                  <strong>Total Amount:</strong> ₹{{
-                    selectedOrder.totalAmount
-                  }}
-                </p>
-                <p>
-                  <strong>Order Date:</strong>
-                  {{
-                    formatDate(
-                      selectedOrder.updatedAt || selectedOrder.createdAt
-                    )
-                  }}
-                </p>
-                <h4>Items:</h4>
-                <ul>
-                  <li
-                    v-for="item in selectedOrder.items"
-                    :key="item.productId._id"
-                  >
-                    {{ item.productId.name }} - {{ item.quantity }} x ₹{{
-                      item.productId.price
+                  <p>
+                    <strong>Total Amount:</strong> ₹{{
+                      selectedOrder.totalAmount
                     }}
-                    = ₹{{ item.price }}
-                  </li>
-                </ul> -->
+                  </p>
+                  <p>
+                    <strong>Order Date:</strong>
+                    {{
+                      formatDate(
+                        selectedOrder.updatedAt || selectedOrder.createdAt
+                      )
+                    }}
+                  </p>
+                  <h4>Items:</h4>
+                  <ul>
+                    <li
+                      v-for="item in selectedOrder.items"
+                      :key="item.productId._id"
+                    >
+                      {{ item.productId.name }} - {{ item.quantity }} x ₹{{
+                        item.productId.price
+                      }}
+                      = ₹{{ item.price }}
+                    </li>
+                  </ul> -->
               </div>
             </Modal>
           </div>

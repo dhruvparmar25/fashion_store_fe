@@ -34,7 +34,7 @@
           >
             <input
               type="checkbox"
-              :value="category"
+              :value="category._id"
               :checked="productMetas.category?.includes(category)"
               @change="filterProducts($event, 'category')"
             />
@@ -186,7 +186,11 @@
             <div class="add-category">
               <label>Category:</label>
               <select v-model="form.categoryId" name="categoryId">
-                <option v-for="cat in categories" :value="cat._id">
+                <option
+                  v-for="cat in categories"
+                  :value="cat._id"
+                  :key="cat._id"
+                >
                   {{ cat.name }}
                 </option>
               </select>
@@ -340,14 +344,16 @@ const setQuery = () => {
   isCategoryView.value = !!productMetas.value?.category?.length;
   isBrandView.value = !!productMetas.value?.type?.length;
 };
-const fetchCategories = () => {
+const fetchCategories = async () => {
   axios
-    .get("http://localhost:3000/api/admin/category", {
+    .get("http://localhost:3000/api/category", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then((response) => {
       categories.value = response?.data?.data || [];
+      console.log("Categories:", response);
     })
+
     .catch((error) => {
       console.error("Error Fetching Categories", error);
     });

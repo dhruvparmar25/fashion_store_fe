@@ -98,7 +98,7 @@ onMounted(() => {
   gap: 5rem;
   align-items: center;
   position: absolute;
-  bottom: 270px;
+  bottom: 170px;
   left: 370px;
 }
 
