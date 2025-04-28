@@ -94,21 +94,6 @@
       @prev="prePage"
       @next="nextPage"
     />
-    <!-- Pagination buttons -->
-    <!-- <button @click="prePage" :disabled="currenPage === 1" class="prev">
-      &laquo;
-    </button>
-    <button
-      v-for="page in paginationNumbers"
-      :key="page"
-      @click="changePage(page)"
-      :class="{ active: currenPage === page }"
-    >
-      {{ page }}
-    </button>
-    <button @click="nextPage" :disabled="prdlists.length < perPage">
-      &raquo;
-    </button> -->
   </div>
 </template>
 
@@ -136,15 +121,10 @@ const totalPages = computed(() => {
   return Math.ceil(totalProducts.value / perPage.value);
 });
 
-// Pagination numbers (Hardcoded for now, can be dynamic)
-// const paginationNumbers = computed(() => {
-//   return [1, 2, 3, 4];
-// });
-
-// Fetch categories and set initial query on component mount
 onMounted(() => {
   fetchCategories();
   setQuery();
+  currenPage.value = parseInt(route.query.page) || 1;
 });
 
 // Watch for changes in route query and refetch products accordingly
@@ -158,23 +138,22 @@ watch(
 
 // Set query parameters based on URL
 const setQuery = () => {
-  if (Object.values(route.query).length) {
-    const q = route.query;
-    if (typeof q.categoryId === "string" && q.categoryId) {
-      q.categoryId = [q.categoryId];
-    }
-    productMetas.value = { ...productMetas.value, ...q };
+  const q = route.query;
 
-    if (q.categoryId?.length) {
-      productMetas.value.type = null;
-    }
-    fetchProducts();
-  } else {
-    productMetas.value = { categoryId: [], type: null };
-    fetchProducts();
+  if (typeof q.categoryId === "string" && q.categoryId) {
+    q.categoryId = [q.categoryId];
   }
+
+  productMetas.value = { ...productMetas.value, ...q };
+
+  if (q.categoryId?.length) {
+    productMetas.value.type = null;
+  }
+
   isCategoryView.value = !!productMetas.value?.categoryId?.length;
   isBrandView.value = !!productMetas.value?.type?.length;
+
+  fetchProducts();
 };
 
 // Toggle category and brand views
@@ -198,13 +177,11 @@ const fetchProducts = async () => {
     const params = {
       ...productMetas.value,
       q: searchQuery.value,
+      page: currenPage.value,
+      per_page: perPage.value,
     };
     const response = await axios.get("http://localhost:3000/api/product", {
       params,
-      ...productMetas.value,
-      q: searchQuery.value,
-      page: currenPage.value,
-      per_page: perPage.value,
     });
     prdlists.value = response.data.data;
     totalProducts.value = response.data.total;
@@ -232,6 +209,7 @@ const fetchCategories = async () => {
 // Filter products based on category or type
 const filterProducts = (event, filterType) => {
   const val = event.target.value;
+
   if (filterType === "category") {
     if (productMetas.value.categoryId.includes(val)) {
       productMetas.value.categoryId = productMetas.value.categoryId.filter(
@@ -243,17 +221,17 @@ const filterProducts = (event, filterType) => {
     productMetas.value.type = null;
   } else if (filterType === "type") {
     productMetas.value.type = val;
-    productMetas.value.categoryId = [];
   }
   router.push({
     name: "Product",
     query: {
       type: productMetas.value.type || undefined,
-      category: productMetas.value.categoryId.length
+      categoryId: productMetas.value.categoryId.length
         ? productMetas.value.categoryId
-        : undefined,
+        : undefined, // Pass array directly
     },
   });
+
   fetchProducts();
 };
 

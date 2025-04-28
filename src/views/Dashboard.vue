@@ -7,7 +7,7 @@
       <router-link :to="{ name: 'adminproducts' }">
         <div class="products">
           <label> Products</label>
-          <h4><i class="fa-solid fa-cube"></i> {{ products.length }}</h4>
+          <h4><i class="fa-solid fa-cube"></i> {{ console.log(products) }}</h4>
         </div></router-link
       >
       <router-link :to="{ name: 'adminuser' }">

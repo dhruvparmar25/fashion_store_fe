@@ -35,7 +35,7 @@
             <input
               type="checkbox"
               :value="category._id"
-              :checked="productMetas.category?.includes(category)"
+              :checked="productMetas.categoryId?.includes(category)"
               @change="filterProducts($event, 'category')"
             />
             {{ category.name }}
@@ -240,23 +240,13 @@
       </Modal>
     </div>
   </section>
-  <div class="pagination">
-    <!-- Pagination buttons -->
-    <button @click="prePage" :disabled="currenPage === 1" class="prev">
-      &laquo;
-    </button>
-    <button
-      v-for="page in paginationNumbers"
-      :key="page"
-      @click="changePage(page)"
-      :class="{ active: currenPage === page }"
-    >
-      {{ page }}
-    </button>
-    <button @click="nextPage" :disabled="products.length < perPage">
-      &raquo;
-    </button>
-  </div>
+  <Pagination
+    :current-page="currenPage"
+    :total-pages="totalPages"
+    @change="changePage"
+    @prev="prePage"
+    @next="nextPage"
+  />
 </template>
 <script setup>
 import FilterComponent from "../Filters/FilterComponent.vue";
@@ -267,6 +257,7 @@ import { toast } from "vue3-toastify";
 import Modal from "../commons/Modal.vue";
 import { updateImage } from "@/utils/helpers";
 import { FileUploadModules } from "@/utils/Enum";
+import Pagination from "../Pagination/pagination.vue";
 
 const form = ref({
   brand: "",
@@ -283,26 +274,27 @@ const form = ref({
 
 const route = useRoute();
 const router = useRouter();
-const productMetas = ref({ category: [], type: null });
-const isCategoryView = ref(!!productMetas.value?.category?.length);
+const productMetas = ref({ categoryId: [], type: null });
+const isCategoryView = ref(!!productMetas.value?.categoryId?.length);
 const isBrandView = ref(!!productMetas.value?.type);
 const categories = ref([]);
 const imageFile = ref(null);
 const searchQuery = ref("");
 const products = ref([]);
 const currenPage = ref(1);
-const perPage = 12;
+const perPage = ref(12);
+const totalProducts = ref(0);
 
 const shoeModal = ref(false);
 const isEditMode = ref(false);
 const openCatAddModal = ref(false);
 const newCategoryName = ref("");
-const showAddCategoryModal = ref(false);
+// const showAddCategoryModal = ref(false);
 openCatAddModal.value = false;
 
 const selectProduct = ref(null);
-const paginationNumbers = computed(() => {
-  return [1, 2, 3, 4];
+const totalPages = computed(() => {
+  return Math.ceil(totalProducts.value / perPage.value);
 });
 
 onMounted(() => {
@@ -323,25 +315,23 @@ const toggleCategory = () => {
 const toggleBrand = () => {
   isBrandView.value = !isBrandView.value;
 };
-
 const setQuery = () => {
   if (Object.values(route.query).length) {
     const q = route.query;
-
-    if (typeof q.category === "string" && q.category) {
-      q.category = [q.category];
+    if (typeof q.categoryId === "string" && q.categoryId) {
+      q.categoryId = [q.categoryId];
     }
     productMetas.value = { ...productMetas.value, ...q };
-    if (q.category?.length) {
+
+    if (q.categoryId?.length) {
       productMetas.value.type = null;
     }
-
     fetchAdminProducts();
   } else {
-    productMetas.value = { category: [], type: null };
+    productMetas.value = { categoryId: [], type: null };
     fetchAdminProducts();
   }
-  isCategoryView.value = !!productMetas.value?.category?.length;
+  isCategoryView.value = !!productMetas.value?.categoryId?.length;
   isBrandView.value = !!productMetas.value?.type?.length;
 };
 const fetchCategories = async () => {
@@ -384,27 +374,29 @@ const addCategories = () => {
 const filterProducts = (event, filterType) => {
   const val = event.target.value;
   if (filterType === "category") {
-    if (productMetas.value.category.includes(val)) {
-      productMetas.value.category = productMetas.value.category.filter(
+    if (productMetas.value.categoryId.includes(val)) {
+      productMetas.value.categoryId = productMetas.value.categoryId.filter(
         (f) => f !== val
       );
     } else {
-      productMetas.value.category.push(val);
+      productMetas.value.categoryId.push(val);
     }
     productMetas.value.type = null;
   } else if (filterType === "type") {
     productMetas.value.type = val;
-    productMetas.value.category = [];
   }
   router.push({
     name: "adminproducts",
     query: {
       type: productMetas.value.type || undefined,
-      category: productMetas.value.category.length
-        ? productMetas.value.category
-        : undefined,
+      categoryId: productMetas.value.categoryId.length
+        ? productMetas.value.categoryId
+        : undefined, // Pass array directly
+      category: undefined,
+      page: currenPage.value,
     },
   });
+
   fetchAdminProducts();
 };
 
@@ -417,14 +409,16 @@ const fetchAdminProducts = async () => {
     const params = {
       ...productMetas.value,
       q: searchQuery.value,
+      page: currenPage.value,
+      per_page: perPage.value,
     };
-    const res = await axios.get("http://localhost:3000/api/admin/products", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    const response = await axios.get("http://localhost:3000/api/product", {
       params,
     });
-    products.value = res.data;
+    products.value = response.data.data;
+    totalProducts.value = response.data.total;
   } catch (error) {
-    console.log("Error Fetching Products", error);
+    console.error("Error Fetching Products", error);
   }
 };
 
@@ -490,6 +484,7 @@ const removeAdminProduct = async (product) => {
     console.error("Error Removing Item :", error);
   }
 };
+// Pagination functions
 const changePage = (page) => {
   currenPage.value = page;
   router.push({ name: "adminproducts", query: { ...route.query, page } });
@@ -499,7 +494,9 @@ const prePage = () => {
   if (currenPage.value > 1) changePage(--currenPage.value);
 };
 const nextPage = () => {
-  if (products.value.length === perPage) changePage(++currenPage.value);
+  if (currenPage.value < totalPages.value) {
+    changePage(currenPage.value + 1);
+  }
 };
 const openAddModal = () => {
   isEditMode.value = false;
@@ -693,7 +690,7 @@ const updateProduct = async (id) => {
   align-items: center;
 }
 .srch input {
-  width: 140px;
+  width: 100px;
   padding: 6px;
   margin: 1rem 0rem;
   font-size: 12px;
@@ -915,7 +912,6 @@ input {
   /* list-style: none; */
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 .pagination button {
   color: black;

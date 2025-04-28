@@ -3,14 +3,13 @@
   <MainNav v-if="!route.path.includes('/admin')" />
   <div><router-view /></div>
   <Modal />
-  <Footer v-if="!route.path.includes('/admin')" />
+  <mainFooter v-if="!route.path.includes('/admin')" />
 </template>
-
 
 <script setup>
 import Navbar from "./components/Navbar/Navbar.vue";
 import MainNav from "./components/Navbar/MainNav.vue";
-import Footer from "./components/Footer/footer.vue";
+import mainFooter from "./components/Footer/mainFooter.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

@@ -62,10 +62,7 @@ onMounted(async () => {
   background-color: #01485c;
   border-radius: 10px;
 }
-.featured {
-  height: fit-content;
-  margin: 2rem 0rem;
-}
+
 .productContainer {
   display: flex;
   justify-content: space-between;

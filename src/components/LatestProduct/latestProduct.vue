@@ -6,8 +6,8 @@
     </div>
     <div class="productContainer">
       <ProductCard
-      v-for="prd in prds.data?.slice(0, 5) || []"
-      :key="prd._id"
+        v-for="prd in prds.data?.slice(0, 5) || []"
+        :key="prd._id"
         :product="prd"
       />
     </div>
@@ -62,16 +62,11 @@ onMounted(async () => {
   border-radius: 10px;
 }
 
-.featured {
-  height: fit-content;
-  margin: 2rem 0rem;
-  border-bottom: 1px solid #adb5bd;
-}
 .productContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5rem;
+  margin-bottom: 2rem;
 }
 .products {
   padding: 0.5rem;

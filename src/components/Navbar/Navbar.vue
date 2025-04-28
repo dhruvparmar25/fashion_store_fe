@@ -1,13 +1,5 @@
 <template>
   <nav>
-    <!-- Social Media Icons -->
-    <div class="icons">
-      <i class="fa-brands fa-facebook fb"></i>
-      <i class="fa-brands fa-instagram insta"></i>
-      <i class="fa-brands fa-youtube yt"></i>
-      <i class="fa-brands fa-x-twitter x"></i>
-    </div>
-
     <!-- Dynamic Offer Message -->
     <div class="offer">
       <p class="offerText">
@@ -20,13 +12,13 @@
     <div class="menu">
       <router-link to="/contact" class="menu-item">Contact</router-link>
       <div class="dropdown">
-      <div class="user">
-        <i class="fa-regular fa-user"></i>
-        <div class="dropdown-content">
-          <router-link to="/orders"><label >MyOrders</label></router-link>
+        <div class="user">
+          <i class="fa-regular fa-user"></i>
+          <div class="dropdown-content">
+            <router-link to="/orders"><label>MyOrders</label></router-link>
+          </div>
         </div>
       </div>
-    </div>
       <!-- Login / Logout Button -->
       <router-link v-if="!isLoggedIn" to="/login" class="login"
         >Login</router-link
@@ -53,25 +45,6 @@ nav {
   color: black;
   border-bottom: 1px solid #adb5bd;
   background-color: #f8f9fa;
-}
-
-/* Social Icons */
-.icons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.icon {
-  font-size: 20px;
-  color: black;
-  transition:
-    color 0.3s ease-in-out,
-    transform 0.2s ease-in-out;
-}
-
-.icon:hover {
-  transform: scale(1.1);
 }
 
 /* Offer Text */
@@ -141,7 +114,7 @@ nav {
   position: absolute;
   background-color: white;
   width: fit-content;
-  padding: .5rem;
+  padding: 0.5rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   z-index: 10;
@@ -162,9 +135,9 @@ nav {
 .dropdown:hover .dropdown-content {
   display: block;
 }
-.dropdown-content label{
- padding: 5px;
- color: black;
+.dropdown-content label {
+  padding: 5px;
+  color: black;
 }
 /* Social Media Hover Effects */
 .fb:hover {
