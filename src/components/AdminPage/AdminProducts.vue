@@ -620,7 +620,7 @@ const updateProduct = async (id) => {
   border-radius: 10px;
   background-color: rgba(231, 229, 229, 0.938);
 }
-.card-img[data-v-3a026967] {
+.card-img {
   width: 100%;
   display: flex;
 }
@@ -630,7 +630,7 @@ const updateProduct = async (id) => {
   border-radius: 10px;
   margin: auto;
 }
-.prd-title h4[data-v-3a026967] {
+.prd-title h4 {
   font-size: 12px;
   font-weight: bold;
   margin-top: 10px;
