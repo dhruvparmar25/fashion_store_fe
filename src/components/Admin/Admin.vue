@@ -30,7 +30,7 @@
             <label><i class="fa-solid fa-users"></i>Users</label>
           </div>
           <div
-            @click="goTo('adminreport')"
+            @click="goTo('report')"
             :class="{ active: activeTab === 'Report' }"
           >
             <label><i class="fa-solid fa-chart-simple"></i>Report</label>

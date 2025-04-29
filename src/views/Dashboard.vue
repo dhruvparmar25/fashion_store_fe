@@ -7,7 +7,7 @@
       <router-link :to="{ name: 'adminproducts' }">
         <div class="products">
           <label> Products</label>
-          <h4><i class="fa-solid fa-cube"></i> {{ console.log(products) }}</h4>
+          <h4><i class="fa-solid fa-cube"></i> {{ totalProducts }}</h4>
         </div></router-link
       >
       <router-link :to="{ name: 'adminuser' }">
@@ -33,17 +33,16 @@ import { ref, onMounted } from "vue";
 const products = ref([]);
 const userdatas = ref([]);
 const Orders = ref([]);
+const totalProducts = ref(0);
 
-const fetchProducts = async () => {
+const fetchAdminProducts = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/admin/products", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    products.value = res.data;
+    const response = await axios.get("http://localhost:3000/api/product");
+
+    products.value = response.data.data;
+    totalProducts.value = response.data.total;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error Fetching Products", error);
   }
 };
 const Adduser = async () => {
@@ -68,7 +67,7 @@ const fetchOrders = async () => {
 };
 
 onMounted(() => {
-  fetchProducts();
+  fetchAdminProducts();
   Adduser();
   fetchOrders();
 });
@@ -98,7 +97,7 @@ onMounted(() => {
   gap: 5rem;
   align-items: center;
   position: absolute;
-  bottom: 170px;
+  bottom: 250px;
   left: 370px;
 }
 

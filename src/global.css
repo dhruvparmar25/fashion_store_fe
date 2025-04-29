@@ -1,0 +1,9 @@
+.scroller-y {
+  overflow-y: scroll;
+  overflow-x: clip;
+}
+
+.scroller-x {
+  overflow-x: scroll;
+  overflow-y: clip;
+}

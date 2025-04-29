@@ -12,10 +12,9 @@ import Admin from "@/components/Admin/Admin.vue";
 import AdminOrders from "@/components/AdminPage/AdminOrders.vue";
 import AdminProducts from "@/components/AdminPage/AdminProducts.vue";
 import AdminUser from "@/components/AdminPage/AdminUser.vue";
-import AdminReport from "@/components/AdminPage/AdminReport.vue";
 import OrdersDetail from "@/views/ordersDetail.vue";
-import path from "node:path";
 import Dashboard from "@/views/Dashboard.vue";
+import Report from "@/views/report.vue";
 
 // Define application routes
 const routes = [
@@ -84,8 +83,8 @@ const routes = [
       },
       {
         path: "report",
-        name: "adminReport",
-        component: AdminReport,
+        name: "report",
+        component: Report,
       },
       {
         path: "orders",

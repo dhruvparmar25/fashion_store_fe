@@ -415,6 +415,7 @@ const fetchAdminProducts = async () => {
     const response = await axios.get("http://localhost:3000/api/product", {
       params,
     });
+    console.log("total : ", response.data.total);
     products.value = response.data.data;
     totalProducts.value = response.data.total;
   } catch (error) {
@@ -579,6 +580,7 @@ const updateProduct = async (id) => {
         },
       }
     );
+
     toast.success("Product updated successfully");
     shoeModal.value = false;
     isEditMode.value = false;
