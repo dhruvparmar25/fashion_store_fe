@@ -37,7 +37,7 @@
   font-weight: 700;
   color: #212529;
 }
-.offtext[data-v-11c85b44] {
+.offtext {
   position: absolute;
   top: 80px;
   bottom: 0px;

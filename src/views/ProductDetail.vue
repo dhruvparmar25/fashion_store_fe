@@ -277,7 +277,7 @@ const addToCart = async () => {
   width: fit-content;
   margin-right: 200px;
 }
-.addtocart[data-v-95e08fb6] {
+.addtocart {
   background-color: #26829c;
   font-family: "Montserrat";
   font-size: 16px;
