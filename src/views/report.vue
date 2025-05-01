@@ -190,6 +190,8 @@ const loadProduct = async () => {
 .title-selling {
   background-color: white;
   border-bottom: 1px solid #e1e6eb;
+  position: static;
+  top: 0;
 }
 .title-selling {
   display: flex;
@@ -231,9 +233,10 @@ const loadProduct = async () => {
 .topselling {
   margin: auto;
   width: 97%;
-  height: 345px;
+  height: calc(100vh - 300px);
   background-color: white;
   padding: 1rem;
+  overflow: hidden;
 }
 .totalAmount h1,
 .totalOrders h1 {
@@ -242,7 +245,6 @@ const loadProduct = async () => {
 }
 .selling-table {
   padding: 1rem;
-  overflow: hidden;
   height: calc(100vh - 370px);
 }
 .selling-table table tbody tr {
