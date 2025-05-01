@@ -604,7 +604,7 @@ const updateProduct = async (id) => {
 }
 .admin-products {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
 }
 .admin-cards {
   height: auto;
@@ -926,5 +926,12 @@ input {
 .pagination button.active {
   background-color: black;
   color: white;
+}
+@media screen and (min-width: 1536px) and (max-width: 1536px) and (min-height: 864px) and (max-height: 864px) {
+  .admin-products {
+    display: flex;
+    justify-content: start;
+    gap: 85px;
+  }
 }
 </style>
