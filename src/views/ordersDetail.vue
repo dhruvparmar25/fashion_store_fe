@@ -52,7 +52,11 @@
         <div class="cust-details">
           <div class="name">
             <div class="cust-detail">
-              <strong>Name : </strong>{{ OrdersDetail?.address?.fullName }}
+              <strong>Name: </strong
+              >{{
+                OrdersDetail?.address?.fullName ||
+                OrdersDetail?.addressId?.fullName
+              }}
             </div>
           </div>
           <div class="conatct-label">
@@ -67,7 +71,10 @@
           <div class="phone">
             <div class="cust-detail">
               <i class="fa fa-phone" aria-hidden="true"></i>
-              {{ OrdersDetail?.address?.phoneNumber }}
+              {{
+                OrdersDetail?.address?.phoneNumber ||
+                OrdersDetail?.addressId?.phoneNumber
+              }}
             </div>
           </div>
           <!-- address -->
@@ -76,12 +83,18 @@
           </div>
           <div class="mail">
             <div class="cust-detail">
-              {{ OrdersDetail.address?.street }}<br />
-              {{ OrdersDetail.address?.city }}
+              <!-- {{ OrdersDetail.addressId }} -->
+              {{ OrdersDetail?.address?.street }}<br />
+              {{ OrdersDetail?.address?.city || OrdersDetail?.addressId?.city }}
               <br />
-              {{ OrdersDetail.address?.state }}
+              {{
+                OrdersDetail?.address?.state || OrdersDetail?.addressId?.state
+              }}
               <br />
-              {{ OrdersDetail.address?.zipCode }}
+              {{
+                OrdersDetail?.address?.zipCode ||
+                OrdersDetail?.addressId?.pincode
+              }}
             </div>
           </div>
         </div>
@@ -147,7 +160,7 @@ const fetchOrders = async () => {
   color: rgb(0, 0, 0);
   margin: 1rem;
 }
-.product-details[data-v-7c338ad9] {
+.product-details {
   display: flex;
   margin: 1rem;
   justify-content: space-between;
@@ -163,7 +176,7 @@ const fetchOrders = async () => {
   font-size: 14px;
   color: #67779b;
 }
-.length[data-v-7c338ad9] {
+.length {
   background-color: #67779b;
   color: white;
   width: 25px;
