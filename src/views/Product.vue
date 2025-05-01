@@ -34,7 +34,7 @@
           <input
             type="checkbox"
             :value="category._id"
-            :checked="productMetas.categoryId?.includes(category)"
+            :checked="productMetas.categoryId?.includes(category._id)"
             @change="filterProducts($event, 'category')"
           />
           {{ category.name }}
@@ -127,7 +127,6 @@ onMounted(() => {
   currenPage.value = parseInt(route.query.page) || 1;
 });
 
-// Watch for changes in route query and refetch products accordingly
 watch(
   () => route.query,
   () => {
@@ -144,18 +143,22 @@ const setQuery = () => {
     q.categoryId = [q.categoryId];
   }
 
-  productMetas.value = { ...productMetas.value, ...q };
+  productMetas.value = {
+    categoryId: q.categoryId || [],
+    type: q.type || null,
+  };
 
-  if (q.categoryId?.length) {
-    productMetas.value.type = null;
-  }
-
-  isCategoryView.value = !!productMetas.value?.categoryId?.length;
-  isBrandView.value = !!productMetas.value?.type?.length;
+  isCategoryView.value = !!productMetas.value.categoryId.length;
+  isBrandView.value = !!productMetas.value.type;
 
   fetchProducts();
 };
-
+const selectCategory = (categoryId) => {
+  router.push({
+    name: "Product",
+    query: { categoryId: [categoryId], type: undefined },
+  });
+};
 // Toggle category and brand views
 const toggleCategory = () => {
   isCategoryView.value = !isCategoryView.value;
@@ -218,7 +221,6 @@ const filterProducts = (event, filterType) => {
     } else {
       productMetas.value.categoryId.push(val);
     }
-    productMetas.value.type = null;
   } else if (filterType === "type") {
     productMetas.value.type = val;
   }

@@ -316,24 +316,23 @@ const toggleBrand = () => {
   isBrandView.value = !isBrandView.value;
 };
 const setQuery = () => {
-  if (Object.values(route.query).length) {
-    const q = route.query;
-    if (typeof q.categoryId === "string" && q.categoryId) {
-      q.categoryId = [q.categoryId];
-    }
-    productMetas.value = { ...productMetas.value, ...q };
+  const q = route.query;
 
-    if (q.categoryId?.length) {
-      productMetas.value.type = null;
-    }
-    fetchAdminProducts();
-  } else {
-    productMetas.value = { categoryId: [], type: null };
-    fetchAdminProducts();
+  if (typeof q.categoryId === "string" && q.categoryId) {
+    q.categoryId = [q.categoryId];
   }
-  isCategoryView.value = !!productMetas.value?.categoryId?.length;
-  isBrandView.value = !!productMetas.value?.type?.length;
+
+  productMetas.value = {
+    categoryId: q.categoryId || [],
+    type: q.type || null,
+  };
+
+  isCategoryView.value = !!productMetas.value.categoryId.length;
+  isBrandView.value = !!productMetas.value.type;
+
+  fetchAdminProducts();
 };
+
 const fetchCategories = async () => {
   axios
     .get("http://localhost:3000/api/category", {

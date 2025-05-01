@@ -27,6 +27,18 @@
         Women
       </div>
       <div class="dropdown">
+        <span class="dropbtn" @click="toggleMenu">Category</span>
+        <div class="dropdown-content" v-if="showMenu">
+          <div
+            v-for="category in categories"
+            :key="category._id"
+            @click="selectCategory(category._id)"
+          >
+            {{ category.name }}
+          </div>
+        </div>
+      </div>
+      <!-- <div class="dropdown">
         <span class="dropbtn">Category</span>
         <div class="dropdown-content">
           <div
@@ -40,7 +52,7 @@
             {{ category.name }}
           </div>
         </div>
-      </div>
+      </div> -->
 
       <router-link to="/product" @click="showMenu = false">Product</router-link>
       <router-link to="/cart" @click="showMenu = false" class="cart">
@@ -83,10 +95,10 @@ onMounted(() => {
   fetchCategories();
 });
 
-const openCate = (category) => {
+const selectCategory = (categoryId) => {
   router.push({
     name: "Product",
-    query: { category: [category], type: undefined },
+    query: { categoryId: [categoryId], type: undefined },
   });
 };
 
@@ -100,6 +112,9 @@ const openType = (type) => {
 const toggleMenu = () => {
   showMenu.value = !showMenu.value;
 };
+router.afterEach(() => {
+  showMenu.value = false;
+});
 </script>
 
 <style scoped>
