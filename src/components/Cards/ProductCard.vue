@@ -9,7 +9,7 @@
       <img :src="product.image" />
       <div class="container">
         <h4>{{ product.category.name }}</h4>
-        <h1>${{ product.price }}</h1>
+        <h1>₹{{ product.price }}</h1>
       </div>
     </div>
   </div>

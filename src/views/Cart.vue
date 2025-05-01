@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="bag">
-      <!-- {{ cart }} -->
+      <!-- {{ totalItems }} -->
       <div class="title"><h4>Shopping Bag</h4></div>
       <div v-if="cart?.items?.length > 0" class="cart-items">
         <div v-for="item in cart?.items || []" :key="item.id" class="cart-item">
@@ -49,9 +49,11 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import Address from "./address.vue";
+import { useCartstore } from "@/stores/cartStore";
 
-const cart = ref({});
+const cart = computed(() => cartStore.cart);
 const router = useRouter();
+const cartStore = useCartstore();
 
 const loadCart = async () => {
   try {
@@ -69,6 +71,7 @@ const increaseQuantity = async (item) => {
   if (!item || !item.productId?._id) {
     console.error("Invalid Product ID");
     return;
+    await cartStore.updateQuantity(item.productId._id, item.quantity + 1);
   }
   try {
     await axios.put(
@@ -88,6 +91,7 @@ const decreaseQuantity = async (item) => {
   if (!item || !item.productId?._id) {
     console.error("Invalid Product ID");
     return;
+    await cartStore.updateQuantity(item.productId._id, item.quantity - 1);
   }
   if (item.quantity > 1) {
     try {
@@ -105,6 +109,8 @@ const decreaseQuantity = async (item) => {
       console.error("Error updating quantity:", error);
     }
   } else {
+    await cartStore.removeItem(item.productId._id);
+
     removeFromCart(item.productId?._id);
   }
 };
@@ -114,6 +120,7 @@ const removeFromCart = async (item) => {
   if (!item || !item.productId?._id) {
     console.error("Error:Product ID is missing!");
     return;
+    await cartStore.removeItem(item.productId._id);
   }
   const id = item.productId?._id;
 
@@ -130,9 +137,7 @@ const removeFromCart = async (item) => {
   }
 };
 
-const totalItems = computed(() =>
-  cart.value?.items?.reduce((sum, item) => sum + item.quantity, 0)
-);
+const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() =>
   cart.value?.items?.reduce(
     (sum, item) => sum + item?.productId.price * item.quantity,
@@ -142,6 +147,7 @@ const totalPrice = computed(() =>
 
 onMounted(() => {
   loadCart();
+  cartStore.loadCart();
 });
 </script>
 

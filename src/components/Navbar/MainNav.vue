@@ -57,6 +57,7 @@
       <router-link to="/product" @click="showMenu = false">Product</router-link>
       <router-link to="/cart" @click="showMenu = false" class="cart">
         <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count">{{ totalItems }}</span>
       </router-link>
       <!-- <div class="main-icon"></div> -->
     </div>
@@ -67,10 +68,14 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useCartstore } from "@/stores/cartStore";
+import { storeToRefs } from "pinia";
 
 const categories = ref([]);
 const router = useRouter();
 const showMenu = ref(false);
+const cartStore = useCartstore();
+const { totalItems } = storeToRefs(cartStore);
 
 router.afterEach(() => {
   showMenu.value = false;
@@ -93,6 +98,7 @@ const fetchCategories = async () => {
 
 onMounted(() => {
   fetchCategories();
+  cartStore.loadCart();
 });
 
 const selectCategory = (categoryId) => {
@@ -112,9 +118,6 @@ const openType = (type) => {
 const toggleMenu = () => {
   showMenu.value = !showMenu.value;
 };
-router.afterEach(() => {
-  showMenu.value = false;
-});
 </script>
 
 <style scoped>
@@ -151,6 +154,7 @@ nav {
   text-decoration: none;
   color: black;
   transition: color 0.3s ease-in-out;
+  position: relative;
 }
 
 .main-menu a:hover,
@@ -230,7 +234,18 @@ nav {
   cursor: pointer;
   margin-right: 1rem;
 }
+.cart-count {
+  background-color: red;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-left: 4px;
+  position: absolute;
 
+  right: 2px;
+  bottom: 28px;
+}
 @media (max-width: 768px) {
   .hamburger {
     display: block;

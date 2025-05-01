@@ -7,14 +7,31 @@
         <div class="add">
           <h4>Delivery Address</h4>
           <div class="add-detail">
-            <p><strong>Name:</strong> {{ order.addressId?.fullName }}</p>
+            <!-- {{ order }} -->
             <p>
-              <strong>Mobile No:</strong> {{ order.addressId?.phoneNumber }}
+              <strong>Name:</strong>
+              {{ order.addressId?.fullName || order.address?.fullName }}
             </p>
-            <p><strong>City:</strong> {{ order.addressId?.city }}</p>
-            <p><strong>State:</strong> {{ order.addressId?.state }}</p>
-            <p><strong>zipCode:</strong> {{ order.addressId?.pincode }}</p>
-            <p><strong>Country:</strong> {{ order.addressId?.country }}</p>
+            <p>
+              <strong>Mobile No:</strong>
+              {{ order.addressId?.phoneNumber || order.address?.phoneNumber }}
+            </p>
+            <p>
+              <strong>City:</strong>
+              {{ order.addressId?.city || order.address?.city }}
+            </p>
+            <p>
+              <strong>State:</strong>
+              {{ order.addressId?.state || order.address?.state }}
+            </p>
+            <p>
+              <strong>zipCode:</strong>
+              {{ order.addressId?.pincode || order.address?.zipCode }}
+            </p>
+            <p>
+              <strong>Country:</strong>
+              {{ order.addressId?.country || order.address?.country }}
+            </p>
           </div>
         </div>
 

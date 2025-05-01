@@ -141,7 +141,7 @@ const addToCart = async () => {
     const errorMessage = error.response?.data?.msg || "somthing went a wrong";
     if (error.response?.data?.status_code === "E_UNAUTHORIZED_ACCESS") {
       localStorage.clear();
-      toast.error("Session expired! Please login again.", {
+      toast.error("Please Login OR Register Your Account", {
         autoClose: 1000,
         position: "top-right",
         theme: "colored",
