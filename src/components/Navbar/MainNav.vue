@@ -146,6 +146,7 @@ nav {
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  position: relative;
 }
 
 .main-menu a,
@@ -154,7 +155,6 @@ nav {
   text-decoration: none;
   color: black;
   transition: color 0.3s ease-in-out;
-  position: relative;
 }
 
 .main-menu a:hover,

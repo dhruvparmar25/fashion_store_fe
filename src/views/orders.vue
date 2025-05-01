@@ -133,32 +133,32 @@
                     <h4>Total Amount : ₹{{ selectedOrder.totalAmount }}</h4>
                   </div>
                 </div>
-                <!-- <p><strong>Order ID:</strong> {{ selectedOrder._id }}</p>
-                  <p>
-                    <strong>Total Amount:</strong> ₹{{
-                      selectedOrder.totalAmount
+                <p>
+                  <strong>Total Amount:</strong> ₹{{
+                    selectedOrder.totalAmount
+                  }}
+                </p>
+                <p>
+                  <strong>Order Date:</strong>
+                  {{
+                    formatDate(
+                      selectedOrder.updatedAt || selectedOrder.createdAt
+                    )
+                  }}
+                </p>
+                <h4>Items:</h4>
+                <ul>
+                  <li
+                    v-for="item in selectedOrder.items"
+                    :key="item.productId._id"
+                  >
+                    {{ item.productId.name }} - {{ item.quantity }} x ₹{{
+                      item.productId.price
                     }}
-                  </p>
-                  <p>
-                    <strong>Order Date:</strong>
-                    {{
-                      formatDate(
-                        selectedOrder.updatedAt || selectedOrder.createdAt
-                      )
-                    }}
-                  </p>
-                  <h4>Items:</h4>
-                  <ul>
-                    <li
-                      v-for="item in selectedOrder.items"
-                      :key="item.productId._id"
-                    >
-                      {{ item.productId.name }} - {{ item.quantity }} x ₹{{
-                        item.productId.price
-                      }}
-                      = ₹{{ item.price }}
-                    </li>
-                  </ul> -->
+                    = ₹{{ item.price }}
+                  </li>
+                </ul>
+                -->
               </div>
             </Modal>
           </div>
@@ -242,9 +242,8 @@ onMounted(() => {
 
 <style scoped>
 .order-item {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: space-evenly;
+  display: flex;
+  justify-content: space-between;
   grid-gap: 10px;
   border-top: 1px solid #d5d9d9;
   border-bottom: 1px solid #d5d9d9;
@@ -288,6 +287,12 @@ onMounted(() => {
 }
 .total .tm {
   margin-top: 0.5rem;
+}
+.item {
+  width: 65%;
+}
+.add {
+  width: 25%;
 }
 .item,
 .add {
@@ -368,7 +373,7 @@ onMounted(() => {
   color: rgb(0, 0, 0);
   margin: 1rem;
 }
-.product-details[data-v-7c338ad9] {
+.product-details {
   display: flex;
   margin: 1rem;
   justify-content: space-between;
