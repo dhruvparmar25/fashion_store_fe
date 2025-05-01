@@ -244,7 +244,8 @@ const loadProduct = async () => {
 }
 .selling-table {
   padding: 1rem;
-  height: calc(100vh - 370px);
+  height: auto;
+  /* height: calc(100vh - 370px); */
 }
 .selling-table table tbody tr {
   border-bottom: 1px solid #e5e9ec;

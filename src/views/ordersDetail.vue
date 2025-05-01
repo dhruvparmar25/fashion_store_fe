@@ -84,7 +84,10 @@
           <div class="mail">
             <div class="cust-detail">
               <!-- {{ OrdersDetail.addressId }} -->
-              {{ OrdersDetail?.address?.street }}<br />
+              {{
+                OrdersDetail?.address?.street ||
+                OrdersDetail?.addressId?.landmark
+              }}<br />
               {{ OrdersDetail?.address?.city || OrdersDetail?.addressId?.city }}
               <br />
               {{
