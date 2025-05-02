@@ -267,7 +267,7 @@ const nextPage = () => {
 .fillter {
   width: 15%;
   height: 100vh;
-  margin-left: 0.5rem;
+
   font-size: 2rem;
   font-weight: 700;
   background-color: #004b60;

@@ -5,6 +5,7 @@ import "vue3-toastify/dist/index.css"; // Importing CSS for Toastify
 import "./global.css";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import "./assets/fonts/fonts.css";
 
 const app = createApp(App);
 const pinia = createPinia();

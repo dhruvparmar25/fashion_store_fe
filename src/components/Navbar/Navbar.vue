@@ -3,8 +3,9 @@
     <!-- Dynamic Offer Message -->
     <div class="offer">
       <p class="offerText">
-        <strong><i class="fas fa-shipping-fast"></i></strong>FREE SHIPPING on
-        all orders above ₹399
+        <strong style="margin-right: 10px"
+          ><i class="fa-solid fa-users"></i></strong
+        >Styled more than 100,000 Clients
       </p>
     </div>
 
@@ -41,10 +42,10 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 2.5rem;
-  color: black;
+  padding: 0rem 2.5rem;
+  color: white;
   border-bottom: 1px solid #adb5bd;
-  background-color: #f8f9fa;
+  background-color: black;
 }
 
 /* Offer Text */
@@ -52,6 +53,7 @@ nav {
   font-size: 1rem;
   font-weight: 500;
   text-align: center;
+  font-family: "MyFont", sans-serif;
 }
 
 /* Menu */

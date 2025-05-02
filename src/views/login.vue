@@ -311,7 +311,7 @@ const resetPassword = () => {
 /* Logo image styling */
 .text img {
   width: 100px;
-  border-radius: 50%;
+  margin-bottom: 2rem;
 }
 
 /* Form heading styling */
@@ -321,7 +321,6 @@ const resetPassword = () => {
   color: #2c3e50;
   font-weight: 600;
   text-transform: uppercase;
-  margin-bottom: 2rem;
 }
 
 /* Form box styling */

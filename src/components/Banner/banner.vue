@@ -61,7 +61,7 @@ section.banner {
 }
 img {
   width: 90%;
-  height: 450px;
+  /* height: 450px; */
   border-radius: 0.5rem;
   margin: 1rem;
 }

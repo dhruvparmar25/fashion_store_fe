@@ -154,6 +154,7 @@ onMounted(() => {
 <style scoped>
 .main {
   width: 90%;
+  height: 100vh;
   max-width: 1200px;
   margin: auto;
   display: flex;
