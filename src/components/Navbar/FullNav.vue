@@ -171,7 +171,6 @@ const toggleMenu = () => {
   margin: 0;
   color: white;
   padding: 6px 0px;
-  font-family: "MyFont", sans-serif;
 }
 nav {
   display: flex;
