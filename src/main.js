@@ -14,6 +14,7 @@ app.use(Vue3Toastify, {
   theme: "dark",
 });
 
+app.config.devtools = false;
 app.use(pinia);
 app.use(router);
 app.mount("#app");
