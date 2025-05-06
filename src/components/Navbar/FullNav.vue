@@ -341,15 +341,17 @@ nav {
 }
 /* Login Button */
 .login-fn {
-  color: black;
+  color: white;
   cursor: pointer;
   text-decoration: none;
   padding: 5px;
+  background-color: #41464b;
+  border-radius: 20px;
 }
 .login-fn:hover {
   background-color: #000;
   color: white;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 /* Logout Button */
 .logout-btn {
