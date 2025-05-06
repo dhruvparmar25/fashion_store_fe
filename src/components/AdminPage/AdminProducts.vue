@@ -460,9 +460,10 @@ const AddAdminProducts = async () => {
       color: "",
       size: [],
     };
-  } catch (error) {
-    console.log("Error in adding product:", error);
-    toast.error("Error adding product");
+  } catch (err) {
+    const errorMessage = err.response?.data?.msg || "somthing went a wrong";
+    toast.error(errorMessage);
+    console.error("Error:", err);
   }
 };
 

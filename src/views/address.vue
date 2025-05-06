@@ -256,7 +256,7 @@ console.log("Saved Addresses:", saveAddresses.value);
 
 form {
   max-width: 700px;
-  margin: 10px auto;
+  margin: 20px;
   padding: 10px;
   background-color: #fafafa;
   border: 1px solid #ddd;

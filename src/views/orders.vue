@@ -82,83 +82,55 @@
             <button @click="openBillModal(order)">BillView</button>
             <Modal v-if="showBillModal" @close="showBillModal = false">
               <div class="bill-modal">
-                <h3>Bill Details</h3>
-                <!-- {{ selectedOrder }} -->
+                <h2 class="invoice-title">INVOICE</h2>
 
-                <div class="order-detail">
-                  <div class="main-shop">
-                    <div class="shop-detail">
-                      <div class="logo">
-                        <img
-                          src="/public/Fashion.png"
-                          style="width: 50px; height: 50px"
-                        />
-
-                        <div class="date">
-                          Date:
-                          {{ formatDate(selectedOrder.createdAt) }}
-                        </div>
-                      </div>
-
-                      <div class="invoice">
-                        <h4>INVOICE</h4>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="label">
-                    <h4>Orders Detail</h4>
-                  </div>
-                  <div
-                    class="product-details"
-                    v-for="(item, index) in selectedOrder.items"
-                    :key="index"
-                  >
-                    <div class="product">
-                      {{ item?.productId?.name }}
-                    </div>
-                    <div class="items">
-                      <div class="item-price">
-                        <div class="prd-price">
-                          ₹{{ item.productId?.price }}
-                        </div>
-                      </div>
-                      <div class="item-qty">
-                        <div class="prd-qut">{{ item.quantity }}</div>
-                      </div>
-                      <div class="prd-price">₹{{ item.price }}</div>
-                    </div>
-                  </div>
-                  <div class="total">
-                    <h4>Total Amount : ₹{{ selectedOrder.totalAmount }}</h4>
+                <div class="header-section">
+                  <img src="/public/Fashion.png" alt="Logo" class="logo" />
+                  <div class="date">
+                    <strong>Date:</strong>
+                    {{ formatDate(selectedOrder.createdAt) }}
                   </div>
                 </div>
-                <p>
-                  <strong>Total Amount:</strong> ₹{{
-                    selectedOrder.totalAmount
-                  }}
-                </p>
-                <p>
-                  <strong>Order Date:</strong>
-                  {{
-                    formatDate(
-                      selectedOrder.updatedAt || selectedOrder.createdAt
-                    )
-                  }}
-                </p>
-                <h4>Items:</h4>
-                <ul>
-                  <li
-                    v-for="item in selectedOrder.items"
-                    :key="item.productId._id"
-                  >
-                    {{ item.productId.name }} - {{ item.quantity }} x ₹{{
-                      item.productId.price
+
+                <hr />
+
+                <h3 class="section-title">Order Details</h3>
+                <table class="order-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Qty</th>
+                      <th>Unit Price</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(item, index) in selectedOrder.items"
+                      :key="index"
+                    >
+                      <td>{{ item?.productId?.name }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>₹{{ item.productId?.price }}</td>
+                      <td>₹{{ item.price }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="total-amount">
+                  Total Amount: ₹{{ selectedOrder.totalAmount }}
+                </div>
+
+                <div class="summary">
+                  <p>
+                    <strong>Order Date:</strong>
+                    {{
+                      formatDate(
+                        selectedOrder.updatedAt || selectedOrder.createdAt
+                      )
                     }}
-                    = ₹{{ item.price }}
-                  </li>
-                </ul>
-                -->
+                  </p>
+                </div>
               </div>
             </Modal>
           </div>
@@ -299,7 +271,7 @@ onMounted(() => {
   padding: 1rem;
   background-color: #f8f9fa;
 }
-.paymentMessage p {
+.paymentMessage > p {
   font-size: 27px;
   color: green;
   text-align: end;
@@ -340,46 +312,6 @@ onMounted(() => {
   padding: 1rem;
 }
 
-.bill-modal {
-  padding: 1rem;
-  min-width: 300px;
-}
-
-.product-details {
-  display: flex;
-  margin: 1rem;
-  justify-content: space-between;
-}
-.order-detail {
-  margin: 2rem;
-  /* width: 60%; */
-  border-radius: 1rem;
-  border: 1px solid #eef0f7;
-}
-
-.label {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #eef0f7;
-}
-.label h4 {
-  margin: 1rem;
-}
-.order-detail h4,
-.label h4 {
-  font-family: "inter";
-  font-weight: 400;
-  font-size: 18px;
-  color: rgb(0, 0, 0);
-  margin: 1rem;
-}
-.product-details {
-  display: flex;
-  margin: 1rem;
-  justify-content: space-between;
-  border-bottom: 1px solid #eef0f7;
-}
-
 .product {
   display: flex;
   gap: 0.5rem;
@@ -399,22 +331,7 @@ onMounted(() => {
   font-weight: 600;
   align-items: center;
 }
-.shop-detail {
-  display: flex;
-  justify-content: space-between;
-  margin: 1rem;
-}
 
-.invoice h4 {
-  font-size: 18px;
-  color: black;
-  font-family: "Poppins";
-  line-height: 32px;
-  font-weight: 400;
-}
-.main-shop {
-  border-bottom: 1px solid #eef0f7;
-}
 .paymentMessage button {
   background-color: #4caf50; /* Green tone */
   color: white;
@@ -430,5 +347,73 @@ onMounted(() => {
 
 .paymentMessage button:hover {
   background-color: #388e3c;
+}
+
+.bill-modal {
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.invoice-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 60px;
+}
+
+.date {
+  font-size: 14px;
+}
+
+.section-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.order-table th {
+  background-color: #f8f8f8;
+  font-weight: bold;
+}
+
+.total-amount {
+  text-align: right;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.summary p {
+  margin: 0;
+  font-size: 14px;
 }
 </style>

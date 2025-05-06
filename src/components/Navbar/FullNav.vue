@@ -155,7 +155,7 @@ const toggleMenu = () => {
   justify-content: space-between;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
   background-color: white;
 }
 .topnavbar {
@@ -282,7 +282,7 @@ nav {
   border-radius: 50%;
   font-size: 10px;
   position: absolute;
-  right: 76px;
+  right: 96px;
   bottom: 26px;
 }
 .dropdown {

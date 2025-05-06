@@ -24,7 +24,7 @@ const close = () => emit("close");
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 101;
 }
 .modal-content {
   background: #fff;
