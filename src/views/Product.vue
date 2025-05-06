@@ -150,6 +150,7 @@ const setQuery = () => {
 
   isCategoryView.value = !!productMetas.value.categoryId.length;
   isBrandView.value = !!productMetas.value.type;
+  currenPage.value = parseInt(route.query.page) || 1;
 
   fetchProducts();
 };
