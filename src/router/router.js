@@ -4,17 +4,17 @@ import Product from "@/views/Product.vue";
 import Home from "@/views/Home.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import Cart from "@/views/Cart.vue";
-import Login from "@/views/login.vue";
-import Contact from "@/views/contact.vue";
-import Orders from "@/views/orders.vue";
-import Address from "@/views/address.vue";
+import Login from "@/views/Login.vue";
+import Contact from "@/views/Contact.vue";
+import Orders from "@/views/Orders.vue";
+import Address from "@/views/Address.vue";
 import Admin from "@/components/Admin/Admin.vue";
-import AdminOrders from "@/components/AdminPage/AdminOrders.vue";
-import AdminProducts from "@/components/AdminPage/AdminProducts.vue";
-import AdminUser from "@/components/AdminPage/AdminUser.vue";
-import OrdersDetail from "@/views/ordersDetail.vue";
+import AdminOrders from "@/components/Admin/AdminOrders.vue";
+import AdminProducts from "@/components/Admin/AdminProducts.vue";
+import AdminUser from "@/components/Admin/AdminUser.vue";
+import OrdersDetail from "@/components/Admin/OrdersDetail.vue";
 import Dashboard from "@/views/Dashboard.vue";
-import Report from "@/views/report.vue";
+import Report from "@/components/Admin/Report.vue";
 
 // Define application routes
 const routes = [

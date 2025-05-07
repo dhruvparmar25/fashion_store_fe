@@ -24,15 +24,19 @@ const close = () => emit("close");
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 101;
+  z-index: 9999;
 }
+
 .modal-content {
   background: #fff;
-  /* padding: 2rem; */
+  padding: 2rem;
   border-radius: 1rem;
   max-height: 90vh;
   overflow-y: auto;
-  width: 50%;
-  left: 5rem;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -100,10 +100,10 @@
 <script setup>
 import { onMounted, ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import ProductPage from "@/components/Cards/ProductPage.vue";
+import ProductPage from "@/views/ProductPage.vue";
 import FilterComponent from "@/components/Filters/FilterComponent.vue";
 import axios from "axios";
-import Pagination from "@/components/Pagination/pagination.vue";
+import Pagination from "@/components/Pagination/Pagination.vue";
 
 const router = useRouter();
 const route = useRoute();
