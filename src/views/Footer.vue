@@ -6,8 +6,7 @@
   </footer>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped>
 .footer-bottom {
@@ -21,4 +20,4 @@
   color: white;
   padding: 1rem;
 }
-</style> 
+</style>
