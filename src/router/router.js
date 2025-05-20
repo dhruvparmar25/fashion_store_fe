@@ -13,7 +13,6 @@ import Dashboard from "@/views/Dashboard.vue";
 import Report from "@/components/Admin/Report.vue";
 import Orders from "@/views/orders.vue";
 import Login from "@/views/login.vue";
-import Contact from "@/views/Contact.vue"; // Define application routes
 const routes = [
   {
     path: "/",
@@ -43,11 +42,7 @@ const routes = [
     component: ProductDetail, // Product detail page
     props: true, // Pass the ID as a prop
   },
-  {
-    path: "/contact",
-    name: "Contact",
-    component: Contact, // Contact page
-  },
+
   {
     path: "/cart",
     name: "cart",
