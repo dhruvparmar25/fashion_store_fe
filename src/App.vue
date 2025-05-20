@@ -5,9 +5,9 @@
 </template>
 
 <script setup>
-import Footer from "./components/Footer/Footer.vue";
 import { useRoute } from "vue-router";
 import FullNav from "./components/Navbar/FullNav.vue";
+import Footer from "./components/Footer.vue";
 
 const route = useRoute();
 </script>
