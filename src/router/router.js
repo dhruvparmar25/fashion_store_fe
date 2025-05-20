@@ -12,6 +12,7 @@ import OrdersDetail from "@/components/Admin/OrdersDetail.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Report from "@/components/Admin/Report.vue";
 import Orders from "@/views/orders.vue";
+import Login from "@/views/login.vue";
 // Define application routes
 const routes = [
   {
