@@ -4,7 +4,6 @@ import Product from "@/views/Product.vue";
 import Home from "@/views/Home.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import Cart from "@/views/Cart.vue";
-import Contact from "@/views/Contact.vue";
 import Address from "@/views/Address.vue";
 import Admin from "@/components/Admin/Admin.vue";
 import AdminOrders from "@/components/Admin/AdminOrders.vue";
@@ -14,7 +13,6 @@ import OrdersDetail from "@/components/Admin/OrdersDetail.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Report from "@/components/Admin/Report.vue";
 import Orders from "@/views/orders.vue";
-import Login from "@/views/login.vue";
 // Define application routes
 const routes = [
   {
