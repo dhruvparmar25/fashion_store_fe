@@ -4,7 +4,6 @@ import Product from "@/views/Product.vue";
 import Home from "@/views/Home.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import Cart from "@/views/Cart.vue";
-import Address from "@/views/Address.vue";
 import Admin from "@/components/Admin/Admin.vue";
 import AdminOrders from "@/components/Admin/AdminOrders.vue";
 import AdminProducts from "@/components/Admin/AdminProducts.vue";
@@ -53,11 +52,7 @@ const routes = [
     name: "cart",
     component: Cart, // Shopping cart page
   },
-  {
-    path: "/address",
-    name: "address",
-    component: Address,
-  },
+
   {
     path: "/orders",
     name: "orders",
