@@ -257,6 +257,7 @@ import { toast } from "vue3-toastify";
 import Modal from "../commons/Modal.vue";
 import { updateImage } from "@/utils/helpers";
 import { FileUploadModules } from "@/utils/Enum";
+import Pagination from "@/views/Pagination.vue";
 const form = ref({
   brand: "",
   price: "",

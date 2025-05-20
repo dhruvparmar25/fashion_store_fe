@@ -103,7 +103,7 @@ import { useRoute, useRouter } from "vue-router";
 import ProductPage from "@/views/ProductPage.vue";
 import FilterComponent from "@/components/Filters/FilterComponent.vue";
 import axios from "axios";
-import Pagination from "@/components/Pagination/Pagination.vue";
+import Pagination from "@/views/Pagination.vue";
 
 const router = useRouter();
 const route = useRoute();
