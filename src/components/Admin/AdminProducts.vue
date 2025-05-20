@@ -257,8 +257,7 @@ import { toast } from "vue3-toastify";
 import Modal from "../commons/Modal.vue";
 import { updateImage } from "@/utils/helpers";
 import { FileUploadModules } from "@/utils/Enum";
-import Pagination from "../Pagination/pagination.vue";
-
+import Pagination from "../Pagination/Pagination.vue";
 const form = ref({
   brand: "",
   price: "",
@@ -336,7 +335,7 @@ const setQuery = () => {
 
 const fetchCategories = async () => {
   axios
-    .get("http://localhost:3000/api/category", {
+    .get(`${import.meta.env.VITE_API_BASE_URL}category`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then((response) => {
@@ -351,7 +350,7 @@ const fetchCategories = async () => {
 const addCategories = () => {
   axios
     .post(
-      "http://localhost:3000/api/admin/category",
+      `${import.meta.env.VITE_API_BASE_URL}admin/category`,
       { name: newCategoryName.value },
       {
         headers: {
@@ -412,9 +411,12 @@ const fetchAdminProducts = async () => {
       page: currenPage.value,
       per_page: perPage.value,
     };
-    const response = await axios.get("http://localhost:3000/api/product", {
-      params,
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}product`,
+      {
+        params,
+      }
+    );
     console.log("total : ", response.data.total);
     products.value = response.data.data;
     totalProducts.value = response.data.total;
@@ -429,7 +431,7 @@ const uploadImage = (event) => {
 const AddAdminProducts = async () => {
   try {
     let action = form.value?._id ? "put" : "post";
-    let path = "http://localhost:3000/api/admin/products";
+    let path = `${import.meta.env.VITE_API_BASE_URL}admin/products`;
     if (form.value?._id) {
       path += `/${form.value?._id}`;
     }
@@ -476,9 +478,12 @@ const removeAdminProduct = async (product) => {
   }
   const id = product._id;
   try {
-    await axios.delete(`http://localhost:3000/api/admin/products/${id}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}admin/products/${id}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     toast.success("product remove");
 
     products.value = products.value.filter((i) => i._id !== id);
@@ -572,7 +577,7 @@ const updateProduct = async (id) => {
     }
 
     const res = await axios.put(
-      `http://localhost:3000/api/admin/products/${id}`,
+      `${import.meta.env.VITE_API_BASE_URL}admin/products/${id}`,
       formData,
       {
         headers: {

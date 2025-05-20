@@ -35,9 +35,7 @@
       <p>
         Total Price: ₹<span>{{ totalPrice }}</span>
       </p>
-      <!-- <button @click="checkout()" class="checkout-btn">
-        Proceed to Checkout
-      </button> -->
+
       <Address v-if="cart?.items?.length > 0" :cart="cart" />
     </div>
   </div>
@@ -48,7 +46,7 @@ import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
-import Address from "./address.vue";
+
 import { useCartstore } from "@/stores/cartStore";
 
 const cart = computed(() => cartStore.cart);
@@ -57,7 +55,7 @@ const cartStore = useCartstore();
 
 const loadCart = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/cart", {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}cart`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value = res.data;
@@ -75,7 +73,7 @@ const increaseQuantity = async (item) => {
   }
   try {
     await axios.put(
-      `http://localhost:3000/api/cart/${item.productId._id}`,
+      `${import.meta.env.VITE_API_BASE_URL}cart/${item.productId._id}`,
       {
         quantity: item.quantity + 1,
       },
@@ -96,7 +94,7 @@ const decreaseQuantity = async (item) => {
   if (item.quantity > 1) {
     try {
       await axios.put(
-        `http://localhost:3000/api/cart/${item.productId._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}cart/${item.productId._id}`,
         {
           quantity: item.quantity - 1,
         },
@@ -125,7 +123,7 @@ const removeFromCart = async (item) => {
   const id = item.productId?._id;
 
   try {
-    await axios.delete(`http://localhost:3000/api/cart/${id}`, {
+    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}cart/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value.items = cart.value?.items?.filter(

@@ -126,7 +126,7 @@ const fetchOrders = async () => {
   }
   try {
     const res = await axios.get(
-      `http://localhost:3000/api/admin/orders/${ordersId}`,
+      `${import.meta.env.VITE_API_BASE_URL}admin/orders/${ordersId}`,
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     OrdersDetail.value = res.data;

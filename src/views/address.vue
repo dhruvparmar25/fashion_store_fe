@@ -137,7 +137,7 @@ const saveAddresses = ref([]);
 
 const fetchAddresses = () => {
   axios
-    .get("http://localhost:3000/api/addresses", {
+    .get(`${import.meta.env.VITE_API_BASE_URL}addresses`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then((res) => {
@@ -151,7 +151,7 @@ const fetchAddresses = () => {
 
 const addAddress = () => {
   axios
-    .post(`http://localhost:3000/api/address/`, address.value, {
+    .post(`${import.meta.env.VITE_API_BASE_URL}address/`, address.value, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then((res) => {
@@ -176,7 +176,7 @@ const placeOrder = async () => {
   if (!selectAddress) return toast.error("please select address");
   try {
     const res = await axios.post(
-      `http://localhost:3000/api/orders/${cartId}`,
+      `${import.meta.env.VITE_API_BASE_URL}orders/${cartId}`,
       {
         addressId: selectAddressId.value,
         address: selectAddress,
@@ -202,7 +202,7 @@ const placeOrder = async () => {
 const deleteAddress = (id) => {
   if (!confirm("Are you sure you want to delete this address?")) return;
   axios
-    .delete(`http://localhost:3000/api/address/${id}`, {
+    .delete(`${import.meta.env.VITE_API_BASE_URL}address/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then(() => {

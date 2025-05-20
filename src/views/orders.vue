@@ -168,7 +168,7 @@ const openBillModal = (order) => {
 
 const loadOrders = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/orders", {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}orders`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     console.log("Orders fetched:", res.data); // Debugging ke liye
@@ -184,9 +184,12 @@ const removeOrders = async (orderId) => {
   }
   remove.value = true;
   try {
-    await axios.delete(`http://localhost:3000/api/orders/${orderId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}orders/${orderId}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     toast.success("Order removed successfully!");
     orders.value = orders.value.filter((order) => order._id !== orderId);
   } catch (error) {

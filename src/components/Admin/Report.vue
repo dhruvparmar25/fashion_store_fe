@@ -137,7 +137,7 @@ watch([cardRange.value, productRange.value], () => {
 const loadOrder = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:3000/api/admin/report/Order",
+      `${import.meta.env.VITE_API_BASE_URL}admin/report/Order`,
       {
         params: cardRange.value,
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -152,7 +152,7 @@ const loadOrder = async () => {
 const loadRevenue = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:3000/api/admin/report/TotalRevenue",
+      `${import.meta.env.VITE_API_BASE_URL}admin/report/TotalRevenue`,
       {
         params: cardRange.value,
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -167,7 +167,7 @@ const loadRevenue = async () => {
 const loadProduct = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:3000/api/admin/report/Product",
+      `${import.meta.env.VITE_API_BASE_URL}admin/report/Product`,
       {
         params: productRange.value,
 

@@ -22,7 +22,7 @@ const prds = ref([]);
 
 onMounted(async () => {
   await axios
-    .get("http://localhost:3000/api/product")
+    .get(`${import.meta.env.VITE_API_BASE_URL}product`)
     .then((resp) => {
       prds.value = resp.data;
     })

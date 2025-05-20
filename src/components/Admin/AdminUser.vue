@@ -34,9 +34,12 @@ onMounted(() => {
 });
 const Adduser = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/admin/users", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}admin/users`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     userdatas.value = res.data;
   } catch (error) {
     console.log("Error Fetching User", error);

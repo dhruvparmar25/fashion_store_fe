@@ -184,9 +184,12 @@ const fetchProducts = async () => {
       page: currenPage.value,
       per_page: perPage.value,
     };
-    const response = await axios.get("http://localhost:3000/api/product", {
-      params,
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}product`,
+      {
+        params,
+      }
+    );
     prdlists.value = response.data.data;
     totalProducts.value = response.data.total;
   } catch (error) {
@@ -197,7 +200,7 @@ const fetchProducts = async () => {
 // Fetch categories from API
 const fetchCategories = async () => {
   axios
-    .get("http://localhost:3000/api/category", {
+    .get(`${import.meta.env.VITE_API_BASE_URL}category`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then((response) => {

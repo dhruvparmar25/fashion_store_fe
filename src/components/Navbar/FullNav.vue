@@ -106,7 +106,7 @@ router.afterEach(() => {
 
 const fetchCategories = async () => {
   axios
-    .get("http://localhost:3000/api/category", {
+    .get(`${import.meta.env.VITE_API_BASE_URL}category`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
     .then((response) => {

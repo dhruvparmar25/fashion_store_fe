@@ -37,7 +37,9 @@ const totalProducts = ref(0);
 
 const fetchAdminProducts = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/product");
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}product`
+    );
 
     products.value = response.data.data;
     totalProducts.value = response.data.total;
@@ -47,9 +49,12 @@ const fetchAdminProducts = async () => {
 };
 const Adduser = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/admin/users", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}admin/users`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     userdatas.value = res.data;
   } catch (error) {
     console.log("Error Fetching User", error);
@@ -57,9 +62,12 @@ const Adduser = async () => {
 };
 const fetchOrders = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/admin/orders", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}admin/orders`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     Orders.value = res.data;
   } catch (error) {
     console.log("Error Fetching User", error);

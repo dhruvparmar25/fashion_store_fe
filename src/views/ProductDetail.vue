@@ -86,7 +86,7 @@ const fetchData = async () => {
   }
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/product/${productId}`
+      `${import.meta.env.VITE_API_BASE_URL}product/${productId}`
     );
     product.value = response.data;
   } catch (error) {
@@ -95,7 +95,7 @@ const fetchData = async () => {
 };
 const loadCart = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/cart", {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}cart`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     cart.value = res.data.item || res.data || [];
@@ -114,7 +114,7 @@ const addToCart = async () => {
 
   try {
     await axios.post(
-      "http://localhost:3000/api/cart",
+      `${import.meta.env.VITE_API_BASE_URL}cart`,
       [
         {
           productId: route.params.id,

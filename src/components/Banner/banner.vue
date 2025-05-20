@@ -19,7 +19,9 @@ const router = useRouter();
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/category");
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}category`
+    );
     categories.value = response.data;
   } catch (error) {
     console.error("Error fetching categories", error);
