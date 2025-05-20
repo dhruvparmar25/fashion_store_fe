@@ -13,8 +13,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import Report from "@/components/Admin/Report.vue";
 import Orders from "@/views/orders.vue";
 import Login from "@/views/login.vue";
-import Contact from "@/views/Contact.vue";
-// Define application routes
+import Contact from "@/views/Contact.vue"; // Define application routes
 const routes = [
   {
     path: "/",
