@@ -12,9 +12,14 @@ export const useCartstore = defineStore("cart", {
   actions: {
     async loadCart() {
       try {
-        const res = await axios.get("http://localhost:3000/api/cart", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}cart`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         this.cart = res.data;
       } catch (err) {
         console.log(err);
@@ -22,7 +27,7 @@ export const useCartstore = defineStore("cart", {
     },
     async removeItem(id) {
       try {
-        await axios.delete(`http://localhost:3000/api/cart/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}cart/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         this.cart.items = this.cart.items.filter((i) => i.productId._id !== id);
@@ -33,7 +38,7 @@ export const useCartstore = defineStore("cart", {
     async updateQuantity(productId, quantity) {
       try {
         const res = await axios.put(
-          `http://localhost:3000/api/cart/${productId}`,
+          `${import.meta.env.VITE_API_BASE_URL}cart/${productId}`,
           { quantity },
           {
             headers: {

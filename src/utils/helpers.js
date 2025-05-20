@@ -43,7 +43,7 @@ export const completeOrderPayment = async (order, onSuccessCallback) => {
 
 export const saveTransation = async (paymentId, orderId) => {
   const res = await axios.post(
-    `http://localhost:3000/api/transaction/${orderId}`,
+    `${import.meta.env.VITE_API_BASE_URL}transaction/${orderId}`,
     { paymentId }
   );
 
@@ -57,7 +57,7 @@ export const updateImage = async (module, id, file) => {
   const formData = new FormData();
   formData.append("image", file);
   await axios.post(
-    `http://localhost:3000/api/upload/${module}/${id}`,
+    `${import.meta.env.VITE_API_BASE_URL}upload/${module}/${id}`,
     formData,
     {
       headers: {
